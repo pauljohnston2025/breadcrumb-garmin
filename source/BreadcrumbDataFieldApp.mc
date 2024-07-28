@@ -8,14 +8,12 @@ import Toybox.Communications;
 
 class BreadcrumbDataFieldApp extends Application.AppBase {
     var _view as BreadcrumbDataFieldView;
-    var _bcView as BreadcrumbView;
     var _breadcrumbContext as BreadcrumbContext;
 
     function initialize() {
         AppBase.initialize();
         _breadcrumbContext = new BreadcrumbContext(); 
-        _bcView = _breadcrumbContext.breadcrumbView();
-        _view = new BreadcrumbDataFieldView(_bcView, _breadcrumbContext);
+        _view = new BreadcrumbDataFieldView(_breadcrumbContext);
     }
 
     // onStart() is called on application start up
@@ -33,12 +31,12 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
     // Return the initial view of your application here
     function getInitialView() as [Views] or [Views, InputDelegates] {
         
-        return [ _view , new BreadcrumbDataFieldDelegate(_bcView)];
+        return [ _view , new BreadcrumbDataFieldDelegate(_breadcrumbContext)];
     }
 
     function onPhone(msg as Communications.Message) as Void {
         System.println("got message");
-        _view.onMessage();
+        // todo handle updateint the route wiht the message
     }
 }
 

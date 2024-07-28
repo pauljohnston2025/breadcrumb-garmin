@@ -2,59 +2,60 @@
 import Toybox.Position;
 [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 2; ]
 import Toybox.Lang;
-[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 4; ]
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 3; ]
+import Toybox.Activity;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 5; ]
 class BreadcrumbContext{
-    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 4; ]
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 5; ]
     <init> {
     }
-    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 4; ]
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 5; ]
     static
     <init> {
     }
-    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 5; @position = 6; ]
-    var _breadcrumbView as BreadcrumbView;
     [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 6; @position = 6; ]
+    var _breadcrumbView as BreadcrumbView;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 7; @position = 6; ]
     var _breadcrumbTrack as BreadcrumbTrack;
-    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 9; ]
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 10; ]
     function initialize() as Void {
-C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_9_24_12_2_start:
-[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc" 10 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_10_24_13_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc" 11 4 ]
         %tmp.4 = getv ? :BreadcrumbTrack;
         %tmp.1 = newc %tmp.4 ();
         putv self :_breadcrumbTrack %tmp.1;
-[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc" 11 4 ]
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc" 12 4 ]
         %tmp.8 = getv ? :BreadcrumbView;
         %tmp.10 = getv ? :_breadcrumbTrack;
         %tmp.5 = newc %tmp.8 (%tmp.10);
         putv self :_breadcrumbView %tmp.5;
-C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_9_24_12_2_stop:
-    }
-    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 14; ]
-    function breadcrumbView() as BreadcrumbView {
-C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_14_46_14_72_start:
-[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc" 14 48 ]
-        %tmp.2 = getv ? :_breadcrumbView;
-        ret %tmp.2;
-C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_14_46_14_72_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_10_24_13_2_stop:
     }
     [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 15; ]
+    function breadcrumbView() as BreadcrumbView {
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_15_46_15_72_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc" 15 48 ]
+        %tmp.2 = getv ? :_breadcrumbView;
+        ret %tmp.2;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_15_46_15_72_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 16; ]
     function breadcrumbTrack() as BreadcrumbTrack {
-C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_15_48_15_75_start:
-[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc" 15 50 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_16_48_16_75_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc" 16 50 ]
         %tmp.2 = getv ? :_breadcrumbTrack;
         ret %tmp.2;
-C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_15_48_15_75_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_16_48_16_75_stop:
     }
-    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 17; ]
-    function onPosition(altitude as Float or Null, position as Position.Location or Null) as Void {
-C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_18_69_20_2_start:
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 18; ]
+    function onActivityInfo(activityInfo as Activity.Info) as Void {
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_18_65_20_2_start:
 [ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc" 19 4 ]
         %tmp.2 = getv ? :_breadcrumbTrack;
-        %tmp.3 = getv function %tmp.2 :onPosition;
-        %tmp.5 = lgetv %altitude;
-        %tmp.7 = lgetv %position;
-        invoke %tmp.2 %tmp.3(%tmp.5, %tmp.7);
-C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_18_69_20_2_stop:
+        %tmp.3 = getv function %tmp.2 :onActivityInfo;
+        %tmp.5 = lgetv %activityInfo;
+        invoke %tmp.2 %tmp.3(%tmp.5);
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbContext_mc_18_65_20_2_stop:
     }
 }
 [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbContext.mc"; @line = 1; ]

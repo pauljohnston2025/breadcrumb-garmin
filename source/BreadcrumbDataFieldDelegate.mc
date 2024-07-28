@@ -3,25 +3,31 @@ import Toybox.System;
 
 // see BreadcrumbDataFieldView if touch stops working
 class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
-  var _breadcrumbView as BreadcrumbView;
+  var _breadcrumbContext as BreadcrumbContext;
 
-  function initialize(breadcrumbView as BreadcrumbView) {
-    _breadcrumbView = breadcrumbView;
+  function initialize(breadcrumbContext as BreadcrumbContext) {
     InputDelegate.initialize();
+    _breadcrumbContext = breadcrumbContext;
   }
 
   function onKey(keyEvent as WatchUi.KeyEvent) {
-    System.println(keyEvent.getKey());  // e.g. KEY_MENU = 7
-    return true;
+    System.println("got key event: " + keyEvent.getKey());  // e.g. KEY_MENU = 7
+    return false;
   }
 
   // see BreadcrumbDataFieldView if touch stops working
   function onTap(evt as WatchUi.ClickEvent) {
-    return _breadcrumbView.onTap(evt);
-  }
+    System.println("got tap (x,y): (" + evt.getCoordinates()[0] + "," +
+                   evt.getCoordinates()[1] + ")");
 
-  function onSwipe(swipeEvent as WatchUi.SwipeEvent) {
-    System.println(swipeEvent.getDirection());  // e.g. SWIPE_DOWN = 2
-    return true;
+    // perhaps put this into new class to handle touch events, and have a
+    // renderer for that ui would allow us to switch out ui and handle touched
+    // differently also will alow setting the scren height
+    if (evt.getCoordinates()[1] < 180) {
+      _breadcrumbContext.trackRenderer().incScale();
+    } else {
+      _breadcrumbContext.trackRenderer().decScale();
+    }
+    return false;
   }
 }
