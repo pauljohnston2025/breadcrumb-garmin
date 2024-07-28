@@ -1,0 +1,147 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 1; ]
+using Toybox.WatchUi;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 3; ]
+class GenericView{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 3; ]
+    <init> {
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 4 8 ]
+        %tmp.2 = getv ? :Graphics;
+        %tmp.3 = getv %tmp.2 :COLOR_BLACK;
+        putv self :foregroundColor %tmp.3;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 5 8 ]
+        %tmp.5 = getv ? :Graphics;
+        %tmp.6 = getv %tmp.5 :COLOR_WHITE;
+        putv self :backgroundColor %tmp.6;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 6 8 ]
+        %tmp.8 = getv ? :Graphics;
+        %tmp.9 = getv %tmp.8 :COLOR_RED;
+        putv self :trackColor %tmp.9;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 7 8 ]
+        %tmp.11 = getv ? :Graphics;
+        %tmp.12 = getv %tmp.11 :COLOR_DK_BLUE;
+        putv self :cursorColor %tmp.12;
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 3; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 4; @position = 8; ]
+    var foregroundColor;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 5; @position = 8; ]
+    var backgroundColor;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 6; @position = 8; ]
+    var trackColor;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 7; @position = 8; ]
+    var cursorColor;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 9; ]
+    function initialize() as Void {
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_9_26_11_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 10 8 ]
+        %tmp.1 = self;
+        %tmp.2 = getv function %tmp.1 :setDarkMode;
+        %tmp.3 = true;
+        invoke %tmp.1 %tmp.2(%tmp.3);
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_9_26_11_4_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 13; ]
+    function drawStartStop(dc) {
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_13_31_33_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 15 8 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_13_31_33_4_start" "C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_13_31_33_4_stop" ]
+        %pixelWidth2.1 = local;
+        %tmp.1 = 0.5;
+        %tmp.2 = lgetv %dc;
+        %tmp.3 = getv function %tmp.2 :getWidth;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        %tmp.5 = mul %tmp.1 %tmp.4;
+        lputv %pixelWidth2.1 %tmp.5;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 16 8 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_13_31_33_4_start" "C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_13_31_33_4_stop" ]
+        %pixelHeight2.2 = local;
+        %tmp.6 = 0.5;
+        %tmp.7 = lgetv %dc;
+        %tmp.8 = getv function %tmp.7 :getHeight;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        %tmp.10 = mul %tmp.6 %tmp.9;
+        lputv %pixelHeight2.2 %tmp.10;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 17 8 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_13_31_33_4_start" "C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_13_31_33_4_stop" ]
+        %pixelMin.3 = local;
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_begin:
+        %tmp.11 = lgetv %dc;
+        %tmp.12 = getv function %tmp.11 :getWidth;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        %tmp.14 = lgetv %dc;
+        %tmp.15 = getv function %tmp.14 :getHeight;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        %tmp.17 = lt %tmp.13 %tmp.16;
+        bf %tmp.17 @C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_true:
+        %tmp.18 = lgetv %dc;
+        %tmp.19 = getv function %tmp.18 :getHeight;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        push %tmp.20;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_false:
+        %tmp.21 = lgetv %dc;
+        %tmp.22 = getv function %tmp.21 :getHeight;
+        %tmp.23 = invoke %tmp.21 %tmp.22();
+        push %tmp.23;
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_end:
+        %tmp.24 = phi [%tmp.17 @C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_begin] [%tmp.20 @C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_true] [%tmp.23 @C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_false] [%tmp.24 @C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_17_23_17_86_end];
+        lputv %pixelMin.3 %tmp.24;
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_13_31_33_4_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 35; ]
+    function setDarkMode(isDarkMode) {
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_35_37_48_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 36 8 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_36_8_47_8_if_stmt:
+        %tmp.2 = lgetv %isDarkMode;
+        bf %tmp.2 @C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_36_8_47_8_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_36_8_47_8_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_36_23_41_8_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 37 12 ]
+        %tmp.4 = getv ? :Graphics;
+        %tmp.5 = getv %tmp.4 :COLOR_WHITE;
+        putv self :foregroundColor %tmp.5;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 38 12 ]
+        %tmp.7 = getv ? :Graphics;
+        %tmp.8 = getv %tmp.7 :COLOR_BLACK;
+        putv self :backgroundColor %tmp.8;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 39 12 ]
+        %tmp.10 = getv ? :Graphics;
+        %tmp.11 = getv %tmp.10 :COLOR_RED;
+        putv self :trackColor %tmp.11;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 40 12 ]
+        %tmp.13 = getv ? :Graphics;
+        %tmp.14 = getv %tmp.13 :COLOR_BLUE;
+        putv self :cursorColor %tmp.14;
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_36_23_41_8_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_36_8_47_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_36_8_47_8_if_false:
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_42_13_47_8_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 43 12 ]
+        %tmp.16 = getv ? :Graphics;
+        %tmp.17 = getv %tmp.16 :COLOR_BLACK;
+        putv self :foregroundColor %tmp.17;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 44 12 ]
+        %tmp.19 = getv ? :Graphics;
+        %tmp.20 = getv %tmp.19 :COLOR_WHITE;
+        putv self :backgroundColor %tmp.20;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 45 12 ]
+        %tmp.22 = getv ? :Graphics;
+        %tmp.23 = getv %tmp.22 :COLOR_RED;
+        putv self :trackColor %tmp.23;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc" 46 12 ]
+        %tmp.25 = getv ? :Graphics;
+        %tmp.26 = getv %tmp.25 :COLOR_DK_BLUE;
+        putv self :cursorColor %tmp.26;
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_42_13_47_8_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_36_8_47_8_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_GenericView_mc_35_37_48_4_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\GenericView.mc"; @line = 1; ]
+<init> {
+}

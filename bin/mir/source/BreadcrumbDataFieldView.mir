@@ -1,0 +1,250 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 1; ]
+import Toybox.Activity;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 2; ]
+import Toybox.Lang;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 3; ]
+import Toybox.Time;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 4; ]
+import Toybox.WatchUi;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 5; ]
+import Toybox.Communications;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 6; ]
+import Toybox.Graphics;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 8; ]
+class BreadcrumbDataFieldView extends WatchUi.DataField{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 8; ]
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 8; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 9; @position = 6; ]
+    var _breadcrumbView as BreadcrumbView;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 10; @position = 6; ]
+    var _breadcrumbContext as BreadcrumbContext;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 13; ]
+    function initialize(breadcrumbView as BreadcrumbView, breadcrumbContext as BreadcrumbContext) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_14_62_18_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 15 4 ]
+        %tmp.2 = lgetv %breadcrumbContext;
+        putv self :_breadcrumbContext %tmp.2;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 16 4 ]
+        %tmp.4 = lgetv %breadcrumbView;
+        putv self :_breadcrumbView %tmp.4;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 17 4 ]
+        %tmp.6 = getv ? :DataField;
+        %tmp.7 = getv function %tmp.6 :initialize;
+        invoke %tmp.6 %tmp.7();
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_14_62_18_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 20; ]
+    function onLayout(dc as Dc) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_20_38_50_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 21 4 ]
+        %tmp.2 = getv ? :System;
+        %tmp.3 = getv function %tmp.2 :println;
+        %tmp.4 = "onLayout";
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 22 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_20_38_50_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_20_38_50_2_stop" ]
+        %obscurityFlags.1 = local;
+        %tmp.6 = getv ? :DataField;
+        %tmp.7 = getv function %tmp.6 :getObscurityFlags;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %obscurityFlags.1 %tmp.8;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 25 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_25_4_47_4_if_stmt:
+        %tmp.10 = lgetv %obscurityFlags.1;
+        %tmp.12 = getv ? :OBSCURE_TOP;
+        %tmp.14 = getv ? :OBSCURE_LEFT;
+        %tmp.15 = bitor %tmp.12 %tmp.14;
+        %tmp.16 = eq %tmp.10 %tmp.15;
+        bf %tmp.16 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_25_4_47_4_if_false;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_25_4_47_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_25_56_29_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 26 6 ]
+        %tmp.18 = getv ? :View;
+        %tmp.19 = getv function %tmp.18 :setLayout;
+        %tmp.21 = getv ? :Rez;
+        %tmp.22 = getv %tmp.21 :Layouts;
+        %tmp.23 = getv function %tmp.22 :TopLeftLayout;
+        %tmp.25 = lgetv %dc;
+        %tmp.26 = invoke %tmp.22 %tmp.23(%tmp.25);
+        invoke %tmp.18 %tmp.19(%tmp.26);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_25_56_29_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_25_4_47_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_25_4_47_4_if_false:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 29 11 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_29_11_47_4_if_stmt:
+        %tmp.28 = lgetv %obscurityFlags.1;
+        %tmp.30 = getv ? :OBSCURE_TOP;
+        %tmp.32 = getv ? :OBSCURE_RIGHT;
+        %tmp.33 = bitor %tmp.30 %tmp.32;
+        %tmp.34 = eq %tmp.28 %tmp.33;
+        bf %tmp.34 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_29_11_47_4_if_false;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_29_11_47_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_29_64_33_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 30 6 ]
+        %tmp.36 = getv ? :View;
+        %tmp.37 = getv function %tmp.36 :setLayout;
+        %tmp.39 = getv ? :Rez;
+        %tmp.40 = getv %tmp.39 :Layouts;
+        %tmp.41 = getv function %tmp.40 :TopRightLayout;
+        %tmp.43 = lgetv %dc;
+        %tmp.44 = invoke %tmp.40 %tmp.41(%tmp.43);
+        invoke %tmp.36 %tmp.37(%tmp.44);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_29_64_33_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_29_11_47_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_29_11_47_4_if_false:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 33 11 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_33_11_47_4_if_stmt:
+        %tmp.46 = lgetv %obscurityFlags.1;
+        %tmp.48 = getv ? :OBSCURE_BOTTOM;
+        %tmp.50 = getv ? :OBSCURE_LEFT;
+        %tmp.51 = bitor %tmp.48 %tmp.50;
+        %tmp.52 = eq %tmp.46 %tmp.51;
+        bf %tmp.52 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_33_11_47_4_if_false;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_33_11_47_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_33_66_37_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 34 6 ]
+        %tmp.54 = getv ? :View;
+        %tmp.55 = getv function %tmp.54 :setLayout;
+        %tmp.57 = getv ? :Rez;
+        %tmp.58 = getv %tmp.57 :Layouts;
+        %tmp.59 = getv function %tmp.58 :BottomLeftLayout;
+        %tmp.61 = lgetv %dc;
+        %tmp.62 = invoke %tmp.58 %tmp.59(%tmp.61);
+        invoke %tmp.54 %tmp.55(%tmp.62);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_33_66_37_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_33_11_47_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_33_11_47_4_if_false:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 37 11 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_37_11_47_4_if_stmt:
+        %tmp.64 = lgetv %obscurityFlags.1;
+        %tmp.66 = getv ? :OBSCURE_BOTTOM;
+        %tmp.68 = getv ? :OBSCURE_RIGHT;
+        %tmp.69 = bitor %tmp.66 %tmp.68;
+        %tmp.70 = eq %tmp.64 %tmp.69;
+        bf %tmp.70 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_37_11_47_4_if_false;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_37_11_47_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_37_67_41_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 38 6 ]
+        %tmp.72 = getv ? :View;
+        %tmp.73 = getv function %tmp.72 :setLayout;
+        %tmp.75 = getv ? :Rez;
+        %tmp.76 = getv %tmp.75 :Layouts;
+        %tmp.77 = getv function %tmp.76 :BottomRightLayout;
+        %tmp.79 = lgetv %dc;
+        %tmp.80 = invoke %tmp.76 %tmp.77(%tmp.79);
+        invoke %tmp.72 %tmp.73(%tmp.80);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_37_67_41_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_37_11_47_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_37_11_47_4_if_false:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_41_11_47_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 42 6 ]
+        %tmp.82 = getv ? :View;
+        %tmp.83 = getv function %tmp.82 :setLayout;
+        %tmp.85 = getv ? :Rez;
+        %tmp.86 = getv %tmp.85 :Layouts;
+        %tmp.87 = getv function %tmp.86 :MainLayout;
+        %tmp.89 = lgetv %dc;
+        %tmp.90 = invoke %tmp.86 %tmp.87(%tmp.89);
+        invoke %tmp.82 %tmp.83(%tmp.90);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 43 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_41_11_47_4_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_41_11_47_4_stop" ]
+        %labelView.2 = local;
+        %tmp.92 = getv ? :View;
+        %tmp.93 = getv function %tmp.92 :findDrawableById;
+        %tmp.94 = "label";
+        %tmp.95 = invoke %tmp.92 %tmp.93(%tmp.94);
+        %tmp.96 = as %tmp.95 Text;
+        lputv %labelView.2 %tmp.96;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 44 6 ]
+        %tmp.97 = lgetv %labelView.2;
+        %tmp.98 = lgetv %labelView.2;
+        %tmp.99 = getv %tmp.98 :locY;
+        %tmp.100 = 16;
+        %tmp.101 = sub %tmp.99 %tmp.100;
+        putv %tmp.97 :locY %tmp.101;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 45 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_41_11_47_4_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_41_11_47_4_stop" ]
+        %valueView.3 = local;
+        %tmp.103 = getv ? :View;
+        %tmp.104 = getv function %tmp.103 :findDrawableById;
+        %tmp.105 = "value";
+        %tmp.106 = invoke %tmp.103 %tmp.104(%tmp.105);
+        %tmp.107 = as %tmp.106 Text;
+        lputv %valueView.3 %tmp.107;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 46 6 ]
+        %tmp.108 = lgetv %valueView.3;
+        %tmp.109 = lgetv %valueView.3;
+        %tmp.110 = getv %tmp.109 :locY;
+        %tmp.111 = 7;
+        %tmp.112 = add %tmp.110 %tmp.111;
+        putv %tmp.108 :locY %tmp.112;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_41_11_47_4_stop:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_37_11_47_4_if_end:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_33_11_47_4_if_end:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_29_11_47_4_if_end:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_25_4_47_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 49 4 ]
+        %tmp.114 = getv ? :View;
+        %tmp.115 = getv function %tmp.114 :findDrawableById;
+        %tmp.116 = "label";
+        %tmp.117 = invoke %tmp.114 %tmp.115(%tmp.116);
+        %tmp.118 = as %tmp.117 Text;
+        %tmp.119 = getv function %tmp.118 :setText;
+        %tmp.121 = getv ? :Rez;
+        %tmp.122 = getv %tmp.121 :Strings;
+        %tmp.123 = getv %tmp.122 :label;
+        invoke %tmp.118 %tmp.119(%tmp.123);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_20_38_50_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 52; ]
+    function compute(info as Activity.Info) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_52_50_55_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 53 4 ]
+        %tmp.2 = getv ? :System;
+        %tmp.3 = getv function %tmp.2 :println;
+        %tmp.4 = "computing data field";
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 54 4 ]
+        %tmp.6 = getv ? :_breadcrumbContext;
+        %tmp.7 = getv function %tmp.6 :onPosition;
+        %tmp.8 = lgetv %info;
+        %tmp.9 = getv %tmp.8 :altitude;
+        %tmp.10 = lgetv %info;
+        %tmp.11 = getv %tmp.10 :currentLocation;
+        invoke %tmp.6 %tmp.7(%tmp.9, %tmp.11);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_52_50_55_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 57; ]
+    function onUpdate(dc as Dc) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_57_38_60_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 58 4 ]
+        %tmp.2 = getv ? :System;
+        %tmp.3 = getv function %tmp.2 :println;
+        %tmp.4 = "onUpdate data field";
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 59 4 ]
+        %tmp.6 = getv ? :_breadcrumbView;
+        %tmp.7 = getv function %tmp.6 :displayBreadCrumb;
+        %tmp.9 = lgetv %dc;
+        invoke %tmp.6 %tmp.7(%tmp.9);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_57_38_60_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 62; ]
+    function onMessage() as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_62_31_62_66_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc" 62 33 ]
+        %tmp.2 = getv ? :System;
+        %tmp.3 = getv function %tmp.2 :println;
+        %tmp.4 = "got a message";
+        invoke %tmp.2 %tmp.3(%tmp.4);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldView_mc_62_31_62_66_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldView.mc"; @line = 1; ]
+<init> {
+}

@@ -1,0 +1,2558 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 1; ]
+using Toybox.WatchUi;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 3; ]
+class TrackViewCommon extends GenericView{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 3; ]
+    <init> {
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 9 8 ]
+        %tmp.1 = newa 25;
+        %tmp.2 = 12.0;
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = 20.0;
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        %tmp.8 = 30.0;
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 2 %tmp.8;
+        %tmp.11 = 50.0;
+        %tmp.12 = dup %tmp.10;
+        %tmp.13 = aputv %tmp.12 3 %tmp.11;
+        %tmp.14 = 80.0;
+        %tmp.15 = dup %tmp.13;
+        %tmp.16 = aputv %tmp.15 4 %tmp.14;
+        %tmp.17 = 120.0;
+        %tmp.18 = dup %tmp.16;
+        %tmp.19 = aputv %tmp.18 5 %tmp.17;
+        %tmp.20 = 200.0;
+        %tmp.21 = dup %tmp.19;
+        %tmp.22 = aputv %tmp.21 6 %tmp.20;
+        %tmp.23 = 300.0;
+        %tmp.24 = dup %tmp.22;
+        %tmp.25 = aputv %tmp.24 7 %tmp.23;
+        %tmp.26 = 500.0;
+        %tmp.27 = dup %tmp.25;
+        %tmp.28 = aputv %tmp.27 8 %tmp.26;
+        %tmp.29 = 800.0;
+        %tmp.30 = dup %tmp.28;
+        %tmp.31 = aputv %tmp.30 9 %tmp.29;
+        %tmp.32 = 1200.0;
+        %tmp.33 = dup %tmp.31;
+        %tmp.34 = aputv %tmp.33 10 %tmp.32;
+        %tmp.35 = 2000.0;
+        %tmp.36 = dup %tmp.34;
+        %tmp.37 = aputv %tmp.36 11 %tmp.35;
+        %tmp.38 = 3000.0;
+        %tmp.39 = dup %tmp.37;
+        %tmp.40 = aputv %tmp.39 12 %tmp.38;
+        %tmp.41 = 5000.0;
+        %tmp.42 = dup %tmp.40;
+        %tmp.43 = aputv %tmp.42 13 %tmp.41;
+        %tmp.44 = 8000.0;
+        %tmp.45 = dup %tmp.43;
+        %tmp.46 = aputv %tmp.45 14 %tmp.44;
+        %tmp.47 = 12000.0;
+        %tmp.48 = dup %tmp.46;
+        %tmp.49 = aputv %tmp.48 15 %tmp.47;
+        %tmp.50 = 20000.0;
+        %tmp.51 = dup %tmp.49;
+        %tmp.52 = aputv %tmp.51 16 %tmp.50;
+        %tmp.53 = 30000.0;
+        %tmp.54 = dup %tmp.52;
+        %tmp.55 = aputv %tmp.54 17 %tmp.53;
+        %tmp.56 = 50000.0;
+        %tmp.57 = dup %tmp.55;
+        %tmp.58 = aputv %tmp.57 18 %tmp.56;
+        %tmp.59 = 80000.0;
+        %tmp.60 = dup %tmp.58;
+        %tmp.61 = aputv %tmp.60 19 %tmp.59;
+        %tmp.62 = 120000.0;
+        %tmp.63 = dup %tmp.61;
+        %tmp.64 = aputv %tmp.63 20 %tmp.62;
+        %tmp.65 = 200000.0;
+        %tmp.66 = dup %tmp.64;
+        %tmp.67 = aputv %tmp.66 21 %tmp.65;
+        %tmp.68 = 300000.0;
+        %tmp.69 = dup %tmp.67;
+        %tmp.70 = aputv %tmp.69 22 %tmp.68;
+        %tmp.71 = 500000.0;
+        %tmp.72 = dup %tmp.70;
+        %tmp.73 = aputv %tmp.72 23 %tmp.71;
+        %tmp.74 = 800000.0;
+        %tmp.75 = dup %tmp.73;
+        %tmp.76 = aputv %tmp.75 24 %tmp.74;
+        putv self :SCALES %tmp.76;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 55 6 ]
+        %tmp.78 = getv ? :Graphics;
+        %tmp.79 = getv %tmp.78 :FONT_MEDIUM;
+        putv self :fontsize %tmp.79;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 57 6 ]
+        %tmp.81 = getv ? :Graphics;
+        %tmp.82 = getv %tmp.81 :FONT_LARGE;
+        putv self :fontsizeNumber %tmp.82;
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 3; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 4; @position = 8; ]
+    const EARTH_RADIUS = 6371000.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 6; @position = 6; ]
+    var zoomLevel = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 7; @position = 6; ]
+    var scaleFactor;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 8; @position = 6; ]
+    var refScale = 2.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 9; @position = 8; ]
+    const SCALES;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 18; @position = 6; ]
+    var pixelHeight;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 19; @position = 6; ]
+    var pixelWidth;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 20; @position = 6; ]
+    var pixelWidth2;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 21; @position = 6; ]
+    var pixelHeight2;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 22; @position = 6; ]
+    var pixelHeight3;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 23; @position = 6; ]
+    var pixelMin;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 25; @position = 6; ]
+    var xSCenter;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 26; @position = 6; ]
+    var ySCenter;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 28; @position = 6; ]
+    var x1Scale;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 29; @position = 6; ]
+    var y1Scale;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 30; @position = 6; ]
+    var x2Scale;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 31; @position = 6; ]
+    var y2Scale;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 32; @position = 6; ]
+    var xCompass;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 33; @position = 6; ]
+    var yCompass;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 34; @position = 6; ]
+    var sizeCompass;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 36; @position = 6; ]
+    var eleWidth;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 37; @position = 6; ]
+    var eleHeight;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 38; @position = 6; ]
+    var x1Ele;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 39; @position = 6; ]
+    var y1Ele;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 40; @position = 6; ]
+    var x2Ele;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 41; @position = 6; ]
+    var y2Ele;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 42; @position = 6; ]
+    var eleTrack;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 43; @position = 6; ]
+    var scaleEleX;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 44; @position = 6; ]
+    var scaleEleY;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 47; @position = 6; ]
+    var sinTransform = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 48; @position = 6; ]
+    var cosTransform = 1.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 49; @position = 6; ]
+    var xCenter = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 50; @position = 6; ]
+    var yCenter = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 52; @position = 6; ]
+    var sizeCursor;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 53; @position = 6; ]
+    var posCursor;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 54; @position = 6; ]
+    var isNewTrack = false;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 55; @position = 6; ]
+    var fontsize;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 56; @position = 6; ]
+    var fontHeight = 0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 57; @position = 6; ]
+    var fontsizeNumber;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 58; @position = 6; ]
+    var padding = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 60; @position = 6; ]
+    var showElevationPlot = false;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 64; ]
+    function initialize() as Void {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_64_24_68_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 65 4 ]
+        %tmp.2 = getv ? :GenericView;
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 66 4 ]
+        %tmp.5 = getv ? :Graphics;
+        %tmp.6 = getv %tmp.5 :FONT_XTINY;
+        putv self :fontsize %tmp.6;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 67 4 ]
+        %tmp.8 = getv ? :Graphics;
+        %tmp.9 = getv function %tmp.8 :getFontAscent;
+        %tmp.11 = getv ? :fontsize;
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        putv self :padding %tmp.12;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_64_24_68_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 70; ]
+    function drawScale(dc) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_70_25_79_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 71 4 ]
+        %tmp.1 = lgetv %dc;
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.4 = getv ? :foregroundColor;
+        %tmp.6 = getv ? :Graphics;
+        %tmp.7 = getv %tmp.6 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.7);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 72 4 ]
+        %tmp.8 = lgetv %dc;
+        %tmp.9 = getv function %tmp.8 :setPenWidth;
+        %tmp.10 = 2;
+        invoke %tmp.8 %tmp.9(%tmp.10);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 74 4 ]
+        %tmp.11 = lgetv %dc;
+        %tmp.12 = getv function %tmp.11 :drawLine;
+        %tmp.14 = getv ? :x1Scale;
+        %tmp.16 = getv ? :y1Scale;
+        %tmp.18 = getv ? :padding;
+        %tmp.19 = sub %tmp.16 %tmp.18;
+        %tmp.21 = getv ? :x1Scale;
+        %tmp.23 = getv ? :y2Scale;
+        %tmp.25 = getv ? :padding;
+        %tmp.26 = sub %tmp.23 %tmp.25;
+        invoke %tmp.11 %tmp.12(%tmp.14, %tmp.19, %tmp.21, %tmp.26);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 75 4 ]
+        %tmp.27 = lgetv %dc;
+        %tmp.28 = getv function %tmp.27 :drawLine;
+        %tmp.30 = getv ? :x1Scale;
+        %tmp.32 = getv ? :y2Scale;
+        %tmp.34 = getv ? :padding;
+        %tmp.35 = sub %tmp.32 %tmp.34;
+        %tmp.37 = getv ? :x2Scale;
+        %tmp.39 = getv ? :y2Scale;
+        %tmp.41 = getv ? :padding;
+        %tmp.42 = sub %tmp.39 %tmp.41;
+        invoke %tmp.27 %tmp.28(%tmp.30, %tmp.35, %tmp.37, %tmp.42);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 76 4 ]
+        %tmp.43 = lgetv %dc;
+        %tmp.44 = getv function %tmp.43 :drawLine;
+        %tmp.46 = getv ? :x2Scale;
+        %tmp.48 = getv ? :y2Scale;
+        %tmp.50 = getv ? :padding;
+        %tmp.51 = sub %tmp.48 %tmp.50;
+        %tmp.53 = getv ? :x2Scale;
+        %tmp.55 = getv ? :y1Scale;
+        %tmp.57 = getv ? :padding;
+        %tmp.58 = sub %tmp.55 %tmp.57;
+        invoke %tmp.43 %tmp.44(%tmp.46, %tmp.51, %tmp.53, %tmp.58);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 77 4 ]
+        %tmp.59 = lgetv %dc;
+        %tmp.60 = getv function %tmp.59 :drawText;
+        %tmp.62 = getv ? :pixelWidth2;
+        %tmp.64 = getv ? :y2Scale;
+        %tmp.66 = getv ? :fontHeight;
+        %tmp.67 = sub %tmp.64 %tmp.66;
+        %tmp.69 = getv ? :padding;
+        %tmp.70 = sub %tmp.67 %tmp.69;
+        %tmp.72 = getv ? :fontsize;
+        %tmp.73 = self;
+        %tmp.74 = getv function %tmp.73 :formattedScale;
+        %tmp.75 = invoke %tmp.73 %tmp.74();
+        %tmp.77 = getv ? :Graphics;
+        %tmp.78 = getv %tmp.77 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.59 %tmp.60(%tmp.62, %tmp.70, %tmp.72, %tmp.75, %tmp.78);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_70_25_79_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 81; ]
+    function drawTrack(dc, breadcrumbTrack as BreadcrumbTrack) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 83 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %x1.1 = local;
+        %tmp.1 = 0.0;
+        lputv %x1.1 %tmp.1;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 84 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %y1.2 = local;
+        %tmp.2 = 0.0;
+        lputv %y1.2 %tmp.2;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 85 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %x2.3 = local;
+        %tmp.3 = 0.0;
+        lputv %x2.3 %tmp.3;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 86 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %y2.4 = local;
+        %tmp.4 = 0.0;
+        lputv %y2.4 %tmp.4;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 87 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %xr.5 = local;
+        %tmp.5 = 0.0;
+        lputv %xr.5 %tmp.5;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 88 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %yr.6 = local;
+        %tmp.6 = 0.0;
+        lputv %yr.6 %tmp.6;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 92 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_xSCenter.7 = local;
+        %tmp.8 = getv ? :xSCenter;
+        lputv %_xSCenter.7 %tmp.8;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 93 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_ySCenter.8 = local;
+        %tmp.10 = getv ? :ySCenter;
+        lputv %_ySCenter.8 %tmp.10;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 94 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_xCenter.9 = local;
+        %tmp.12 = getv ? :xCenter;
+        lputv %_xCenter.9 %tmp.12;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 95 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_yCenter.10 = local;
+        %tmp.14 = getv ? :yCenter;
+        lputv %_yCenter.10 %tmp.14;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 96 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_scaleFactor.11 = local;
+        %tmp.16 = getv ? :scaleFactor;
+        lputv %_scaleFactor.11 %tmp.16;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 97 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_cosTransform.12 = local;
+        %tmp.18 = getv ? :cosTransform;
+        lputv %_cosTransform.12 %tmp.18;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 98 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_sinTransform.13 = local;
+        %tmp.20 = getv ? :sinTransform;
+        lputv %_sinTransform.13 %tmp.20;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 100 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_xArray.14 = local;
+        %tmp.21 = null;
+        lputv %_xArray.14 %tmp.21;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 101 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_yArray.15 = local;
+        %tmp.22 = null;
+        lputv %_yArray.15 %tmp.22;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 102 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop" ]
+        %_nPoints.16 = local;
+        %tmp.23 = null;
+        lputv %_nPoints.16 %tmp.23;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 104 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_104_4_126_4_if_stmt:
+        %tmp.24 = lgetv %breadcrumbTrack;
+        %tmp.25 = getv %tmp.24 :hasTrackData;
+        bf %tmp.25 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_104_4_126_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_104_4_126_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_104_38_126_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 105 6 ]
+        %tmp.26 = lgetv %dc;
+        %tmp.27 = getv function %tmp.26 :setColor;
+        %tmp.29 = getv ? :trackColor;
+        %tmp.31 = getv ? :Graphics;
+        %tmp.32 = getv %tmp.31 :COLOR_TRANSPARENT;
+        invoke %tmp.26 %tmp.27(%tmp.29, %tmp.32);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 106 6 ]
+        %tmp.33 = lgetv %dc;
+        %tmp.34 = getv function %tmp.33 :setPenWidth;
+        %tmp.35 = 2;
+        invoke %tmp.33 %tmp.34(%tmp.35);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 108 6 ]
+        %tmp.36 = lgetv %breadcrumbTrack;
+        %tmp.37 = getv %tmp.36 :xArray;
+        lputv %_xArray.14 %tmp.37;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 109 6 ]
+        %tmp.38 = lgetv %breadcrumbTrack;
+        %tmp.39 = getv %tmp.38 :yArray;
+        lputv %_yArray.15 %tmp.39;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 110 6 ]
+        %tmp.40 = lgetv %breadcrumbTrack;
+        %tmp.41 = getv %tmp.40 :nPoints;
+        lputv %_nPoints.16 %tmp.41;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 112 6 ]
+        for @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_test @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_incr @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_init:
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_begin" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_end" ]
+        %i.17 = local;
+        %tmp.42 = 0;
+        lputv %i.17 %tmp.42;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_test:
+        %tmp.44 = lgetv %i.17;
+        %tmp.46 = lgetv %_nPoints.16;
+        %tmp.47 = lt %tmp.44 %tmp.46;
+        bf %tmp.47 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_begin:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_41_125_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 113 8 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_113_8_116_8_if_stmt:
+        %tmp.49 = lgetv %i.17;
+        %tmp.50 = 0;
+        %tmp.51 = gt %tmp.49 %tmp.50;
+        bf %tmp.51 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_113_8_116_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_113_8_116_8_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_113_19_116_8_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 114 10 ]
+        %tmp.53 = lgetv %x2.3;
+        lputv %x1.1 %tmp.53;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 115 10 ]
+        %tmp.55 = lgetv %y2.4;
+        lputv %y1.2 %tmp.55;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_113_19_116_8_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_113_8_116_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_113_8_116_8_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 117 8 ]
+        %tmp.57 = lgetv %_scaleFactor.11;
+        %tmp.59 = lgetv %_xArray.14;
+        %tmp.61 = lgetv %i.17;
+        %tmp.62 = agetv %tmp.59 %tmp.61;
+        %tmp.64 = lgetv %_xCenter.9;
+        %tmp.65 = sub %tmp.62 %tmp.64;
+        %tmp.66 = mul %tmp.57 %tmp.65;
+        lputv %xr.5 %tmp.66;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 118 8 ]
+        %tmp.68 = lgetv %_scaleFactor.11;
+        %tmp.70 = lgetv %_yArray.15;
+        %tmp.72 = lgetv %i.17;
+        %tmp.73 = agetv %tmp.70 %tmp.72;
+        %tmp.75 = lgetv %_yCenter.10;
+        %tmp.76 = sub %tmp.73 %tmp.75;
+        %tmp.77 = mul %tmp.68 %tmp.76;
+        lputv %yr.6 %tmp.77;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 119 8 ]
+        %tmp.79 = lgetv %_xSCenter.7;
+        %tmp.81 = lgetv %xr.5;
+        %tmp.83 = lgetv %_cosTransform.12;
+        %tmp.84 = mul %tmp.81 %tmp.83;
+        %tmp.85 = add %tmp.79 %tmp.84;
+        %tmp.87 = lgetv %yr.6;
+        %tmp.89 = lgetv %_sinTransform.13;
+        %tmp.90 = mul %tmp.87 %tmp.89;
+        %tmp.91 = sub %tmp.85 %tmp.90;
+        lputv %x2.3 %tmp.91;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 120 8 ]
+        %tmp.93 = lgetv %_ySCenter.8;
+        %tmp.95 = lgetv %xr.5;
+        %tmp.97 = lgetv %_sinTransform.13;
+        %tmp.98 = mul %tmp.95 %tmp.97;
+        %tmp.99 = sub %tmp.93 %tmp.98;
+        %tmp.101 = lgetv %yr.6;
+        %tmp.103 = lgetv %_cosTransform.12;
+        %tmp.104 = mul %tmp.101 %tmp.103;
+        %tmp.105 = sub %tmp.99 %tmp.104;
+        lputv %y2.4 %tmp.105;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 122 8 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_122_8_124_8_if_stmt:
+        %tmp.107 = lgetv %i.17;
+        %tmp.108 = 0;
+        %tmp.109 = gt %tmp.107 %tmp.108;
+        bf %tmp.109 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_122_8_124_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_122_8_124_8_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_122_19_124_8_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 123 10 ]
+        %tmp.110 = lgetv %dc;
+        %tmp.111 = getv function %tmp.110 :drawLine;
+        %tmp.113 = lgetv %x1.1;
+        %tmp.115 = lgetv %y1.2;
+        %tmp.117 = lgetv %x2.3;
+        %tmp.119 = lgetv %y2.4;
+        invoke %tmp.110 %tmp.111(%tmp.113, %tmp.115, %tmp.117, %tmp.119);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_122_19_124_8_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_122_8_124_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_122_8_124_8_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_41_125_6_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_incr:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 112 ]
+        %tmp.122 = lgetv %i.17;
+        %tmp.123 = add %tmp.122 1;
+        lputv %i.17 %tmp.123;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_test;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_112_6_125_6_for_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_104_38_126_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_104_4_126_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_104_4_126_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 129 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_129_4_142_4_if_stmt:
+        %tmp.124 = lgetv %breadcrumbTrack;
+        %tmp.125 = getv %tmp.124 :pos_nelements;
+        %tmp.126 = 0;
+        %tmp.127 = gt %tmp.125 %tmp.126;
+        bf %tmp.127 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_129_4_142_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_129_4_142_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_129_43_142_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 130 6 ]
+        %tmp.128 = lgetv %dc;
+        %tmp.129 = getv function %tmp.128 :setColor;
+        %tmp.131 = getv ? :Graphics;
+        %tmp.132 = getv %tmp.131 :COLOR_DK_GREEN;
+        %tmp.134 = getv ? :Graphics;
+        %tmp.135 = getv %tmp.134 :COLOR_TRANSPARENT;
+        invoke %tmp.128 %tmp.129(%tmp.132, %tmp.135);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 132 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_129_43_142_4_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_129_43_142_4_stop" ]
+        %_xya.18 = local;
+        %tmp.136 = lgetv %breadcrumbTrack;
+        %tmp.137 = getv %tmp.136 :bxy;
+        lputv %_xya.18 %tmp.137;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 133 6 ]
+        %tmp.138 = lgetv %breadcrumbTrack;
+        %tmp.139 = getv %tmp.138 :pos_nelements;
+        lputv %_nPoints.16 %tmp.139;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 134 6 ]
+        for @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_test @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_incr @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_init:
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_begin" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_end" ]
+        %i.19 = local;
+        %tmp.140 = 0;
+        lputv %i.19 %tmp.140;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_test:
+        %tmp.142 = lgetv %i.19;
+        %tmp.144 = lgetv %_nPoints.16;
+        %tmp.145 = lt %tmp.142 %tmp.144;
+        bf %tmp.145 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_begin:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_44_141_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 135 8 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_44_141_6_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_44_141_6_stop" ]
+        %j.20 = local;
+        %tmp.146 = lgetv %breadcrumbTrack;
+        %tmp.147 = getv %tmp.146 :pos_start_index;
+        %tmp.149 = lgetv %i.19;
+        %tmp.150 = add %tmp.147 %tmp.149;
+        %tmp.151 = lgetv %breadcrumbTrack;
+        %tmp.152 = getv %tmp.151 :breadCrumbNumber;
+        %tmp.153 = mod %tmp.150 %tmp.152;
+        lputv %j.20 %tmp.153;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 137 8 ]
+        %tmp.155 = lgetv %_scaleFactor.11;
+        %tmp.157 = lgetv %_xya.18;
+        %tmp.158 = 2;
+        %tmp.160 = lgetv %j.20;
+        %tmp.161 = mul %tmp.158 %tmp.160;
+        %tmp.162 = agetv %tmp.157 %tmp.161;
+        %tmp.164 = lgetv %_xCenter.9;
+        %tmp.165 = sub %tmp.162 %tmp.164;
+        %tmp.166 = mul %tmp.155 %tmp.165;
+        lputv %xr.5 %tmp.166;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 138 8 ]
+        %tmp.168 = lgetv %_scaleFactor.11;
+        %tmp.170 = lgetv %_xya.18;
+        %tmp.171 = 2;
+        %tmp.173 = lgetv %j.20;
+        %tmp.174 = mul %tmp.171 %tmp.173;
+        %tmp.175 = 1;
+        %tmp.176 = add %tmp.174 %tmp.175;
+        %tmp.177 = agetv %tmp.170 %tmp.176;
+        %tmp.179 = lgetv %_yCenter.10;
+        %tmp.180 = sub %tmp.177 %tmp.179;
+        %tmp.181 = mul %tmp.168 %tmp.180;
+        lputv %yr.6 %tmp.181;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 139 8 ]
+        %tmp.182 = lgetv %dc;
+        %tmp.183 = getv function %tmp.182 :fillCircle;
+        %tmp.185 = lgetv %_xSCenter.7;
+        %tmp.187 = lgetv %xr.5;
+        %tmp.189 = lgetv %_cosTransform.12;
+        %tmp.190 = mul %tmp.187 %tmp.189;
+        %tmp.191 = add %tmp.185 %tmp.190;
+        %tmp.193 = lgetv %yr.6;
+        %tmp.195 = lgetv %_sinTransform.13;
+        %tmp.196 = mul %tmp.193 %tmp.195;
+        %tmp.197 = sub %tmp.191 %tmp.196;
+        %tmp.199 = lgetv %_ySCenter.8;
+        %tmp.201 = lgetv %xr.5;
+        %tmp.203 = lgetv %_sinTransform.13;
+        %tmp.204 = mul %tmp.201 %tmp.203;
+        %tmp.205 = sub %tmp.199 %tmp.204;
+        %tmp.207 = lgetv %yr.6;
+        %tmp.209 = lgetv %_cosTransform.12;
+        %tmp.210 = mul %tmp.207 %tmp.209;
+        %tmp.211 = sub %tmp.205 %tmp.210;
+        %tmp.212 = 4;
+        invoke %tmp.182 %tmp.183(%tmp.197, %tmp.211, %tmp.212);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_44_141_6_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_incr:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 134 ]
+        %tmp.213 = lgetv %i.19;
+        %tmp.214 = 1;
+        %tmp.215 = add %tmp.213 %tmp.214;
+        lputv %i.19 %tmp.215;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_test;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_134_6_141_6_for_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_129_43_142_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_129_4_142_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_129_4_142_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 143 4 ]
+        %tmp.216 = null;
+        lputv %_xArray.14 %tmp.216;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 144 4 ]
+        %tmp.217 = null;
+        lputv %_yArray.15 %tmp.217;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_81_61_146_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 148; ]
+    function drawProfile(dc, breadcrumbTrack as BreadcrumbTrack) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 150 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %x1.1 = local;
+        %tmp.1 = 0.0;
+        lputv %x1.1 %tmp.1;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 151 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %y1.2 = local;
+        %tmp.2 = 0.0;
+        lputv %y1.2 %tmp.2;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 152 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %x2.3 = local;
+        %tmp.3 = 0.0;
+        lputv %x2.3 %tmp.3;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 153 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %y2.4 = local;
+        %tmp.4 = 0.0;
+        lputv %y2.4 %tmp.4;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 155 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %d2.5 = local;
+        %tmp.5 = lgetv %breadcrumbTrack;
+        %tmp.6 = getv %tmp.5 :EARTH_RADIUS;
+        %tmp.7 = lgetv %breadcrumbTrack;
+        %tmp.8 = getv %tmp.7 :EARTH_RADIUS;
+        %tmp.9 = mul %tmp.6 %tmp.8;
+        lputv %d2.5 %tmp.9;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 156 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %nearestPointIndex.6 = local;
+        %tmp.10 = -1;
+        lputv %nearestPointIndex.6 %tmp.10;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 157 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %nearestPointLambda.7 = local;
+        %tmp.11 = 0.0;
+        lputv %nearestPointLambda.7 %tmp.11;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 158 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %findNearestPoint.8 = local;
+        %tmp.12 = lgetv %breadcrumbTrack;
+        %tmp.13 = getv %tmp.12 :onPositionCalled;
+        lputv %findNearestPoint.8 %tmp.13;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 159 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %dx.9 = local;
+        %tmp.14 = 0.0;
+        lputv %dx.9 %tmp.14;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 160 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %dy.10 = local;
+        %tmp.15 = 0.0;
+        lputv %dy.10 %tmp.15;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 161 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %xt1.11 = local;
+        %tmp.16 = 0.0;
+        lputv %xt1.11 %tmp.16;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 162 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %yt1.12 = local;
+        %tmp.17 = 0.0;
+        lputv %yt1.12 %tmp.17;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 163 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %xt2.13 = local;
+        %tmp.18 = 0.0;
+        lputv %xt2.13 %tmp.18;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 164 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %yt2.14 = local;
+        %tmp.19 = 0.0;
+        lputv %yt2.14 %tmp.19;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 165 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %xs.15 = local;
+        %tmp.20 = 0.0;
+        lputv %xs.15 %tmp.20;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 166 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %ys.16 = local;
+        %tmp.21 = 0.0;
+        lputv %ys.16 %tmp.21;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 167 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %ds.17 = local;
+        %tmp.22 = 0.0;
+        lputv %ds.17 %tmp.22;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 168 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %ds2.18 = local;
+        %tmp.23 = 0.0;
+        lputv %ds2.18 %tmp.23;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 169 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %dss.19 = local;
+        %tmp.24 = 0.0;
+        lputv %dss.19 %tmp.24;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 170 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %dssn.20 = local;
+        %tmp.25 = 0.0;
+        lputv %dssn.20 %tmp.25;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 171 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %s.21 = local;
+        %tmp.26 = 0.0;
+        lputv %s.21 %tmp.26;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 175 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_eleWidth.22 = local;
+        %tmp.28 = getv ? :eleWidth;
+        lputv %_eleWidth.22 %tmp.28;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 176 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_eleHeight.23 = local;
+        %tmp.30 = getv ? :eleHeight;
+        lputv %_eleHeight.23 %tmp.30;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 177 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_scaleEleX.24 = local;
+        %tmp.32 = getv ? :scaleEleX;
+        lputv %_scaleEleX.24 %tmp.32;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 178 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_scaleEleY.25 = local;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_begin:
+        %tmp.33 = lgetv %breadcrumbTrack;
+        %tmp.34 = getv %tmp.33 :eleMaxTrack;
+        %tmp.35 = lgetv %breadcrumbTrack;
+        %tmp.36 = getv %tmp.35 :eleMinTrack;
+        %tmp.37 = sub %tmp.34 %tmp.36;
+        %tmp.38 = 1.0;
+        %tmp.39 = gt %tmp.37 %tmp.38;
+        bf %tmp.39 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_true:
+        %tmp.40 = 1.0;
+        %tmp.42 = getv ? :eleHeight;
+        %tmp.43 = mul %tmp.40 %tmp.42;
+        %tmp.44 = lgetv %breadcrumbTrack;
+        %tmp.45 = getv %tmp.44 :eleMaxTrack;
+        %tmp.46 = lgetv %breadcrumbTrack;
+        %tmp.47 = getv %tmp.46 :eleMinTrack;
+        %tmp.48 = sub %tmp.45 %tmp.47;
+        %tmp.49 = div %tmp.43 %tmp.48;
+        push %tmp.49;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_false:
+        %tmp.50 = 0.0;
+        push %tmp.50;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_end:
+        %tmp.51 = phi [%tmp.39 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_begin] [%tmp.49 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_true] [%tmp.50 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_false] [%tmp.51 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_179_8_182_14_end];
+        lputv %_scaleEleY.25 %tmp.51;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 183 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_eleMinTrack.26 = local;
+        %tmp.52 = lgetv %breadcrumbTrack;
+        %tmp.53 = getv %tmp.52 :eleMinTrack;
+        lputv %_eleMinTrack.26 %tmp.53;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 184 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_x1Ele.27 = local;
+        %tmp.55 = getv ? :x1Ele;
+        lputv %_x1Ele.27 %tmp.55;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 185 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_y1Ele.28 = local;
+        %tmp.57 = getv ? :y1Ele;
+        lputv %_y1Ele.28 %tmp.57;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 186 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_x2Ele.29 = local;
+        %tmp.59 = getv ? :x2Ele;
+        lputv %_x2Ele.29 %tmp.59;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 187 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_y2Ele.30 = local;
+        %tmp.61 = getv ? :y2Ele;
+        %tmp.63 = lgetv %_scaleEleY.25;
+        %tmp.65 = lgetv %_eleMinTrack.26;
+        %tmp.66 = mul %tmp.63 %tmp.65;
+        %tmp.67 = add %tmp.61 %tmp.66;
+        lputv %_y2Ele.30 %tmp.67;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 189 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_xp.31 = local;
+        %tmp.68 = lgetv %breadcrumbTrack;
+        %tmp.69 = getv %tmp.68 :xPos;
+        lputv %_xp.31 %tmp.69;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 190 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_yp.32 = local;
+        %tmp.70 = lgetv %breadcrumbTrack;
+        %tmp.71 = getv %tmp.70 :yPos;
+        lputv %_yp.32 %tmp.71;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 192 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_xArray.33 = local;
+        %tmp.72 = null;
+        lputv %_xArray.33 %tmp.72;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 193 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_yArray.34 = local;
+        %tmp.73 = null;
+        lputv %_yArray.34 %tmp.73;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 194 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_eleArray.35 = local;
+        %tmp.74 = null;
+        lputv %_eleArray.35 %tmp.74;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 195 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %_nPoints.36 = local;
+        %tmp.75 = 0;
+        lputv %_nPoints.36 %tmp.75;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 197 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_197_4_260_4_if_stmt:
+        %tmp.76 = lgetv %breadcrumbTrack;
+        %tmp.77 = getv %tmp.76 :hasElevationData;
+        bf %tmp.77 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_197_4_260_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_197_4_260_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_197_42_260_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 198 6 ]
+        %tmp.78 = lgetv %dc;
+        %tmp.79 = getv function %tmp.78 :setColor;
+        %tmp.81 = getv ? :trackColor;
+        %tmp.83 = getv ? :Graphics;
+        %tmp.84 = getv %tmp.83 :COLOR_TRANSPARENT;
+        invoke %tmp.78 %tmp.79(%tmp.81, %tmp.84);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 199 6 ]
+        %tmp.85 = lgetv %dc;
+        %tmp.86 = getv function %tmp.85 :setPenWidth;
+        %tmp.87 = 2;
+        invoke %tmp.85 %tmp.86(%tmp.87);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 200 6 ]
+        %tmp.88 = lgetv %breadcrumbTrack;
+        %tmp.89 = getv %tmp.88 :xArray;
+        lputv %_xArray.33 %tmp.89;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 201 6 ]
+        %tmp.90 = lgetv %breadcrumbTrack;
+        %tmp.91 = getv %tmp.90 :yArray;
+        lputv %_yArray.34 %tmp.91;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 202 6 ]
+        %tmp.92 = lgetv %breadcrumbTrack;
+        %tmp.93 = getv %tmp.92 :eleArray;
+        lputv %_eleArray.35 %tmp.93;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 203 6 ]
+        %tmp.94 = lgetv %breadcrumbTrack;
+        %tmp.95 = getv %tmp.94 :nPoints;
+        lputv %_nPoints.36 %tmp.95;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 205 6 ]
+        for @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_test @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_incr @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_init:
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_begin" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_end" ]
+        %i.37 = local;
+        %tmp.96 = 0;
+        lputv %i.37 %tmp.96;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_test:
+        %tmp.98 = lgetv %i.37;
+        %tmp.100 = lgetv %_nPoints.36;
+        %tmp.101 = lt %tmp.98 %tmp.100;
+        bf %tmp.101 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_begin:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_41_259_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 206 8 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_206_8_211_8_if_stmt:
+        %tmp.103 = lgetv %i.37;
+        %tmp.104 = 0;
+        %tmp.105 = gt %tmp.103 %tmp.104;
+        bf %tmp.105 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_206_8_211_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_206_8_211_8_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_206_19_211_8_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 207 10 ]
+        %tmp.107 = lgetv %x2.3;
+        lputv %x1.1 %tmp.107;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 208 10 ]
+        %tmp.109 = lgetv %y2.4;
+        lputv %y1.2 %tmp.109;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 209 10 ]
+        %tmp.111 = lgetv %xt2.13;
+        lputv %xt1.11 %tmp.111;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 210 10 ]
+        %tmp.113 = lgetv %yt2.14;
+        lputv %yt1.12 %tmp.113;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_206_19_211_8_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_206_8_211_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_206_8_211_8_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 213 8 ]
+        %tmp.115 = lgetv %_xArray.33;
+        %tmp.117 = lgetv %i.37;
+        %tmp.118 = agetv %tmp.115 %tmp.117;
+        lputv %xt2.13 %tmp.118;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 214 8 ]
+        %tmp.120 = lgetv %_yArray.34;
+        %tmp.122 = lgetv %i.37;
+        %tmp.123 = agetv %tmp.120 %tmp.122;
+        lputv %yt2.14 %tmp.123;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 219 8 ]
+        %tmp.125 = lgetv %_x1Ele.27;
+        %tmp.127 = lgetv %_scaleEleX.24;
+        %tmp.129 = lgetv %dss.19;
+        %tmp.130 = mul %tmp.127 %tmp.129;
+        %tmp.131 = add %tmp.125 %tmp.130;
+        lputv %x2.3 %tmp.131;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 220 8 ]
+        %tmp.133 = lgetv %_y2Ele.30;
+        %tmp.135 = lgetv %_scaleEleY.25;
+        %tmp.137 = lgetv %_eleArray.35;
+        %tmp.139 = lgetv %i.37;
+        %tmp.140 = agetv %tmp.137 %tmp.139;
+        %tmp.141 = mul %tmp.135 %tmp.140;
+        %tmp.142 = sub %tmp.133 %tmp.141;
+        lputv %y2.4 %tmp.142;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 222 8 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_222_8_258_8_if_stmt:
+        %tmp.144 = lgetv %i.37;
+        %tmp.145 = 0;
+        %tmp.146 = gt %tmp.144 %tmp.145;
+        bf %tmp.146 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_222_8_258_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_222_8_258_8_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_222_19_258_8_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 223 10 ]
+        %tmp.147 = lgetv %dc;
+        %tmp.148 = getv function %tmp.147 :drawLine;
+        %tmp.150 = lgetv %x1.1;
+        %tmp.152 = lgetv %y1.2;
+        %tmp.154 = lgetv %x2.3;
+        %tmp.156 = lgetv %y2.4;
+        invoke %tmp.147 %tmp.148(%tmp.150, %tmp.152, %tmp.154, %tmp.156);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 224 10 ]
+        %tmp.158 = lgetv %xt2.13;
+        %tmp.160 = lgetv %xt1.11;
+        %tmp.161 = sub %tmp.158 %tmp.160;
+        lputv %xs.15 %tmp.161;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 225 10 ]
+        %tmp.163 = lgetv %yt2.14;
+        %tmp.165 = lgetv %yt1.12;
+        %tmp.166 = sub %tmp.163 %tmp.165;
+        lputv %ys.16 %tmp.166;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 226 10 ]
+        %tmp.168 = lgetv %xs.15;
+        %tmp.170 = lgetv %xs.15;
+        %tmp.171 = mul %tmp.168 %tmp.170;
+        %tmp.173 = lgetv %ys.16;
+        %tmp.175 = lgetv %ys.16;
+        %tmp.176 = mul %tmp.173 %tmp.175;
+        %tmp.177 = add %tmp.171 %tmp.176;
+        lputv %ds2.18 %tmp.177;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 228 10 ]
+        %tmp.179 = getv ? :Math;
+        %tmp.180 = getv function %tmp.179 :sqrt;
+        %tmp.182 = lgetv %ds2.18;
+        %tmp.183 = invoke %tmp.179 %tmp.180(%tmp.182);
+        lputv %ds.17 %tmp.183;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 230 10 ]
+        %tmp.184 = lgetv %dss.19;
+        %tmp.186 = lgetv %ds.17;
+        %tmp.187 = add %tmp.184 %tmp.186;
+        lputv %dss.19 %tmp.187;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 231 10 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_231_10_257_10_if_stmt:
+        %tmp.189 = lgetv %findNearestPoint.8;
+        bf %tmp.189 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_231_10_257_10_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_231_10_257_10_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_231_32_257_10_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 232 12 ]
+        %tmp.191 = lgetv %xs.15;
+        %tmp.193 = lgetv %_xp.31;
+        %tmp.195 = lgetv %xt1.11;
+        %tmp.196 = sub %tmp.193 %tmp.195;
+        %tmp.197 = mul %tmp.191 %tmp.196;
+        %tmp.199 = lgetv %ys.16;
+        %tmp.201 = lgetv %_yp.32;
+        %tmp.203 = lgetv %yt1.12;
+        %tmp.204 = sub %tmp.201 %tmp.203;
+        %tmp.205 = mul %tmp.199 %tmp.204;
+        %tmp.206 = add %tmp.197 %tmp.205;
+        lputv %s.21 %tmp.206;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 233 12 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_12_243_12_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_16_233_34_begin:
+        %tmp.208 = lgetv %s.21;
+        %tmp.209 = 0.0;
+        %tmp.210 = lte %tmp.208 %tmp.209;
+        bt %tmp.210 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_12_243_12_if_true;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_28_233_34_false:
+        %tmp.212 = lgetv %ds2.18;
+        %tmp.213 = 1.0e-12;
+        %tmp.214 = lt %tmp.212 %tmp.213;
+        push %tmp.214;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_28_233_34_end:
+        %tmp.215 = phi [%tmp.210 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_16_233_34_begin] [%tmp.214 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_28_233_34_false] [%tmp.215 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_28_233_34_end];
+        bf %tmp.215 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_12_243_12_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_12_243_12_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_43_235_12_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 234 14 ]
+        %tmp.216 = 0.0;
+        lputv %s.21 %tmp.216;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_43_235_12_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_12_243_12_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_12_243_12_if_false:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 235 19 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_235_19_243_12_if_stmt:
+        %tmp.218 = lgetv %s.21;
+        %tmp.220 = lgetv %ds2.18;
+        %tmp.221 = gte %tmp.218 %tmp.220;
+        bf %tmp.221 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_235_19_243_12_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_235_19_243_12_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_235_33_241_12_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 236 14 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_236_14_240_14_if_stmt:
+        %tmp.223 = lgetv %i.37;
+        %tmp.225 = lgetv %_nPoints.36;
+        %tmp.226 = 1;
+        %tmp.227 = sub %tmp.225 %tmp.226;
+        %tmp.228 = eq %tmp.223 %tmp.227;
+        bf %tmp.228 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_236_14_240_14_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_236_14_240_14_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_236_37_238_14_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 237 16 ]
+        %tmp.229 = 1.0;
+        lputv %s.21 %tmp.229;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_236_37_238_14_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_236_14_240_14_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_236_14_240_14_if_false:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_238_21_240_14_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 239 16 ]
+        goto break @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_incr;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_238_21_240_14_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_236_14_240_14_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_235_33_241_12_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_235_19_243_12_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_235_19_243_12_if_false:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_241_19_243_12_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 242 14 ]
+        %tmp.230 = lgetv %s.21;
+        %tmp.232 = lgetv %ds2.18;
+        %tmp.233 = div %tmp.230 %tmp.232;
+        lputv %s.21 %tmp.233;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_241_19_243_12_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_235_19_243_12_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_233_12_243_12_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 246 12 ]
+        %tmp.235 = lgetv %_xp.31;
+        %tmp.237 = lgetv %xt1.11;
+        %tmp.239 = lgetv %s.21;
+        %tmp.241 = lgetv %xs.15;
+        %tmp.242 = mul %tmp.239 %tmp.241;
+        %tmp.243 = add %tmp.237 %tmp.242;
+        %tmp.244 = sub %tmp.235 %tmp.243;
+        lputv %dx.9 %tmp.244;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 247 12 ]
+        %tmp.246 = lgetv %_yp.32;
+        %tmp.248 = lgetv %yt1.12;
+        %tmp.250 = lgetv %s.21;
+        %tmp.252 = lgetv %ys.16;
+        %tmp.253 = mul %tmp.250 %tmp.252;
+        %tmp.254 = add %tmp.248 %tmp.253;
+        %tmp.255 = sub %tmp.246 %tmp.254;
+        lputv %dy.10 %tmp.255;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 248 12 ]
+        %tmp.257 = lgetv %dx.9;
+        %tmp.259 = lgetv %dx.9;
+        %tmp.260 = mul %tmp.257 %tmp.259;
+        %tmp.262 = lgetv %dy.10;
+        %tmp.264 = lgetv %dy.10;
+        %tmp.265 = mul %tmp.262 %tmp.264;
+        %tmp.266 = add %tmp.260 %tmp.265;
+        lputv %ds2.18 %tmp.266;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 250 12 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_250_12_256_12_if_stmt:
+        %tmp.268 = lgetv %ds2.18;
+        %tmp.270 = lgetv %d2.5;
+        %tmp.271 = lt %tmp.268 %tmp.270;
+        bf %tmp.271 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_250_12_256_12_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_250_12_256_12_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_250_26_256_12_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 251 14 ]
+        %tmp.273 = lgetv %i.37;
+        %tmp.274 = 1;
+        %tmp.275 = sub %tmp.273 %tmp.274;
+        lputv %nearestPointIndex.6 %tmp.275;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 252 14 ]
+        %tmp.277 = lgetv %s.21;
+        lputv %nearestPointLambda.7 %tmp.277;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 254 14 ]
+        %tmp.279 = lgetv %dss.19;
+        %tmp.281 = lgetv %s.21;
+        %tmp.283 = lgetv %ds.17;
+        %tmp.284 = mul %tmp.281 %tmp.283;
+        %tmp.285 = add %tmp.279 %tmp.284;
+        lputv %dssn.20 %tmp.285;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 255 14 ]
+        %tmp.287 = lgetv %ds2.18;
+        lputv %d2.5 %tmp.287;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_250_26_256_12_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_250_12_256_12_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_250_12_256_12_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_231_32_257_10_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_231_10_257_10_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_231_10_257_10_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_222_19_258_8_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_222_8_258_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_222_8_258_8_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_41_259_6_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_incr:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 205 ]
+        %tmp.290 = lgetv %i.37;
+        %tmp.291 = add %tmp.290 1;
+        lputv %i.37 %tmp.291;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_test;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_205_6_259_6_for_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_197_42_260_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_197_4_260_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_197_4_260_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 262 4 ]
+        %tmp.293 = getv ? :y2Ele;
+        lputv %_y2Ele.30 %tmp.293;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 263 4 ]
+        %tmp.294 = lgetv %dc;
+        %tmp.295 = getv function %tmp.294 :setColor;
+        %tmp.297 = getv ? :foregroundColor;
+        %tmp.299 = getv ? :Graphics;
+        %tmp.300 = getv %tmp.299 :COLOR_TRANSPARENT;
+        invoke %tmp.294 %tmp.295(%tmp.297, %tmp.300);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 266 4 ]
+        %tmp.301 = lgetv %dc;
+        %tmp.302 = getv function %tmp.301 :drawLine;
+        %tmp.304 = lgetv %_x1Ele.27;
+        %tmp.306 = lgetv %_y2Ele.30;
+        %tmp.308 = lgetv %_x2Ele.29;
+        %tmp.310 = lgetv %_y2Ele.30;
+        invoke %tmp.301 %tmp.302(%tmp.304, %tmp.306, %tmp.308, %tmp.310);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 267 4 ]
+        %tmp.311 = lgetv %dc;
+        %tmp.312 = getv function %tmp.311 :drawLine;
+        %tmp.314 = lgetv %_x2Ele.29;
+        %tmp.316 = lgetv %_y2Ele.30;
+        %tmp.318 = lgetv %_x2Ele.29;
+        %tmp.320 = lgetv %_y1Ele.28;
+        invoke %tmp.311 %tmp.312(%tmp.314, %tmp.316, %tmp.318, %tmp.320);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 268 4 ]
+        %tmp.321 = lgetv %dc;
+        %tmp.322 = getv function %tmp.321 :drawLine;
+        %tmp.324 = lgetv %_x1Ele.27;
+        %tmp.326 = lgetv %_y1Ele.28;
+        %tmp.328 = lgetv %_x1Ele.27;
+        %tmp.330 = lgetv %_y2Ele.30;
+        invoke %tmp.321 %tmp.322(%tmp.324, %tmp.326, %tmp.328, %tmp.330);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 271 4 ]
+        for @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_test @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_incr @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_init:
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_begin" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_end" ]
+        %w.38 = local;
+        %tmp.331 = 0.25;
+        lputv %w.38 %tmp.331;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_test:
+        %tmp.333 = lgetv %w.38;
+        %tmp.334 = 0.75;
+        %tmp.335 = lte %tmp.333 %tmp.334;
+        bf %tmp.335 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_begin:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_45_278_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 272 6 ]
+        %tmp.336 = lgetv %dc;
+        %tmp.337 = getv function %tmp.336 :drawLine;
+        %tmp.339 = lgetv %_x1Ele.27;
+        %tmp.341 = lgetv %w.38;
+        %tmp.343 = lgetv %_eleWidth.22;
+        %tmp.344 = mul %tmp.341 %tmp.343;
+        %tmp.345 = add %tmp.339 %tmp.344;
+        %tmp.347 = lgetv %_y2Ele.30;
+        %tmp.349 = lgetv %_x1Ele.27;
+        %tmp.351 = lgetv %w.38;
+        %tmp.353 = lgetv %_eleWidth.22;
+        %tmp.354 = mul %tmp.351 %tmp.353;
+        %tmp.355 = add %tmp.349 %tmp.354;
+        %tmp.357 = getv ? :y2Ele;
+        %tmp.358 = 0.04;
+        %tmp.360 = lgetv %_eleWidth.22;
+        %tmp.361 = mul %tmp.358 %tmp.360;
+        %tmp.362 = add %tmp.357 %tmp.361;
+        invoke %tmp.336 %tmp.337(%tmp.345, %tmp.347, %tmp.355, %tmp.362);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 274 6 ]
+        %tmp.363 = lgetv %dc;
+        %tmp.364 = getv function %tmp.363 :drawLine;
+        %tmp.366 = lgetv %_x1Ele.27;
+        %tmp.368 = lgetv %_y2Ele.30;
+        %tmp.370 = lgetv %w.38;
+        %tmp.372 = lgetv %_eleHeight.23;
+        %tmp.373 = mul %tmp.370 %tmp.372;
+        %tmp.374 = sub %tmp.368 %tmp.373;
+        %tmp.376 = getv ? :x1Ele;
+        %tmp.377 = 0.04;
+        %tmp.379 = lgetv %_eleWidth.22;
+        %tmp.380 = mul %tmp.377 %tmp.379;
+        %tmp.381 = sub %tmp.376 %tmp.380;
+        %tmp.383 = lgetv %_y2Ele.30;
+        %tmp.385 = lgetv %w.38;
+        %tmp.387 = lgetv %_eleHeight.23;
+        %tmp.388 = mul %tmp.385 %tmp.387;
+        %tmp.389 = sub %tmp.383 %tmp.388;
+        invoke %tmp.363 %tmp.364(%tmp.366, %tmp.374, %tmp.381, %tmp.389);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 276 6 ]
+        %tmp.390 = lgetv %dc;
+        %tmp.391 = getv function %tmp.390 :drawLine;
+        %tmp.393 = lgetv %_x2Ele.29;
+        %tmp.395 = lgetv %_y2Ele.30;
+        %tmp.397 = lgetv %w.38;
+        %tmp.399 = lgetv %_eleHeight.23;
+        %tmp.400 = mul %tmp.397 %tmp.399;
+        %tmp.401 = sub %tmp.395 %tmp.400;
+        %tmp.403 = getv ? :x2Ele;
+        %tmp.404 = 0.04;
+        %tmp.406 = lgetv %_eleWidth.22;
+        %tmp.407 = mul %tmp.404 %tmp.406;
+        %tmp.408 = add %tmp.403 %tmp.407;
+        %tmp.410 = lgetv %_y2Ele.30;
+        %tmp.412 = lgetv %w.38;
+        %tmp.414 = lgetv %_eleHeight.23;
+        %tmp.415 = mul %tmp.412 %tmp.414;
+        %tmp.416 = sub %tmp.410 %tmp.415;
+        invoke %tmp.390 %tmp.391(%tmp.393, %tmp.401, %tmp.408, %tmp.416);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_45_278_4_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_incr:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 271 ]
+        %tmp.417 = lgetv %w.38;
+        %tmp.418 = 0.25;
+        %tmp.419 = add %tmp.417 %tmp.418;
+        lputv %w.38 %tmp.419;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_test;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_271_4_278_4_for_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 281 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop" ]
+        %ed.39 = local;
+        %tmp.420 = 0.08;
+        %tmp.422 = getv ? :pixelWidth2;
+        %tmp.424 = lgetv %_x1Ele.27;
+        %tmp.425 = sub %tmp.422 %tmp.424;
+        %tmp.426 = mul %tmp.420 %tmp.425;
+        lputv %ed.39 %tmp.426;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 282 4 ]
+        %tmp.427 = lgetv %dc;
+        %tmp.428 = getv function %tmp.427 :drawText;
+        %tmp.430 = lgetv %_x2Ele.29;
+        %tmp.432 = lgetv %ed.39;
+        %tmp.433 = sub %tmp.430 %tmp.432;
+        %tmp.435 = lgetv %_y2Ele.30;
+        %tmp.436 = 1.5;
+        %tmp.438 = lgetv %ed.39;
+        %tmp.439 = mul %tmp.436 %tmp.438;
+        %tmp.440 = add %tmp.435 %tmp.439;
+        %tmp.442 = getv ? :fontsize;
+        %tmp.443 = lgetv %breadcrumbTrack;
+        %tmp.444 = getv %tmp.443 :eleMinTrack;
+        %tmp.445 = getv function %tmp.444 :format;
+        %tmp.446 = "%d";
+        %tmp.447 = invoke %tmp.444 %tmp.445(%tmp.446);
+        %tmp.449 = getv ? :Graphics;
+        %tmp.450 = getv %tmp.449 :TEXT_JUSTIFY_RIGHT;
+        %tmp.452 = getv ? :Graphics;
+        %tmp.453 = getv %tmp.452 :TEXT_JUSTIFY_VCENTER;
+        %tmp.454 = bitor %tmp.450 %tmp.453;
+        invoke %tmp.427 %tmp.428(%tmp.433, %tmp.440, %tmp.442, %tmp.447, %tmp.454);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 285 4 ]
+        %tmp.455 = lgetv %dc;
+        %tmp.456 = getv function %tmp.455 :drawText;
+        %tmp.458 = lgetv %_x2Ele.29;
+        %tmp.460 = lgetv %ed.39;
+        %tmp.461 = sub %tmp.458 %tmp.460;
+        %tmp.463 = lgetv %_y1Ele.28;
+        %tmp.464 = 1.5;
+        %tmp.466 = lgetv %ed.39;
+        %tmp.467 = mul %tmp.464 %tmp.466;
+        %tmp.468 = sub %tmp.463 %tmp.467;
+        %tmp.469 = lgetv %dc;
+        %tmp.470 = getv function %tmp.469 :getFontAscent;
+        %tmp.472 = getv ? :fontsize;
+        %tmp.473 = invoke %tmp.469 %tmp.470(%tmp.472);
+        %tmp.474 = sub %tmp.468 %tmp.473;
+        %tmp.476 = getv ? :fontsize;
+        %tmp.477 = "^";
+        %tmp.478 = lgetv %breadcrumbTrack;
+        %tmp.479 = getv %tmp.478 :eleTotAscent;
+        %tmp.480 = getv function %tmp.479 :format;
+        %tmp.481 = "%d";
+        %tmp.482 = invoke %tmp.479 %tmp.480(%tmp.481);
+        %tmp.483 = add %tmp.477 %tmp.482;
+        %tmp.485 = getv ? :Graphics;
+        %tmp.486 = getv %tmp.485 :TEXT_JUSTIFY_RIGHT;
+        %tmp.488 = getv ? :Graphics;
+        %tmp.489 = getv %tmp.488 :TEXT_JUSTIFY_VCENTER;
+        %tmp.490 = bitor %tmp.486 %tmp.489;
+        invoke %tmp.455 %tmp.456(%tmp.461, %tmp.474, %tmp.476, %tmp.483, %tmp.490);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 288 4 ]
+        %tmp.491 = lgetv %dc;
+        %tmp.492 = getv function %tmp.491 :drawText;
+        %tmp.494 = lgetv %_x2Ele.29;
+        %tmp.496 = lgetv %ed.39;
+        %tmp.497 = sub %tmp.494 %tmp.496;
+        %tmp.499 = lgetv %_y1Ele.28;
+        %tmp.500 = 1.5;
+        %tmp.502 = lgetv %ed.39;
+        %tmp.503 = mul %tmp.500 %tmp.502;
+        %tmp.504 = sub %tmp.499 %tmp.503;
+        %tmp.506 = getv ? :fontsize;
+        %tmp.507 = lgetv %breadcrumbTrack;
+        %tmp.508 = getv %tmp.507 :eleMaxTrack;
+        %tmp.509 = getv function %tmp.508 :format;
+        %tmp.510 = "%d";
+        %tmp.511 = invoke %tmp.508 %tmp.509(%tmp.510);
+        %tmp.513 = getv ? :Graphics;
+        %tmp.514 = getv %tmp.513 :TEXT_JUSTIFY_RIGHT;
+        %tmp.516 = getv ? :Graphics;
+        %tmp.517 = getv %tmp.516 :TEXT_JUSTIFY_VCENTER;
+        %tmp.518 = bitor %tmp.514 %tmp.517;
+        invoke %tmp.491 %tmp.492(%tmp.497, %tmp.504, %tmp.506, %tmp.511, %tmp.518);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 293 4 ]
+        %tmp.519 = lgetv %dc;
+        %tmp.520 = getv function %tmp.519 :drawText;
+        %tmp.522 = getv ? :pixelWidth2;
+        %tmp.523 = 1.12;
+        %tmp.525 = lgetv %_y2Ele.30;
+        %tmp.526 = mul %tmp.523 %tmp.525;
+        %tmp.528 = getv ? :fontsize;
+        %tmp.529 = lgetv %breadcrumbTrack;
+        %tmp.530 = getv %tmp.529 :xyLengthLabel;
+        %tmp.532 = getv ? :Graphics;
+        %tmp.533 = getv %tmp.532 :TEXT_JUSTIFY_CENTER;
+        %tmp.535 = getv ? :Graphics;
+        %tmp.536 = getv %tmp.535 :TEXT_JUSTIFY_VCENTER;
+        %tmp.537 = bitor %tmp.533 %tmp.536;
+        invoke %tmp.519 %tmp.520(%tmp.522, %tmp.526, %tmp.528, %tmp.530, %tmp.537);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 298 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_298_4_336_4_if_stmt:
+        %tmp.539 = lgetv %nearestPointIndex.6;
+        %tmp.540 = 0;
+        %tmp.541 = gte %tmp.539 %tmp.540;
+        bf %tmp.541 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_298_4_336_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_298_4_336_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_298_32_336_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 300 6 ]
+        %tmp.543 = lgetv %_x1Ele.27;
+        %tmp.545 = lgetv %_scaleEleX.24;
+        %tmp.547 = lgetv %dssn.20;
+        %tmp.548 = mul %tmp.545 %tmp.547;
+        %tmp.549 = add %tmp.543 %tmp.548;
+        lputv %x2.3 %tmp.549;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 301 6 ]
+        %tmp.551 = lgetv %_y2Ele.30;
+        %tmp.553 = lgetv %_scaleEleY.25;
+        %tmp.554 = lgetv %breadcrumbTrack;
+        %tmp.555 = getv %tmp.554 :eleAct;
+        %tmp.556 = lgetv %breadcrumbTrack;
+        %tmp.557 = getv %tmp.556 :eleMinTrack;
+        %tmp.558 = sub %tmp.555 %tmp.557;
+        %tmp.559 = mul %tmp.553 %tmp.558;
+        %tmp.560 = sub %tmp.551 %tmp.559;
+        lputv %y2.4 %tmp.560;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 305 6 ]
+        %tmp.561 = lgetv %dc;
+        %tmp.562 = getv function %tmp.561 :setColor;
+        %tmp.564 = getv ? :trackColor;
+        %tmp.566 = getv ? :Graphics;
+        %tmp.567 = getv %tmp.566 :COLOR_TRANSPARENT;
+        invoke %tmp.561 %tmp.562(%tmp.564, %tmp.567);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 307 6 ]
+        %tmp.569 = lgetv %_eleArray.35;
+        %tmp.571 = lgetv %nearestPointIndex.6;
+        %tmp.572 = agetv %tmp.569 %tmp.571;
+        %tmp.574 = lgetv %nearestPointLambda.7;
+        %tmp.576 = lgetv %_eleArray.35;
+        %tmp.578 = lgetv %nearestPointIndex.6;
+        %tmp.579 = 1;
+        %tmp.580 = add %tmp.578 %tmp.579;
+        %tmp.581 = agetv %tmp.576 %tmp.580;
+        %tmp.583 = lgetv %_eleArray.35;
+        %tmp.585 = lgetv %nearestPointIndex.6;
+        %tmp.586 = agetv %tmp.583 %tmp.585;
+        %tmp.587 = sub %tmp.581 %tmp.586;
+        %tmp.588 = mul %tmp.574 %tmp.587;
+        %tmp.589 = add %tmp.572 %tmp.588;
+        putv self :eleTrack %tmp.589;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 310 6 ]
+        %tmp.590 = lgetv %breadcrumbTrack;
+        %tmp.592 = getv ? :eleTrack;
+        putv %tmp.590 :eleTrack %tmp.592;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 311 6 ]
+        %tmp.593 = lgetv %dc;
+        %tmp.594 = getv function %tmp.593 :drawText;
+        %tmp.596 = lgetv %_x1Ele.27;
+        %tmp.598 = lgetv %ed.39;
+        %tmp.599 = add %tmp.596 %tmp.598;
+        %tmp.601 = lgetv %_y2Ele.30;
+        %tmp.602 = 1.5;
+        %tmp.604 = lgetv %ed.39;
+        %tmp.605 = mul %tmp.602 %tmp.604;
+        %tmp.606 = add %tmp.601 %tmp.605;
+        %tmp.608 = getv ? :fontsize;
+        %tmp.610 = getv ? :eleTrack;
+        %tmp.611 = getv function %tmp.610 :format;
+        %tmp.612 = "%d";
+        %tmp.613 = invoke %tmp.610 %tmp.611(%tmp.612);
+        %tmp.615 = getv ? :Graphics;
+        %tmp.616 = getv %tmp.615 :TEXT_JUSTIFY_LEFT;
+        %tmp.618 = getv ? :Graphics;
+        %tmp.619 = getv %tmp.618 :TEXT_JUSTIFY_VCENTER;
+        %tmp.620 = bitor %tmp.616 %tmp.619;
+        invoke %tmp.593 %tmp.594(%tmp.599, %tmp.606, %tmp.608, %tmp.613, %tmp.620);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 316 6 ]
+        %tmp.621 = lgetv %dc;
+        %tmp.622 = getv function %tmp.621 :setColor;
+        %tmp.624 = getv ? :cursorColor;
+        %tmp.626 = getv ? :backgroundColor;
+        invoke %tmp.621 %tmp.622(%tmp.624, %tmp.626);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 317 6 ]
+        %tmp.627 = lgetv %dc;
+        %tmp.628 = getv function %tmp.627 :drawText;
+        %tmp.630 = lgetv %_x1Ele.27;
+        %tmp.632 = lgetv %ed.39;
+        %tmp.633 = add %tmp.630 %tmp.632;
+        %tmp.635 = lgetv %_y1Ele.28;
+        %tmp.636 = 1.5;
+        %tmp.638 = lgetv %ed.39;
+        %tmp.639 = mul %tmp.636 %tmp.638;
+        %tmp.640 = sub %tmp.635 %tmp.639;
+        %tmp.642 = getv ? :fontsize;
+        %tmp.643 = lgetv %breadcrumbTrack;
+        %tmp.644 = getv %tmp.643 :eleAct;
+        %tmp.645 = getv function %tmp.644 :format;
+        %tmp.646 = "%d";
+        %tmp.647 = invoke %tmp.644 %tmp.645(%tmp.646);
+        %tmp.649 = getv ? :Graphics;
+        %tmp.650 = getv %tmp.649 :TEXT_JUSTIFY_LEFT;
+        %tmp.652 = getv ? :Graphics;
+        %tmp.653 = getv %tmp.652 :TEXT_JUSTIFY_VCENTER;
+        %tmp.654 = bitor %tmp.650 %tmp.653;
+        invoke %tmp.627 %tmp.628(%tmp.633, %tmp.640, %tmp.642, %tmp.647, %tmp.654);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 320 6 ]
+        %tmp.655 = lgetv %dc;
+        %tmp.656 = getv function %tmp.655 :drawText;
+        %tmp.658 = lgetv %_x1Ele.27;
+        %tmp.660 = lgetv %ed.39;
+        %tmp.661 = add %tmp.658 %tmp.660;
+        %tmp.663 = lgetv %_y1Ele.28;
+        %tmp.664 = 1.5;
+        %tmp.666 = lgetv %ed.39;
+        %tmp.667 = mul %tmp.664 %tmp.666;
+        %tmp.668 = sub %tmp.663 %tmp.667;
+        %tmp.669 = lgetv %dc;
+        %tmp.670 = getv function %tmp.669 :getFontAscent;
+        %tmp.672 = getv ? :fontsize;
+        %tmp.673 = invoke %tmp.669 %tmp.670(%tmp.672);
+        %tmp.674 = sub %tmp.668 %tmp.673;
+        %tmp.676 = getv ? :fontsize;
+        %tmp.677 = "^";
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_begin:
+        %tmp.678 = lgetv %breadcrumbTrack;
+        %tmp.679 = getv %tmp.678 :eleTotAscentAct;
+        %tmp.680 = null;
+        %tmp.681 = ne %tmp.679 %tmp.680;
+        bf %tmp.681 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_true:
+        %tmp.682 = lgetv %breadcrumbTrack;
+        %tmp.683 = getv %tmp.682 :eleTotAscentAct;
+        %tmp.684 = getv function %tmp.683 :format;
+        %tmp.685 = "%d";
+        %tmp.686 = invoke %tmp.683 %tmp.684(%tmp.685);
+        push %tmp.686;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_false:
+        %tmp.687 = "";
+        push %tmp.687;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_end:
+        %tmp.688 = phi [%tmp.681 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_begin] [%tmp.686 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_true] [%tmp.687 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_false] [%tmp.688 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_322_25_324_31_end];
+        %tmp.689 = add %tmp.677 %tmp.688;
+        %tmp.691 = getv ? :Graphics;
+        %tmp.692 = getv %tmp.691 :TEXT_JUSTIFY_LEFT;
+        %tmp.694 = getv ? :Graphics;
+        %tmp.695 = getv %tmp.694 :TEXT_JUSTIFY_VCENTER;
+        %tmp.696 = bitor %tmp.692 %tmp.695;
+        invoke %tmp.655 %tmp.656(%tmp.661, %tmp.674, %tmp.676, %tmp.689, %tmp.696);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 326 6 ]
+        %tmp.697 = lgetv %dc;
+        %tmp.698 = getv function %tmp.697 :drawLine;
+        %tmp.700 = lgetv %x2.3;
+        %tmp.702 = lgetv %_y2Ele.30;
+        %tmp.704 = lgetv %x2.3;
+        %tmp.706 = lgetv %_y1Ele.28;
+        invoke %tmp.697 %tmp.698(%tmp.700, %tmp.702, %tmp.704, %tmp.706);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 329 6 ]
+        %tmp.707 = lgetv %dc;
+        %tmp.708 = getv function %tmp.707 :drawLine;
+        %tmp.710 = lgetv %x2.3;
+        %tmp.711 = 2;
+        %tmp.712 = sub %tmp.710 %tmp.711;
+        %tmp.714 = lgetv %y2.4;
+        %tmp.716 = lgetv %x2.3;
+        %tmp.717 = 2;
+        %tmp.718 = add %tmp.716 %tmp.717;
+        %tmp.720 = lgetv %y2.4;
+        invoke %tmp.707 %tmp.708(%tmp.712, %tmp.714, %tmp.718, %tmp.720);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 332 6 ]
+        %tmp.721 = lgetv %dc;
+        %tmp.722 = getv function %tmp.721 :drawText;
+        %tmp.724 = getv ? :pixelWidth2;
+        %tmp.725 = 1.12;
+        %tmp.727 = lgetv %_y2Ele.30;
+        %tmp.728 = mul %tmp.725 %tmp.727;
+        %tmp.729 = 1.1;
+        %tmp.730 = lgetv %dc;
+        %tmp.731 = getv function %tmp.730 :getFontAscent;
+        %tmp.733 = getv ? :fontsize;
+        %tmp.734 = invoke %tmp.730 %tmp.731(%tmp.733);
+        %tmp.735 = mul %tmp.729 %tmp.734;
+        %tmp.736 = add %tmp.728 %tmp.735;
+        %tmp.738 = getv ? :fontsize;
+        %tmp.739 = self;
+        %tmp.740 = getv function %tmp.739 :formatLength;
+        %tmp.741 = lgetv %breadcrumbTrack;
+        %tmp.742 = getv %tmp.741 :xyLength;
+        %tmp.744 = lgetv %dssn.20;
+        %tmp.745 = sub %tmp.742 %tmp.744;
+        %tmp.746 = invoke %tmp.739 %tmp.740(%tmp.745);
+        %tmp.748 = getv ? :Graphics;
+        %tmp.749 = getv %tmp.748 :TEXT_JUSTIFY_CENTER;
+        %tmp.751 = getv ? :Graphics;
+        %tmp.752 = getv %tmp.751 :TEXT_JUSTIFY_VCENTER;
+        %tmp.753 = bitor %tmp.749 %tmp.752;
+        invoke %tmp.721 %tmp.722(%tmp.724, %tmp.736, %tmp.738, %tmp.746, %tmp.753);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_298_32_336_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_298_4_336_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_298_4_336_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 338 4 ]
+        %tmp.754 = null;
+        lputv %_xArray.33 %tmp.754;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 339 4 ]
+        %tmp.755 = null;
+        lputv %_yArray.34 %tmp.755;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 340 4 ]
+        %tmp.756 = null;
+        lputv %_eleArray.35 %tmp.756;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_148_63_342_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 344; ]
+    function drawPositionArrowAndCompass(dc, breadcrumbTrack as BreadcrumbTrack) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 345 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_sin.1 = local;
+        %tmp.1 = 0.0;
+        lputv %_sin.1 %tmp.1;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 346 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_cos.2 = local;
+        %tmp.2 = 1.0;
+        lputv %_cos.2 %tmp.2;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 347 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_4_350_4_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_8_347_56_begin:
+        %tmp.3 = lgetv %breadcrumbTrack;
+        %tmp.4 = getv %tmp.3 :northHeading;
+        bt %tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_4_350_4_if_true;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_40_347_56_false:
+        %tmp.5 = lgetv %breadcrumbTrack;
+        %tmp.6 = getv %tmp.5 :centerMap;
+        push %tmp.6;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_40_347_56_end:
+        %tmp.7 = phi [%tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_8_347_56_begin] [%tmp.6 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_40_347_56_false] [%tmp.7 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_40_347_56_end];
+        bf %tmp.7 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_4_350_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_4_350_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_67_350_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 348 6 ]
+        %tmp.8 = lgetv %breadcrumbTrack;
+        %tmp.9 = getv %tmp.8 :sin_heading_smooth;
+        lputv %_sin.1 %tmp.9;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 349 6 ]
+        %tmp.10 = lgetv %breadcrumbTrack;
+        %tmp.11 = getv %tmp.10 :cos_heading_smooth;
+        lputv %_cos.2 %tmp.11;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_67_350_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_4_350_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_347_4_350_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 352 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_dx1.3 = local;
+        %tmp.13 = getv ? :sizeCursor;
+        %tmp.15 = lgetv %_sin.1;
+        %tmp.16 = mul %tmp.13 %tmp.15;
+        lputv %_dx1.3 %tmp.16;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 353 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_dy1.4 = local;
+        %tmp.18 = getv ? :sizeCursor;
+        %tmp.19 = sub 0 %tmp.18;
+        %tmp.21 = lgetv %_cos.2;
+        %tmp.22 = mul %tmp.19 %tmp.21;
+        lputv %_dy1.4 %tmp.22;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 354 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_dx2.5 = local;
+        %tmp.24 = lgetv %_dy1.4;
+        %tmp.25 = sub 0 %tmp.24;
+        %tmp.26 = 1.577352;
+        %tmp.28 = lgetv %_dx1.3;
+        %tmp.29 = mul %tmp.26 %tmp.28;
+        %tmp.30 = sub %tmp.25 %tmp.29;
+        lputv %_dx2.5 %tmp.30;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 355 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_dy2.6 = local;
+        %tmp.32 = lgetv %_dx1.3;
+        %tmp.33 = 1.577352;
+        %tmp.35 = lgetv %_dy1.4;
+        %tmp.36 = mul %tmp.33 %tmp.35;
+        %tmp.37 = sub %tmp.32 %tmp.36;
+        lputv %_dy2.6 %tmp.37;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 356 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_dx3.7 = local;
+        %tmp.38 = -3.154704;
+        %tmp.40 = lgetv %_dx1.3;
+        %tmp.41 = mul %tmp.38 %tmp.40;
+        %tmp.43 = lgetv %_dx2.5;
+        %tmp.44 = sub %tmp.41 %tmp.43;
+        lputv %_dx3.7 %tmp.44;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 357 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_dy3.8 = local;
+        %tmp.45 = -3.154704;
+        %tmp.47 = lgetv %_dy1.4;
+        %tmp.48 = mul %tmp.45 %tmp.47;
+        %tmp.50 = lgetv %_dy2.6;
+        %tmp.51 = sub %tmp.48 %tmp.50;
+        lputv %_dy3.8 %tmp.51;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 359 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_xy.9 = local;
+        %tmp.52 = self;
+        %tmp.53 = getv function %tmp.52 :xy2Screen;
+        %tmp.54 = lgetv %breadcrumbTrack;
+        %tmp.55 = getv %tmp.54 :xPos;
+        %tmp.56 = lgetv %breadcrumbTrack;
+        %tmp.57 = getv %tmp.56 :yPos;
+        %tmp.58 = invoke %tmp.52 %tmp.53(%tmp.55, %tmp.57);
+        lputv %_xy.9 %tmp.58;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 361 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_x1.10 = local;
+        %tmp.60 = lgetv %_xy.9;
+        %tmp.61 = 0;
+        %tmp.62 = agetv %tmp.60 %tmp.61;
+        %tmp.64 = lgetv %_dx1.3;
+        %tmp.65 = add %tmp.62 %tmp.64;
+        lputv %_x1.10 %tmp.65;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 362 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_y1.11 = local;
+        %tmp.67 = lgetv %_xy.9;
+        %tmp.68 = 1;
+        %tmp.69 = agetv %tmp.67 %tmp.68;
+        %tmp.71 = lgetv %_dy1.4;
+        %tmp.72 = add %tmp.69 %tmp.71;
+        lputv %_y1.11 %tmp.72;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 363 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_x2.12 = local;
+        %tmp.74 = lgetv %_xy.9;
+        %tmp.75 = 0;
+        %tmp.76 = agetv %tmp.74 %tmp.75;
+        %tmp.78 = lgetv %_dx2.5;
+        %tmp.79 = add %tmp.76 %tmp.78;
+        lputv %_x2.12 %tmp.79;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 364 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_y2.13 = local;
+        %tmp.81 = lgetv %_xy.9;
+        %tmp.82 = 1;
+        %tmp.83 = agetv %tmp.81 %tmp.82;
+        %tmp.85 = lgetv %_dy2.6;
+        %tmp.86 = add %tmp.83 %tmp.85;
+        lputv %_y2.13 %tmp.86;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 365 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_x3.14 = local;
+        %tmp.88 = lgetv %_xy.9;
+        %tmp.89 = 0;
+        %tmp.90 = agetv %tmp.88 %tmp.89;
+        %tmp.92 = lgetv %_dx1.3;
+        %tmp.93 = sub %tmp.90 %tmp.92;
+        lputv %_x3.14 %tmp.93;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 366 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_y3.15 = local;
+        %tmp.95 = lgetv %_xy.9;
+        %tmp.96 = 1;
+        %tmp.97 = agetv %tmp.95 %tmp.96;
+        %tmp.99 = lgetv %_dy1.4;
+        %tmp.100 = sub %tmp.97 %tmp.99;
+        lputv %_y3.15 %tmp.100;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 367 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_x4.16 = local;
+        %tmp.102 = lgetv %_xy.9;
+        %tmp.103 = 0;
+        %tmp.104 = agetv %tmp.102 %tmp.103;
+        %tmp.106 = lgetv %_dx3.7;
+        %tmp.107 = add %tmp.104 %tmp.106;
+        lputv %_x4.16 %tmp.107;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 368 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %_y4.17 = local;
+        %tmp.109 = lgetv %_xy.9;
+        %tmp.110 = 1;
+        %tmp.111 = agetv %tmp.109 %tmp.110;
+        %tmp.113 = lgetv %_dy3.8;
+        %tmp.114 = add %tmp.111 %tmp.113;
+        lputv %_y4.17 %tmp.114;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 371 4 ]
+        %tmp.115 = lgetv %dc;
+        %tmp.116 = getv function %tmp.115 :setColor;
+        %tmp.118 = getv ? :cursorColor;
+        %tmp.120 = getv ? :Graphics;
+        %tmp.121 = getv %tmp.120 :COLOR_TRANSPARENT;
+        invoke %tmp.115 %tmp.116(%tmp.118, %tmp.121);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 372 4 ]
+        %tmp.122 = lgetv %dc;
+        %tmp.123 = getv function %tmp.122 :setPenWidth;
+        %tmp.124 = 3;
+        invoke %tmp.122 %tmp.123(%tmp.124);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 373 4 ]
+        %tmp.125 = lgetv %dc;
+        %tmp.126 = getv function %tmp.125 :drawLine;
+        %tmp.128 = lgetv %_x1.10;
+        %tmp.130 = lgetv %_y1.11;
+        %tmp.132 = lgetv %_x2.12;
+        %tmp.134 = lgetv %_y2.13;
+        invoke %tmp.125 %tmp.126(%tmp.128, %tmp.130, %tmp.132, %tmp.134);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 374 4 ]
+        %tmp.135 = lgetv %dc;
+        %tmp.136 = getv function %tmp.135 :drawLine;
+        %tmp.138 = lgetv %_x2.12;
+        %tmp.140 = lgetv %_y2.13;
+        %tmp.142 = lgetv %_x3.14;
+        %tmp.144 = lgetv %_y3.15;
+        invoke %tmp.135 %tmp.136(%tmp.138, %tmp.140, %tmp.142, %tmp.144);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 375 4 ]
+        %tmp.145 = lgetv %dc;
+        %tmp.146 = getv function %tmp.145 :drawLine;
+        %tmp.148 = lgetv %_x3.14;
+        %tmp.150 = lgetv %_y3.15;
+        %tmp.152 = lgetv %_x4.16;
+        %tmp.154 = lgetv %_y4.17;
+        invoke %tmp.145 %tmp.146(%tmp.148, %tmp.150, %tmp.152, %tmp.154);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 376 4 ]
+        %tmp.155 = lgetv %dc;
+        %tmp.156 = getv function %tmp.155 :drawLine;
+        %tmp.158 = lgetv %_x4.16;
+        %tmp.160 = lgetv %_y4.17;
+        %tmp.162 = lgetv %_x1.10;
+        %tmp.164 = lgetv %_y1.11;
+        invoke %tmp.155 %tmp.156(%tmp.158, %tmp.160, %tmp.162, %tmp.164);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 379 4 ]
+        %tmp.165 = lgetv %dc;
+        %tmp.166 = getv function %tmp.165 :setColor;
+        %tmp.168 = getv ? :backgroundColor;
+        %tmp.170 = getv ? :backgroundColor;
+        invoke %tmp.165 %tmp.166(%tmp.168, %tmp.170);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 380 4 ]
+        %tmp.171 = lgetv %dc;
+        %tmp.172 = getv function %tmp.171 :fillCircle;
+        %tmp.174 = getv ? :xCompass;
+        %tmp.176 = getv ? :yCompass;
+        %tmp.178 = getv ? :sizeCompass;
+        invoke %tmp.171 %tmp.172(%tmp.174, %tmp.176, %tmp.178);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 382 4 ]
+        %tmp.179 = -0.5;
+        %tmp.181 = getv ? :sizeCompass;
+        %tmp.182 = mul %tmp.179 %tmp.181;
+        %tmp.184 = getv ? :cosTransform;
+        %tmp.185 = mul %tmp.182 %tmp.184;
+        lputv %_dx1.3 %tmp.185;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 383 4 ]
+        %tmp.186 = +0.5;
+        %tmp.188 = getv ? :sizeCompass;
+        %tmp.189 = mul %tmp.186 %tmp.188;
+        %tmp.191 = getv ? :sinTransform;
+        %tmp.192 = mul %tmp.189 %tmp.191;
+        lputv %_dy1.4 %tmp.192;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 384 4 ]
+        %tmp.194 = getv ? :sizeCompass;
+        %tmp.195 = sub 0 %tmp.194;
+        %tmp.197 = getv ? :sinTransform;
+        %tmp.198 = mul %tmp.195 %tmp.197;
+        lputv %_dx2.5 %tmp.198;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 385 4 ]
+        %tmp.200 = getv ? :sizeCompass;
+        %tmp.201 = sub 0 %tmp.200;
+        %tmp.203 = getv ? :cosTransform;
+        %tmp.204 = mul %tmp.201 %tmp.203;
+        lputv %_dy2.6 %tmp.204;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 388 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop" ]
+        %points.18 = local;
+        %tmp.205 = newa 3;
+        %tmp.206 = newa 2;
+        %tmp.208 = getv ? :xCompass;
+        %tmp.210 = lgetv %_dx1.3;
+        %tmp.211 = add %tmp.208 %tmp.210;
+        %tmp.212 = dup %tmp.206;
+        %tmp.213 = aputv %tmp.212 0 %tmp.211;
+        %tmp.215 = getv ? :yCompass;
+        %tmp.217 = lgetv %_dy1.4;
+        %tmp.218 = add %tmp.215 %tmp.217;
+        %tmp.220 = getv ? :padding;
+        %tmp.221 = sub %tmp.218 %tmp.220;
+        %tmp.222 = dup %tmp.213;
+        %tmp.223 = aputv %tmp.222 1 %tmp.221;
+        %tmp.224 = dup %tmp.205;
+        %tmp.225 = aputv %tmp.224 0 %tmp.223;
+        %tmp.226 = newa 2;
+        %tmp.228 = getv ? :xCompass;
+        %tmp.230 = lgetv %_dx2.5;
+        %tmp.231 = sub %tmp.228 %tmp.230;
+        %tmp.232 = dup %tmp.226;
+        %tmp.233 = aputv %tmp.232 0 %tmp.231;
+        %tmp.235 = getv ? :yCompass;
+        %tmp.237 = lgetv %_dy2.6;
+        %tmp.238 = sub %tmp.235 %tmp.237;
+        %tmp.240 = getv ? :padding;
+        %tmp.241 = sub %tmp.238 %tmp.240;
+        %tmp.242 = dup %tmp.233;
+        %tmp.243 = aputv %tmp.242 1 %tmp.241;
+        %tmp.244 = dup %tmp.225;
+        %tmp.245 = aputv %tmp.244 1 %tmp.243;
+        %tmp.246 = newa 2;
+        %tmp.248 = getv ? :xCompass;
+        %tmp.250 = lgetv %_dx1.3;
+        %tmp.251 = sub %tmp.248 %tmp.250;
+        %tmp.252 = dup %tmp.246;
+        %tmp.253 = aputv %tmp.252 0 %tmp.251;
+        %tmp.255 = getv ? :yCompass;
+        %tmp.257 = lgetv %_dy1.4;
+        %tmp.258 = sub %tmp.255 %tmp.257;
+        %tmp.260 = getv ? :padding;
+        %tmp.261 = sub %tmp.258 %tmp.260;
+        %tmp.262 = dup %tmp.253;
+        %tmp.263 = aputv %tmp.262 1 %tmp.261;
+        %tmp.264 = dup %tmp.245;
+        %tmp.265 = aputv %tmp.264 2 %tmp.263;
+        lputv %points.18 %tmp.265;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 391 4 ]
+        %tmp.266 = lgetv %dc;
+        %tmp.267 = getv function %tmp.266 :setColor;
+        %tmp.269 = getv ? :Graphics;
+        %tmp.270 = getv %tmp.269 :COLOR_BLUE;
+        %tmp.272 = getv ? :Graphics;
+        %tmp.273 = getv %tmp.272 :COLOR_TRANSPARENT;
+        invoke %tmp.266 %tmp.267(%tmp.270, %tmp.273);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 392 4 ]
+        %tmp.274 = lgetv %dc;
+        %tmp.275 = getv function %tmp.274 :fillPolygon;
+        %tmp.277 = lgetv %points.18;
+        invoke %tmp.274 %tmp.275(%tmp.277);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 395 4 ]
+        %tmp.278 = lgetv %points.18;
+        %tmp.279 = newa 2;
+        %tmp.281 = getv ? :xCompass;
+        %tmp.283 = lgetv %_dx2.5;
+        %tmp.284 = add %tmp.281 %tmp.283;
+        %tmp.285 = dup %tmp.279;
+        %tmp.286 = aputv %tmp.285 0 %tmp.284;
+        %tmp.288 = getv ? :yCompass;
+        %tmp.290 = lgetv %_dy2.6;
+        %tmp.291 = add %tmp.288 %tmp.290;
+        %tmp.293 = getv ? :padding;
+        %tmp.294 = sub %tmp.291 %tmp.293;
+        %tmp.295 = dup %tmp.286;
+        %tmp.296 = aputv %tmp.295 1 %tmp.294;
+        %tmp.297 = 1;
+        aputv %tmp.278 %tmp.297 %tmp.296;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 396 4 ]
+        %tmp.298 = lgetv %dc;
+        %tmp.299 = getv function %tmp.298 :setColor;
+        %tmp.301 = getv ? :Graphics;
+        %tmp.302 = getv %tmp.301 :COLOR_RED;
+        %tmp.304 = getv ? :Graphics;
+        %tmp.305 = getv %tmp.304 :COLOR_TRANSPARENT;
+        invoke %tmp.298 %tmp.299(%tmp.302, %tmp.305);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 397 4 ]
+        %tmp.306 = lgetv %dc;
+        %tmp.307 = getv function %tmp.306 :fillPolygon;
+        %tmp.309 = lgetv %points.18;
+        invoke %tmp.306 %tmp.307(%tmp.309);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_344_79_398_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 400; ]
+    function xy2Screen(x, y) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_400_27_408_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 401 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_400_27_408_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_400_27_408_2_stop" ]
+        %xr.1 = local;
+        %tmp.2 = getv ? :scaleFactor;
+        %tmp.4 = lgetv %x;
+        %tmp.6 = getv ? :xCenter;
+        %tmp.7 = sub %tmp.4 %tmp.6;
+        %tmp.8 = mul %tmp.2 %tmp.7;
+        lputv %xr.1 %tmp.8;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 402 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_400_27_408_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_400_27_408_2_stop" ]
+        %yr.2 = local;
+        %tmp.10 = getv ? :scaleFactor;
+        %tmp.12 = lgetv %y;
+        %tmp.14 = getv ? :yCenter;
+        %tmp.15 = sub %tmp.12 %tmp.14;
+        %tmp.16 = mul %tmp.10 %tmp.15;
+        lputv %yr.2 %tmp.16;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 403 4 ]
+        %tmp.17 = newa 2;
+        %tmp.19 = getv ? :xSCenter;
+        %tmp.21 = lgetv %xr.1;
+        %tmp.23 = getv ? :cosTransform;
+        %tmp.24 = mul %tmp.21 %tmp.23;
+        %tmp.25 = add %tmp.19 %tmp.24;
+        %tmp.27 = lgetv %yr.2;
+        %tmp.29 = getv ? :sinTransform;
+        %tmp.30 = mul %tmp.27 %tmp.29;
+        %tmp.31 = sub %tmp.25 %tmp.30;
+        %tmp.32 = dup %tmp.17;
+        %tmp.33 = aputv %tmp.32 0 %tmp.31;
+        %tmp.35 = getv ? :ySCenter;
+        %tmp.37 = lgetv %xr.1;
+        %tmp.39 = getv ? :sinTransform;
+        %tmp.40 = mul %tmp.37 %tmp.39;
+        %tmp.41 = sub %tmp.35 %tmp.40;
+        %tmp.43 = lgetv %yr.2;
+        %tmp.45 = getv ? :cosTransform;
+        %tmp.46 = mul %tmp.43 %tmp.45;
+        %tmp.47 = sub %tmp.41 %tmp.46;
+        %tmp.48 = dup %tmp.33;
+        %tmp.49 = aputv %tmp.48 1 %tmp.47;
+        ret %tmp.49;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_400_27_408_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 411; ]
+    function onLayout(dc) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_411_24_443_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 412 4 ]
+        %tmp.1 = lgetv %dc;
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        putv self :pixelWidth %tmp.3;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 413 4 ]
+        %tmp.4 = 0.5;
+        %tmp.6 = getv ? :pixelWidth;
+        %tmp.7 = mul %tmp.4 %tmp.6;
+        putv self :pixelWidth2 %tmp.7;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 414 4 ]
+        %tmp.8 = lgetv %dc;
+        %tmp.9 = getv function %tmp.8 :getHeight;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        putv self :pixelHeight %tmp.10;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 415 4 ]
+        %tmp.11 = 0.5;
+        %tmp.13 = getv ? :pixelHeight;
+        %tmp.14 = mul %tmp.11 %tmp.13;
+        putv self :pixelHeight2 %tmp.14;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 416 4 ]
+        %tmp.15 = 0.6666667;
+        %tmp.17 = getv ? :pixelHeight;
+        %tmp.18 = mul %tmp.15 %tmp.17;
+        putv self :pixelHeight3 %tmp.18;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 417 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_begin:
+        %tmp.20 = getv ? :pixelWidth;
+        %tmp.22 = getv ? :pixelHeight;
+        %tmp.23 = lt %tmp.20 %tmp.22;
+        bf %tmp.23 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_true:
+        %tmp.25 = getv ? :pixelWidth;
+        push %tmp.25;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_false:
+        %tmp.27 = getv ? :pixelHeight;
+        push %tmp.27;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_end:
+        %tmp.28 = phi [%tmp.23 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_begin] [%tmp.25 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_true] [%tmp.27 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_false] [%tmp.28 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_417_15_417_55_end];
+        putv self :pixelMin %tmp.28;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 420 4 ]
+        %tmp.29 = 0.4;
+        %tmp.31 = getv ? :pixelWidth;
+        %tmp.32 = mul %tmp.29 %tmp.31;
+        putv self :x1Scale %tmp.32;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 421 4 ]
+        %tmp.33 = 0.96;
+        %tmp.35 = getv ? :pixelHeight;
+        %tmp.36 = mul %tmp.33 %tmp.35;
+        putv self :y1Scale %tmp.36;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 422 4 ]
+        %tmp.37 = 0.6;
+        %tmp.39 = getv ? :pixelWidth;
+        %tmp.40 = mul %tmp.37 %tmp.39;
+        putv self :x2Scale %tmp.40;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 423 4 ]
+        %tmp.41 = 0.98;
+        %tmp.43 = getv ? :pixelHeight;
+        %tmp.44 = mul %tmp.41 %tmp.43;
+        putv self :y2Scale %tmp.44;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 426 4 ]
+        %tmp.45 = 0.25;
+        %tmp.47 = getv ? :x2Scale;
+        %tmp.49 = getv ? :x1Scale;
+        %tmp.50 = sub %tmp.47 %tmp.49;
+        %tmp.51 = mul %tmp.45 %tmp.50;
+        putv self :sizeCompass %tmp.51;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 427 4 ]
+        %tmp.53 = getv ? :x2Scale;
+        %tmp.54 = 2;
+        %tmp.56 = getv ? :sizeCompass;
+        %tmp.57 = mul %tmp.54 %tmp.56;
+        %tmp.58 = add %tmp.53 %tmp.57;
+        putv self :xCompass %tmp.58;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 428 4 ]
+        %tmp.60 = getv ? :y2Scale;
+        %tmp.62 = getv ? :sizeCompass;
+        %tmp.63 = sub %tmp.60 %tmp.62;
+        putv self :yCompass %tmp.63;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 431 4 ]
+        %tmp.64 = 0.05;
+        %tmp.66 = getv ? :pixelWidth;
+        %tmp.67 = mul %tmp.64 %tmp.66;
+        putv self :sizeCursor %tmp.67;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 434 4 ]
+        %tmp.68 = 0.8;
+        %tmp.70 = getv ? :pixelWidth;
+        %tmp.71 = mul %tmp.68 %tmp.70;
+        putv self :eleWidth %tmp.71;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 436 4 ]
+        %tmp.72 = 0.32;
+        %tmp.74 = getv ? :pixelWidth;
+        %tmp.75 = mul %tmp.72 %tmp.74;
+        putv self :eleHeight %tmp.75;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 437 4 ]
+        %tmp.77 = getv ? :pixelWidth2;
+        %tmp.78 = 0.5;
+        %tmp.80 = getv ? :eleWidth;
+        %tmp.81 = mul %tmp.78 %tmp.80;
+        %tmp.82 = sub %tmp.77 %tmp.81;
+        putv self :x1Ele %tmp.82;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 438 4 ]
+        %tmp.84 = getv ? :pixelHeight2;
+        %tmp.85 = 0.4;
+        %tmp.87 = getv ? :eleHeight;
+        %tmp.88 = mul %tmp.85 %tmp.87;
+        %tmp.89 = sub %tmp.84 %tmp.88;
+        putv self :y1Ele %tmp.89;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 439 4 ]
+        %tmp.91 = getv ? :x1Ele;
+        %tmp.93 = getv ? :eleWidth;
+        %tmp.94 = add %tmp.91 %tmp.93;
+        putv self :x2Ele %tmp.94;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 440 4 ]
+        %tmp.96 = getv ? :pixelHeight2;
+        %tmp.97 = 0.6;
+        %tmp.99 = getv ? :eleHeight;
+        %tmp.100 = mul %tmp.97 %tmp.99;
+        %tmp.101 = add %tmp.96 %tmp.100;
+        putv self :y2Ele %tmp.101;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 442 4 ]
+        %tmp.102 = lgetv %dc;
+        %tmp.103 = getv function %tmp.102 :getFontHeight;
+        %tmp.105 = getv ? :fontsize;
+        %tmp.106 = invoke %tmp.102 %tmp.103(%tmp.105);
+        putv self :fontHeight %tmp.106;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_411_24_443_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 448; ]
+    function onShow(breadcrumbTrack as BreadcrumbTrack) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_448_54_453_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 450 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_4_452_4_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_8_450_46_begin:
+        %tmp.2 = getv ? :zoomLevel;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_4_452_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_29_450_46_true:
+        %tmp.5 = lgetv %breadcrumbTrack;
+        %tmp.6 = getv %tmp.5 :hasTrackData;
+        %tmp.7 = not %tmp.6;
+        push %tmp.7;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_29_450_46_end:
+        %tmp.8 = phi [%tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_8_450_46_begin] [%tmp.7 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_29_450_46_true] [%tmp.8 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_29_450_46_end];
+        bf %tmp.8 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_4_452_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_4_452_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_60_452_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 451 6 ]
+        %tmp.9 = self;
+        %tmp.10 = getv function %tmp.9 :setZoomLevel;
+        %tmp.11 = 5;
+        %tmp.13 = lgetv %breadcrumbTrack;
+        invoke %tmp.9 %tmp.10(%tmp.11, %tmp.13);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_60_452_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_4_452_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_450_4_452_4_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_448_54_453_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 455; ]
+    function render(dc, breadcrumbTrack as BreadcrumbTrack) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_455_58_538_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 456 4 ]
+        %tmp.2 = getv ? :System;
+        %tmp.3 = getv function %tmp.2 :println;
+        %tmp.4 = "rendered";
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 459 4 ]
+        %tmp.5 = lgetv %dc;
+        %tmp.6 = getv function %tmp.5 :setColor;
+        %tmp.8 = getv ? :backgroundColor;
+        %tmp.10 = getv ? :backgroundColor;
+        invoke %tmp.5 %tmp.6(%tmp.8, %tmp.10);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 460 4 ]
+        %tmp.11 = lgetv %dc;
+        %tmp.12 = getv function %tmp.11 :clear;
+        invoke %tmp.11 %tmp.12();
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 461 4 ]
+        %tmp.13 = self;
+        %tmp.14 = getv function %tmp.13 :onLayout;
+        %tmp.16 = lgetv %dc;
+        invoke %tmp.13 %tmp.14(%tmp.16);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 462 4 ]
+        %tmp.17 = self;
+        %tmp.18 = getv function %tmp.17 :setZoomLevel;
+        %tmp.19 = null;
+        %tmp.21 = lgetv %breadcrumbTrack;
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.21);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 463 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_463_4_469_4_if_stmt:
+        %tmp.23 = getv ? :isNewTrack;
+        bf %tmp.23 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_463_4_469_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_463_4_469_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_463_20_469_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 464 6 ]
+        %tmp.24 = false;
+        putv self :isNewTrack %tmp.24;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 465 6 ]
+        %tmp.25 = self;
+        %tmp.26 = getv function %tmp.25 :setZoomLevel;
+        %tmp.27 = null;
+        %tmp.29 = lgetv %breadcrumbTrack;
+        invoke %tmp.25 %tmp.26(%tmp.27, %tmp.29);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 466 6 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_466_6_468_6_if_stmt:
+        %tmp.30 = lgetv %breadcrumbTrack;
+        %tmp.31 = getv %tmp.30 :hasElevationData;
+        bf %tmp.31 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_466_6_468_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_466_6_468_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_466_44_468_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 467 8 ]
+        %tmp.33 = getv ? :eleWidth;
+        %tmp.34 = lgetv %breadcrumbTrack;
+        %tmp.35 = getv %tmp.34 :xyLength;
+        %tmp.36 = div %tmp.33 %tmp.35;
+        putv self :scaleEleX %tmp.36;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_466_44_468_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_466_6_468_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_466_6_468_6_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_463_20_469_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_463_4_469_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_463_4_469_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 471 4 ]
+        %tmp.38 = getv ? :pixelWidth2;
+        putv self :xSCenter %tmp.38;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 472 4 ]
+        %tmp.40 = getv ? :pixelHeight2;
+        putv self :ySCenter %tmp.40;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 474 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_4_482_4_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_8_475_25_begin:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_8_474_56_begin:
+        %tmp.41 = lgetv %breadcrumbTrack;
+        %tmp.42 = getv %tmp.41 :northHeading;
+        bt %tmp.42 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_4_482_4_if_true;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_40_474_56_false:
+        %tmp.43 = lgetv %breadcrumbTrack;
+        %tmp.44 = getv %tmp.43 :centerMap;
+        push %tmp.44;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_40_474_56_end:
+        %tmp.45 = phi [%tmp.42 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_8_474_56_begin] [%tmp.44 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_40_474_56_false] [%tmp.45 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_40_474_56_end];
+        bt %tmp.45 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_4_482_4_if_true;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_475_8_475_25_false:
+        %tmp.46 = lgetv %breadcrumbTrack;
+        %tmp.47 = getv %tmp.46 :onPositionCalled;
+        %tmp.48 = not %tmp.47;
+        push %tmp.48;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_475_8_475_25_end:
+        %tmp.49 = phi [%tmp.45 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_8_475_25_begin] [%tmp.48 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_475_8_475_25_false] [%tmp.49 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_475_8_475_25_end];
+        bf %tmp.49 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_4_482_4_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_4_482_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_475_43_478_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 476 6 ]
+        %tmp.50 = 0.0;
+        putv self :sinTransform %tmp.50;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 477 6 ]
+        %tmp.51 = 1.0;
+        putv self :cosTransform %tmp.51;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_475_43_478_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_4_482_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_4_482_4_if_false:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_478_11_482_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 479 6 ]
+        %tmp.52 = lgetv %breadcrumbTrack;
+        %tmp.53 = getv %tmp.52 :sin_heading_smooth;
+        putv self :sinTransform %tmp.53;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 480 6 ]
+        %tmp.54 = lgetv %breadcrumbTrack;
+        %tmp.55 = getv %tmp.54 :cos_heading_smooth;
+        putv self :cosTransform %tmp.55;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 481 6 ]
+        %tmp.57 = getv ? :pixelHeight3;
+        putv self :ySCenter %tmp.57;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_478_11_482_4_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_474_4_482_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 484 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_484_4_491_4_if_stmt:
+        %tmp.58 = lgetv %breadcrumbTrack;
+        %tmp.59 = getv %tmp.58 :centerMap;
+        bf %tmp.59 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_484_4_491_4_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_484_4_491_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_484_35_488_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 486 6 ]
+        %tmp.60 = 0.0;
+        putv self :xCenter %tmp.60;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 487 6 ]
+        %tmp.61 = 0.0;
+        putv self :yCenter %tmp.61;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_484_35_488_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_484_4_491_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_484_4_491_4_if_false:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_488_11_491_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 489 6 ]
+        %tmp.62 = lgetv %breadcrumbTrack;
+        %tmp.63 = getv %tmp.62 :xPos;
+        putv self :xCenter %tmp.63;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 490 6 ]
+        %tmp.64 = lgetv %breadcrumbTrack;
+        %tmp.65 = getv %tmp.64 :yPos;
+        putv self :yCenter %tmp.65;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_488_11_491_4_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_484_4_491_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 493 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_493_4_497_4_if_stmt:
+        %tmp.67 = getv ? :showElevationPlot;
+        %tmp.68 = not %tmp.67;
+        bf %tmp.68 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_493_4_497_4_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_493_4_497_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_493_28_495_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 494 6 ]
+        %tmp.69 = self;
+        %tmp.70 = getv function %tmp.69 :drawTrack;
+        %tmp.72 = lgetv %dc;
+        %tmp.74 = lgetv %breadcrumbTrack;
+        invoke %tmp.69 %tmp.70(%tmp.72, %tmp.74);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_493_28_495_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_493_4_497_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_493_4_497_4_if_false:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_495_11_497_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 496 6 ]
+        %tmp.75 = self;
+        %tmp.76 = getv function %tmp.75 :drawProfile;
+        %tmp.78 = lgetv %dc;
+        %tmp.80 = lgetv %breadcrumbTrack;
+        invoke %tmp.75 %tmp.76(%tmp.78, %tmp.80);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_495_11_497_4_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_493_4_497_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 499 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_4_501_4_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_8_499_45_begin:
+        %tmp.81 = lgetv %breadcrumbTrack;
+        %tmp.82 = getv %tmp.81 :onPositionCalled;
+        bf %tmp.82 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_4_501_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_44_499_45_true:
+        %tmp.84 = getv ? :showElevationPlot;
+        %tmp.85 = not %tmp.84;
+        push %tmp.85;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_44_499_45_end:
+        %tmp.86 = phi [%tmp.82 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_8_499_45_begin] [%tmp.85 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_44_499_45_true] [%tmp.86 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_44_499_45_end];
+        bf %tmp.86 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_4_501_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_4_501_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_64_501_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 500 6 ]
+        %tmp.87 = self;
+        %tmp.88 = getv function %tmp.87 :drawPositionArrowAndCompass;
+        %tmp.90 = lgetv %dc;
+        %tmp.92 = lgetv %breadcrumbTrack;
+        invoke %tmp.87 %tmp.88(%tmp.90, %tmp.92);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_64_501_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_4_501_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_499_4_501_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 533 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_533_4_535_4_if_stmt:
+        %tmp.94 = getv ? :showElevationPlot;
+        %tmp.95 = not %tmp.94;
+        bf %tmp.95 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_533_4_535_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_533_4_535_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_533_28_535_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 534 6 ]
+        %tmp.96 = self;
+        %tmp.97 = getv function %tmp.96 :drawScale;
+        %tmp.99 = lgetv %dc;
+        invoke %tmp.96 %tmp.97(%tmp.99);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_533_28_535_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_533_4_535_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_533_4_535_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 537 4 ]
+        %tmp.100 = self;
+        %tmp.101 = getv function %tmp.100 :drawStartStop;
+        %tmp.103 = lgetv %dc;
+        invoke %tmp.100 %tmp.101(%tmp.103);
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_455_58_538_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 540; ]
+    function setZoomLevel(l, breadcrumbTrack as BreadcrumbTrack) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_540_63_562_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 541 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_541_4_558_4_if_stmt:
+        %tmp.2 = lgetv %l;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_541_4_558_4_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_541_4_558_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_541_19_550_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 543 6 ]
+        %tmp.5 = 0;
+        putv self :zoomLevel %tmp.5;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 544 6 ]
+        for @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_test @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_incr @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_init:
+        %tmp.6 = 0;
+        putv self :zoomLevel %tmp.6;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_test:
+        %tmp.8 = getv ? :zoomLevel;
+        %tmp.10 = getv ? :SCALES;
+        %tmp.11 = getv function %tmp.10 :size;
+        %tmp.12 = invoke %tmp.10 %tmp.11();
+        %tmp.13 = lt %tmp.8 %tmp.12;
+        bf %tmp.13 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_begin:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_69_549_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 545 8 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_545_8_548_8_if_stmt:
+        %tmp.15 = getv ? :pixelMin;
+        %tmp.16 = 0.2;
+        %tmp.18 = getv ? :pixelWidth;
+        %tmp.19 = mul %tmp.16 %tmp.18;
+        %tmp.20 = div %tmp.15 %tmp.19;
+        %tmp.22 = getv ? :SCALES;
+        %tmp.24 = getv ? :zoomLevel;
+        %tmp.25 = agetv %tmp.22 %tmp.24;
+        %tmp.26 = mul %tmp.20 %tmp.25;
+        %tmp.27 = 0.95;
+        %tmp.28 = mul %tmp.26 %tmp.27;
+        %tmp.29 = lgetv %breadcrumbTrack;
+        %tmp.30 = getv %tmp.29 :diagonal;
+        %tmp.31 = gt %tmp.28 %tmp.30;
+        bf %tmp.31 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_545_8_548_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_545_8_548_8_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_546_38_548_8_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 547 10 ]
+        goto break @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_546_38_548_8_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_545_8_548_8_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_545_8_548_8_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_69_549_6_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_incr:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 544 ]
+        %tmp.32 = getv self :zoomLevel;
+        %tmp.33 = 1;
+        %tmp.34 = add %tmp.32 %tmp.33;
+        putv self :zoomLevel dup %tmp.34;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_test;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_544_6_549_6_for_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_541_19_550_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_541_4_558_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_541_4_558_4_if_false:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_550_11_558_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 551 6 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_6_557_6_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_10_551_33_begin:
+        %tmp.36 = lgetv %l;
+        %tmp.37 = as %tmp.36 { (!Null) };
+        %tmp.38 = -1;
+        %tmp.39 = eq %tmp.37 %tmp.38;
+        bf %tmp.39 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_6_557_6_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_21_551_33_true:
+        %tmp.41 = getv ? :zoomLevel;
+        %tmp.42 = 0;
+        %tmp.43 = gt %tmp.41 %tmp.42;
+        push %tmp.43;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_21_551_33_end:
+        %tmp.44 = phi [%tmp.39 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_10_551_33_begin] [%tmp.43 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_21_551_33_true] [%tmp.44 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_21_551_33_end];
+        bf %tmp.44 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_6_557_6_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_6_557_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_36_553_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 552 8 ]
+        %tmp.45 = getv self :zoomLevel;
+        %tmp.46 = 1;
+        %tmp.47 = sub %tmp.45 %tmp.46;
+        putv self :zoomLevel dup %tmp.47;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_36_553_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_6_557_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_6_557_6_if_false:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 553 13 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_13_557_6_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_17_553_56_begin:
+        %tmp.49 = lgetv %l;
+        %tmp.50 = as %tmp.49 { (!Null) };
+        %tmp.51 = -2;
+        %tmp.52 = eq %tmp.50 %tmp.51;
+        bf %tmp.52 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_13_557_6_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_28_553_56_true:
+        %tmp.54 = getv ? :zoomLevel;
+        %tmp.56 = getv ? :SCALES;
+        %tmp.57 = getv function %tmp.56 :size;
+        %tmp.58 = invoke %tmp.56 %tmp.57();
+        %tmp.59 = 1;
+        %tmp.60 = sub %tmp.58 %tmp.59;
+        %tmp.61 = lt %tmp.54 %tmp.60;
+        push %tmp.61;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_28_553_56_end:
+        %tmp.62 = phi [%tmp.52 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_17_553_56_begin] [%tmp.61 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_28_553_56_true] [%tmp.62 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_28_553_56_end];
+        bf %tmp.62 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_13_557_6_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_13_557_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_59_555_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 554 8 ]
+        %tmp.63 = getv self :zoomLevel;
+        %tmp.64 = 1;
+        %tmp.65 = add %tmp.63 %tmp.64;
+        putv self :zoomLevel dup %tmp.65;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_59_555_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_13_557_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_13_557_6_if_false:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 555 13 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_13_557_6_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_17_555_44_begin:
+        %tmp.67 = lgetv %l;
+        %tmp.68 = as %tmp.67 { (!Null) };
+        %tmp.69 = 0;
+        %tmp.70 = gte %tmp.68 %tmp.69;
+        bf %tmp.70 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_13_557_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_27_555_44_true:
+        %tmp.72 = lgetv %l;
+        %tmp.73 = as %tmp.72 { (!Null) };
+        %tmp.75 = getv ? :SCALES;
+        %tmp.76 = getv function %tmp.75 :size;
+        %tmp.77 = invoke %tmp.75 %tmp.76();
+        %tmp.78 = lte %tmp.73 %tmp.77;
+        push %tmp.78;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_27_555_44_end:
+        %tmp.79 = phi [%tmp.70 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_17_555_44_begin] [%tmp.78 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_27_555_44_true] [%tmp.79 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_27_555_44_end];
+        bf %tmp.79 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_13_557_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_13_557_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_47_557_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 556 8 ]
+        %tmp.81 = lgetv %l;
+        %tmp.82 = as %tmp.81 { (!Null) };
+        putv self :zoomLevel %tmp.82;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_47_557_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_13_557_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_555_13_557_6_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_553_13_557_6_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_551_6_557_6_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_550_11_558_4_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_541_4_558_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 559 4 ]
+        %tmp.84 = getv ? :SCALES;
+        %tmp.86 = getv ? :zoomLevel;
+        %tmp.87 = agetv %tmp.84 %tmp.86;
+        putv self :refScale %tmp.87;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 560 4 ]
+        %tmp.88 = 0.2;
+        %tmp.90 = getv ? :pixelWidth;
+        %tmp.91 = mul %tmp.88 %tmp.90;
+        %tmp.93 = getv ? :refScale;
+        %tmp.94 = div %tmp.91 %tmp.93;
+        %tmp.96 = getv ? :EARTH_RADIUS;
+        %tmp.97 = mul %tmp.94 %tmp.96;
+        putv self :scaleFactor %tmp.97;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 561 4 ]
+        %tmp.99 = getv ? :zoomLevel;
+        ret %tmp.99;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_540_63_562_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 564; ]
+    function formattedScale() {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_564_28_567_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 565 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_begin:
+        %tmp.2 = getv ? :refScale;
+        %tmp.3 = 1000.0;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_true:
+        %tmp.6 = getv ? :refScale;
+        %tmp.7 = getv function %tmp.6 :format;
+        %tmp.8 = "%d";
+        %tmp.9 = invoke %tmp.6 %tmp.7(%tmp.8);
+        %tmp.10 = "m";
+        %tmp.11 = add %tmp.9 %tmp.10;
+        push %tmp.11;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_false:
+        %tmp.12 = 0.001;
+        %tmp.14 = getv ? :refScale;
+        %tmp.15 = mul %tmp.12 %tmp.14;
+        %tmp.16 = getv function %tmp.15 :format;
+        %tmp.17 = "%.1f";
+        %tmp.18 = invoke %tmp.15 %tmp.16(%tmp.17);
+        %tmp.19 = "k";
+        %tmp.20 = add %tmp.18 %tmp.19;
+        push %tmp.20;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_end:
+        %tmp.21 = phi [%tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_begin] [%tmp.11 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_true] [%tmp.20 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_false] [%tmp.21 @C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_565_11_566_69_end];
+        ret %tmp.21;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_564_28_567_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 569; ]
+    function formatLength(ln) {
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_569_28_572_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 570 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_569_28_572_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_569_28_572_2_stop" ]
+        %l.1 = local;
+        %tmp.1 = 0.001;
+        %tmp.3 = getv ? :EARTH_RADIUS;
+        %tmp.4 = mul %tmp.1 %tmp.3;
+        %tmp.6 = lgetv %ln;
+        %tmp.7 = mul %tmp.4 %tmp.6;
+        lputv %l.1 %tmp.7;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc" 571 4 ]
+        %tmp.8 = lgetv %l.1;
+        %tmp.9 = getv function %tmp.8 :format;
+        %tmp.10 = "%.2f";
+        %tmp.11 = invoke %tmp.8 %tmp.9(%tmp.10);
+        %tmp.12 = " km";
+        %tmp.13 = add %tmp.11 %tmp.12;
+        ret %tmp.13;
+C_Users_RandomGuy2_1_garmin_apps_shared_TrackViewCommon_mc_569_28_572_2_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\TrackViewCommon.mc"; @line = 1; ]
+<init> {
+}

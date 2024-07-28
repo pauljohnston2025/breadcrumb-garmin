@@ -1,0 +1,69 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 1; ]
+import Toybox.Application;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 2; ]
+import Toybox.Graphics;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 3; ]
+import Toybox.WatchUi;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 5; ]
+class BreadcrumbDataFieldBackground extends WatchUi.Drawable{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 5; ]
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 5; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 7; @position = 15; ]
+    protected
+    var mColor as ColorValue;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 9; ]
+    function initialize() as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldBackground_mc_9_26_17_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc" 10 8 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldBackground_mc_9_26_17_4_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldBackground_mc_9_26_17_4_stop" ]
+        %dictionary.1 = local;
+        %tmp.1 = newd 1;
+        %tmp.3 = const :identifier;
+        %tmp.4 = "Background";
+        %tmp.5 = dup %tmp.1;
+        %tmp.6 = aputv %tmp.5 %tmp.3 %tmp.4;
+        lputv %dictionary.1 %tmp.6;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc" 14 8 ]
+        %tmp.8 = getv ? :Drawable;
+        %tmp.9 = getv function %tmp.8 :initialize;
+        %tmp.11 = lgetv %dictionary.1;
+        invoke %tmp.8 %tmp.9(%tmp.11);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc" 16 8 ]
+        %tmp.12 = getm $.Toybox.Graphics;
+        %tmp.13 = getv %tmp.12 :COLOR_WHITE;
+        putv self :mColor %tmp.13;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldBackground_mc_9_26_17_4_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 19; ]
+    function setColor(color as ColorValue) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldBackground_mc_19_51_21_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc" 20 8 ]
+        %tmp.2 = lgetv %color;
+        putv self :mColor %tmp.2;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldBackground_mc_19_51_21_4_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 23; ]
+    function draw(dc as Dc) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldBackground_mc_23_36_26_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc" 24 8 ]
+        %tmp.1 = lgetv %dc;
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = getm $.Toybox.Graphics;
+        %tmp.4 = getv %tmp.3 :COLOR_TRANSPARENT;
+        %tmp.6 = getv ? :mColor;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc" 25 8 ]
+        %tmp.7 = lgetv %dc;
+        %tmp.8 = getv function %tmp.7 :clear;
+        invoke %tmp.7 %tmp.8();
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldBackground_mc_23_36_26_4_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldBackground.mc"; @line = 1; ]
+<init> {
+}

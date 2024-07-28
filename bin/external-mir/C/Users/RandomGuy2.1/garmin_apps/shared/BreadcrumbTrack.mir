@@ -1,0 +1,648 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 1; ]
+import Toybox.Position;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 2; ]
+import Toybox.Lang;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 4; ]
+class BreadcrumbTrack{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 4; ]
+    <init> {
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 8 8 ]
+        %tmp.1 = 0.6666667;
+        %tmp.3 = getv ? :PI;
+        %tmp.4 = mul %tmp.1 %tmp.3;
+        putv self :PI2_3 %tmp.4;
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 4; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 6; @position = 8; ]
+    const EARTH_RADIUS = 6371000.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 7; @position = 8; ]
+    const PI = 3.1415927;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 8; @position = 8; ]
+    const PI2_3;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 11; @position = 6; ]
+    var bxy;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 12; @position = 6; ]
+    var breadCrumbNumber = 10;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 13; @position = 6; ]
+    var breadCrumbDist = 100.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 14; @position = 6; ]
+    var pos_start_index;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 15; @position = 6; ]
+    var pos_nelements;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 16; @position = 6; ]
+    var cumDistance;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 19; @position = 6; ]
+    var lat_view_center = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 20; @position = 6; ]
+    var lon_view_center = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 21; @position = 6; ]
+    var cos_lat_view_center;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 22; @position = 6; ]
+    var sin_lat_view_center;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 25; @position = 6; ]
+    var xPos;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 26; @position = 6; ]
+    var yPos;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 27; @position = 6; ]
+    var xLastPos;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 28; @position = 6; ]
+    var yLastPos;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 29; @position = 6; ]
+    var latLast;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 30; @position = 6; ]
+    var lonLast;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 33; @position = 6; ]
+    var northHeading = true;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 34; @position = 6; ]
+    var centerMap = false;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 35; @position = 6; ]
+    var cos_heading_smooth = 1.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 36; @position = 6; ]
+    var sin_heading_smooth = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 39; @position = 6; ]
+    var lapTime = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 40; @position = 6; ]
+    var lapDistance = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 41; @position = 6; ]
+    var lapInitDistance = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 42; @position = 6; ]
+    var lapInitTime = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 43; @position = 6; ]
+    var lapTimeP = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 44; @position = 6; ]
+    var lapDistanceP = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 45; @position = 6; ]
+    var lapCounter = 0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 46; @position = 6; ]
+    var autolapDistance = 1000.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 47; @position = 6; ]
+    var isAutoLapActive = false;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 50; @position = 6; ]
+    var trackStats;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 51; @position = 6; ]
+    var xArray;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 52; @position = 6; ]
+    var yArray;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 53; @position = 6; ]
+    var eleArray;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 55; @position = 6; ]
+    var latCenter;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 56; @position = 6; ]
+    var lonCenter;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 57; @position = 6; ]
+    var diagonal = 1;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 58; @position = 6; ]
+    var name;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 59; @position = 6; ]
+    var length;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 60; @position = 6; ]
+    var nPoints;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 61; @position = 6; ]
+    var xyLength;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 62; @position = 6; ]
+    var xyLengthLabel;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 63; @position = 6; ]
+    var eleMin;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 64; @position = 6; ]
+    var eleMinDist;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 65; @position = 6; ]
+    var eleMinIdx;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 66; @position = 6; ]
+    var eleMax;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 67; @position = 6; ]
+    var eleMaxDist;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 68; @position = 6; ]
+    var eleMaxIdx;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 69; @position = 6; ]
+    var eleTotAscent;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 70; @position = 6; ]
+    var eleTotDescent;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 71; @position = 6; ]
+    var hasTrackData = false;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 72; @position = 6; ]
+    var hasElevationData = false;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 75; @position = 6; ]
+    var eleAct = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 76; @position = 6; ]
+    var eleMinAct = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 77; @position = 6; ]
+    var eleMaxAct = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 78; @position = 6; ]
+    var eleMinTrack = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 79; @position = 6; ]
+    var eleMaxTrack = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 80; @position = 6; ]
+    var eleTrack = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 81; @position = 6; ]
+    var eleTotAscentAct = null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 83; @position = 6; ]
+    var positionDistance = 0.0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 84; @position = 6; ]
+    var onPositionCalled = false;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 86; ]
+    function initialize() as Void {
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_86_24_89_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 87 4 ]
+        %tmp.1 = self;
+        %tmp.2 = getv function %tmp.1 :resetPosition;
+        invoke %tmp.1 %tmp.2();
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 88 4 ]
+        %tmp.3 = self;
+        %tmp.4 = getv function %tmp.3 :resetBreadCrumbs;
+        %tmp.5 = null;
+        invoke %tmp.3 %tmp.4(%tmp.5);
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_86_24_89_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 91; ]
+    function resetPosition() {
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_91_27_99_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 92 4 ]
+        %tmp.1 = null;
+        putv self :xLastPos %tmp.1;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 93 4 ]
+        %tmp.2 = null;
+        putv self :yLastPos %tmp.2;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 94 4 ]
+        %tmp.3 = 0.0;
+        putv self :positionDistance %tmp.3;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 95 4 ]
+        %tmp.4 = false;
+        putv self :onPositionCalled %tmp.4;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 97 4 ]
+        %tmp.5 = 1.0;
+        putv self :cos_heading_smooth %tmp.5;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 98 4 ]
+        %tmp.6 = 0.0;
+        putv self :sin_heading_smooth %tmp.6;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_91_27_99_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 101; ]
+    function resetBreadCrumbs(number) {
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_101_36_109_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 102 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_102_4_104_4_if_stmt:
+        %tmp.2 = lgetv %number;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_102_4_104_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_102_4_104_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_102_24_104_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 103 6 ]
+        %tmp.6 = lgetv %number;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        putv self :breadCrumbNumber %tmp.7;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_102_24_104_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_102_4_104_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_102_4_104_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 105 4 ]
+        %tmp.9 = 2;
+        %tmp.11 = getv ? :breadCrumbNumber;
+        %tmp.12 = mul %tmp.9 %tmp.11;
+        %tmp.8 = newa %tmp.12;
+        putv self :bxy %tmp.8;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 106 4 ]
+        %tmp.13 = 0;
+        putv self :pos_nelements %tmp.13;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 107 4 ]
+        %tmp.14 = 0;
+        putv self :pos_start_index %tmp.14;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 108 4 ]
+        %tmp.16 = getv ? :breadCrumbDist;
+        putv self :cumDistance %tmp.16;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_101_36_109_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 111; ]
+    function putBreadcrumbPosition(x, y) {
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_111_39_121_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 112 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_111_39_121_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_111_39_121_2_stop" ]
+        %i.1 = local;
+        %tmp.1 = 2;
+        %tmp.3 = getv ? :pos_nelements;
+        %tmp.4 = mul %tmp.1 %tmp.3;
+        lputv %i.1 %tmp.4;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 113 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_113_4_118_4_if_stmt:
+        %tmp.6 = getv ? :pos_nelements;
+        %tmp.8 = getv ? :breadCrumbNumber;
+        %tmp.9 = lt %tmp.6 %tmp.8;
+        bf %tmp.9 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_113_4_118_4_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_113_4_118_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_113_42_115_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 114 6 ]
+        %tmp.10 = getv self :pos_nelements;
+        %tmp.11 = 1;
+        %tmp.12 = add %tmp.10 %tmp.11;
+        putv self :pos_nelements dup %tmp.12;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_113_42_115_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_113_4_118_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_113_4_118_4_if_false:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_115_11_118_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 116 6 ]
+        %tmp.13 = 2;
+        %tmp.15 = getv ? :pos_start_index;
+        %tmp.16 = mul %tmp.13 %tmp.15;
+        lputv %i.1 %tmp.16;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 117 6 ]
+        %tmp.18 = getv ? :pos_start_index;
+        %tmp.19 = 1;
+        %tmp.20 = add %tmp.18 %tmp.19;
+        %tmp.22 = getv ? :breadCrumbNumber;
+        %tmp.23 = mod %tmp.20 %tmp.22;
+        putv self :pos_start_index %tmp.23;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_115_11_118_4_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_113_4_118_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 119 4 ]
+        %tmp.24 = getv self :bxy;
+        %tmp.26 = lgetv %x;
+        %tmp.28 = lgetv %i.1;
+        aputv %tmp.24 %tmp.28 %tmp.26;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 120 4 ]
+        %tmp.29 = getv self :bxy;
+        %tmp.31 = lgetv %y;
+        %tmp.33 = lgetv %i.1;
+        %tmp.34 = 1;
+        %tmp.35 = add %tmp.33 %tmp.34;
+        aputv %tmp.29 %tmp.35 %tmp.31;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_111_39_121_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 123; ]
+    function onPosition(altitude as Float or Null, position as Position.Location or Null) as Void {
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_124_69_136_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 125 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_125_4_127_4_if_stmt:
+        %tmp.2 = lgetv %position;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_125_4_127_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_125_4_127_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_125_26_127_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 126 6 ]
+        ret ?;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_125_26_127_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_125_4_127_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_125_4_127_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 133 4 ]
+        %tmp.5 = true;
+        putv self :onPositionCalled %tmp.5;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 134 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_124_69_136_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_124_69_136_2_stop" ]
+        %asRad.1 = local;
+        %tmp.6 = lgetv %position;
+        %tmp.7 = getv function %tmp.6 :toRadians;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %asRad.1 %tmp.8;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 135 4 ]
+        %tmp.9 = self;
+        %tmp.10 = getv function %tmp.9 :setPosition;
+        %tmp.12 = lgetv %asRad.1;
+        %tmp.13 = 0;
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.16 = lgetv %asRad.1;
+        %tmp.17 = 1;
+        %tmp.18 = agetv %tmp.16 %tmp.17;
+        invoke %tmp.9 %tmp.10(%tmp.14, %tmp.18);
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_124_69_136_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 138; ]
+    function setPosition(lat as Double, lon as Double) as Void {
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_138_61_202_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 140 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_140_4_146_4_if_stmt:
+        %tmp.2 = getv ? :lat_view_center;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_140_4_146_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_140_4_146_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_140_33_146_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 142 6 ]
+        %tmp.5 = lgetv %lat;
+        %tmp.6 = getv function %tmp.5 :toFloat;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        putv self :lat_view_center %tmp.7;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 143 6 ]
+        %tmp.8 = lgetv %lon;
+        %tmp.9 = getv function %tmp.8 :toFloat;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        putv self :lon_view_center %tmp.10;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 144 6 ]
+        %tmp.12 = getv ? :Math;
+        %tmp.13 = getv function %tmp.12 :cos;
+        %tmp.15 = getv ? :lat_view_center;
+        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.15);
+        putv self :cos_lat_view_center %tmp.16;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 145 6 ]
+        %tmp.18 = getv ? :Math;
+        %tmp.19 = getv function %tmp.18 :sin;
+        %tmp.21 = getv ? :lat_view_center;
+        %tmp.22 = invoke %tmp.18 %tmp.19(%tmp.21);
+        putv self :sin_lat_view_center %tmp.22;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_140_33_146_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_140_4_146_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_140_4_146_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 150 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_138_61_202_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_138_61_202_2_stop" ]
+        %xy.1 = local;
+        %tmp.23 = self;
+        %tmp.24 = getv function %tmp.23 :latLon2xy;
+        %tmp.26 = lgetv %lat;
+        %tmp.28 = lgetv %lon;
+        %tmp.29 = invoke %tmp.23 %tmp.24(%tmp.26, %tmp.28);
+        lputv %xy.1 %tmp.29;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 154 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_4_157_4_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_8_154_24_begin:
+        %tmp.31 = getv ? :xPos;
+        %tmp.32 = null;
+        %tmp.33 = ne %tmp.31 %tmp.32;
+        bf %tmp.33 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_4_157_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_24_154_24_true:
+        %tmp.35 = getv ? :onPositionCalled;
+        push %tmp.35;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_24_154_24_end:
+        %tmp.36 = phi [%tmp.33 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_8_154_24_begin] [%tmp.35 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_24_154_24_true] [%tmp.36 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_24_154_24_end];
+        bf %tmp.36 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_4_157_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_4_157_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_42_157_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 155 6 ]
+        %tmp.38 = getv ? :xPos;
+        %tmp.39 = as %tmp.38 { (!Null) };
+        putv self :xLastPos %tmp.39;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 156 6 ]
+        %tmp.41 = getv ? :yPos;
+        putv self :yLastPos %tmp.41;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_42_157_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_4_157_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_154_4_157_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 159 4 ]
+        %tmp.43 = lgetv %xy.1;
+        %tmp.44 = 0;
+        %tmp.45 = agetv %tmp.43 %tmp.44;
+        putv self :xPos %tmp.45;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 160 4 ]
+        %tmp.47 = lgetv %xy.1;
+        %tmp.48 = 1;
+        %tmp.49 = agetv %tmp.47 %tmp.48;
+        putv self :yPos %tmp.49;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 163 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_4_188_4_if_stmt:
+        %tmp.51 = getv ? :xLastPos;
+        %tmp.52 = null;
+        %tmp.53 = ne %tmp.51 %tmp.52;
+        bf %tmp.53 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_4_188_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_4_188_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_26_188_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 164 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_26_188_4_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_26_188_4_stop" ]
+        %dx.2 = local;
+        %tmp.55 = getv ? :xPos;
+        %tmp.57 = getv ? :xLastPos;
+        %tmp.58 = as %tmp.57 { (!Null) };
+        %tmp.59 = sub %tmp.55 %tmp.58;
+        lputv %dx.2 %tmp.59;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 165 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_26_188_4_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_26_188_4_stop" ]
+        %dy.3 = local;
+        %tmp.61 = getv ? :yPos;
+        %tmp.63 = getv ? :yLastPos;
+        %tmp.64 = sub %tmp.61 %tmp.63;
+        lputv %dy.3 %tmp.64;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 168 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_26_188_4_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_26_188_4_stop" ]
+        %d.4 = local;
+        %tmp.66 = getv ? :Math;
+        %tmp.67 = getv function %tmp.66 :sqrt;
+        %tmp.69 = lgetv %dx.2;
+        %tmp.71 = lgetv %dx.2;
+        %tmp.72 = mul %tmp.69 %tmp.71;
+        %tmp.74 = lgetv %dy.3;
+        %tmp.76 = lgetv %dy.3;
+        %tmp.77 = mul %tmp.74 %tmp.76;
+        %tmp.78 = add %tmp.72 %tmp.77;
+        %tmp.79 = invoke %tmp.66 %tmp.67(%tmp.78);
+        lputv %d.4 %tmp.79;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 170 6 ]
+        %tmp.81 = getv ? :EARTH_RADIUS;
+        %tmp.83 = lgetv %d.4;
+        %tmp.84 = mul %tmp.81 %tmp.83;
+        putv self :positionDistance %tmp.84;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 173 6 ]
+        %tmp.85 = getv self :cumDistance;
+        %tmp.87 = getv ? :positionDistance;
+        %tmp.88 = add %tmp.85 %tmp.87;
+        putv self :cumDistance dup %tmp.88;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 176 6 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_6_187_6_if_stmt:
+        %tmp.90 = getv ? :positionDistance;
+        %tmp.91 = 0.01;
+        %tmp.92 = gt %tmp.90 %tmp.91;
+        bf %tmp.92 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_6_187_6_if_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_6_187_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_35_184_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 177 8 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_35_184_6_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_35_184_6_stop" ]
+        %sf.5 = local;
+        %tmp.94 = getv ? :positionDistance;
+        %tmp.95 = 2.0;
+        %tmp.97 = getv ? :positionDistance;
+        %tmp.98 = add %tmp.95 %tmp.97;
+        %tmp.99 = div %tmp.94 %tmp.98;
+        lputv %sf.5 %tmp.99;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 178 8 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_35_184_6_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_35_184_6_stop" ]
+        %dxs.6 = local;
+        %tmp.100 = 1.0;
+        %tmp.102 = lgetv %sf.5;
+        %tmp.103 = sub %tmp.100 %tmp.102;
+        %tmp.105 = getv ? :sin_heading_smooth;
+        %tmp.106 = mul %tmp.103 %tmp.105;
+        %tmp.108 = lgetv %sf.5;
+        %tmp.110 = lgetv %d.4;
+        %tmp.111 = div %tmp.108 %tmp.110;
+        %tmp.113 = lgetv %dx.2;
+        %tmp.114 = mul %tmp.111 %tmp.113;
+        %tmp.115 = add %tmp.106 %tmp.114;
+        lputv %dxs.6 %tmp.115;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 179 8 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_35_184_6_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_35_184_6_stop" ]
+        %dys.7 = local;
+        %tmp.116 = 1.0;
+        %tmp.118 = lgetv %sf.5;
+        %tmp.119 = sub %tmp.116 %tmp.118;
+        %tmp.121 = getv ? :cos_heading_smooth;
+        %tmp.122 = mul %tmp.119 %tmp.121;
+        %tmp.124 = lgetv %sf.5;
+        %tmp.126 = lgetv %d.4;
+        %tmp.127 = div %tmp.124 %tmp.126;
+        %tmp.129 = lgetv %dy.3;
+        %tmp.130 = mul %tmp.127 %tmp.129;
+        %tmp.131 = add %tmp.122 %tmp.130;
+        lputv %dys.7 %tmp.131;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 181 8 ]
+        %tmp.132 = 1.0;
+        %tmp.134 = getv ? :Math;
+        %tmp.135 = getv function %tmp.134 :sqrt;
+        %tmp.137 = lgetv %dxs.6;
+        %tmp.139 = lgetv %dxs.6;
+        %tmp.140 = mul %tmp.137 %tmp.139;
+        %tmp.142 = lgetv %dys.7;
+        %tmp.144 = lgetv %dys.7;
+        %tmp.145 = mul %tmp.142 %tmp.144;
+        %tmp.146 = add %tmp.140 %tmp.145;
+        %tmp.147 = invoke %tmp.134 %tmp.135(%tmp.146);
+        %tmp.148 = div %tmp.132 %tmp.147;
+        lputv %sf.5 %tmp.148;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 182 8 ]
+        %tmp.150 = lgetv %dxs.6;
+        %tmp.152 = lgetv %sf.5;
+        %tmp.153 = mul %tmp.150 %tmp.152;
+        putv self :sin_heading_smooth %tmp.153;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 183 8 ]
+        %tmp.155 = lgetv %dys.7;
+        %tmp.157 = lgetv %sf.5;
+        %tmp.158 = mul %tmp.155 %tmp.157;
+        putv self :cos_heading_smooth %tmp.158;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_35_184_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_6_187_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_6_187_6_if_false:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_184_13_187_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 185 8 ]
+        %tmp.159 = 0.0;
+        putv self :sin_heading_smooth %tmp.159;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 186 8 ]
+        %tmp.160 = 1.0;
+        putv self :cos_heading_smooth %tmp.160;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_184_13_187_6_stop:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_176_6_187_6_if_end:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_26_188_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_4_188_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_163_4_188_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 191 4 ]
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_4_198_4_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_8_192_8_begin:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_8_191_58_begin:
+        %tmp.162 = getv ? :cumDistance;
+        %tmp.164 = getv ? :breadCrumbDist;
+        %tmp.165 = gte %tmp.162 %tmp.164;
+        bf %tmp.165 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_4_198_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_41_191_58_true:
+        %tmp.167 = getv ? :breadCrumbDist;
+        %tmp.168 = 0;
+        %tmp.169 = gt %tmp.167 %tmp.168;
+        push %tmp.169;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_41_191_58_end:
+        %tmp.170 = phi [%tmp.165 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_8_191_58_begin] [%tmp.169 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_41_191_58_true] [%tmp.170 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_41_191_58_end];
+        bf %tmp.170 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_4_198_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_192_8_192_8_true:
+        %tmp.172 = getv ? :onPositionCalled;
+        push %tmp.172;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_192_8_192_8_end:
+        %tmp.173 = phi [%tmp.170 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_8_192_8_begin] [%tmp.172 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_192_8_192_8_true] [%tmp.173 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_192_8_192_8_end];
+        bf %tmp.173 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_4_198_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_4_198_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_192_26_198_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 193 6 ]
+        %tmp.174 = self;
+        %tmp.175 = getv function %tmp.174 :putBreadcrumbPosition;
+        %tmp.177 = getv ? :xPos;
+        %tmp.179 = getv ? :yPos;
+        invoke %tmp.174 %tmp.175(%tmp.177, %tmp.179);
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 196 6 ]
+        %tmp.180 = getv self :cumDistance;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_begin:
+        %tmp.182 = getv ? :breadCrumbDist;
+        %tmp.184 = getv ? :positionDistance;
+        %tmp.185 = gt %tmp.182 %tmp.184;
+        bf %tmp.185 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_false;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_true:
+        %tmp.187 = getv ? :breadCrumbDist;
+        push %tmp.187;
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_false:
+        %tmp.189 = getv ? :positionDistance;
+        push %tmp.189;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_end:
+        %tmp.190 = phi [%tmp.185 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_begin] [%tmp.187 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_true] [%tmp.189 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_false] [%tmp.190 @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_197_10_197_63_end];
+        %tmp.191 = sub %tmp.180 %tmp.190;
+        putv self :cumDistance dup %tmp.191;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_192_26_198_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_4_198_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_191_4_198_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 200 4 ]
+        %tmp.193 = lgetv %lat;
+        putv self :latLast %tmp.193;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 201 4 ]
+        %tmp.195 = lgetv %lon;
+        putv self :lonLast %tmp.195;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_138_61_202_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 210; ]
+    function latLon2xy(lat as Double, lon as Double) as [Float, Float] {
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 211 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_stop" ]
+        %ll.1 = local;
+        %tmp.2 = lgetv %lon;
+        %tmp.4 = getv ? :lon_view_center;
+        %tmp.5 = as %tmp.4 Float;
+        %tmp.6 = sub %tmp.2 %tmp.5;
+        lputv %ll.1 %tmp.6;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 212 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_stop" ]
+        %cosLat.2 = local;
+        %tmp.8 = getv ? :Math;
+        %tmp.9 = getv function %tmp.8 :cos;
+        %tmp.11 = lgetv %lat;
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        lputv %cosLat.2 %tmp.12;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 213 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_stop" ]
+        %x.3 = local;
+        %tmp.14 = lgetv %cosLat.2;
+        %tmp.16 = getv ? :Math;
+        %tmp.17 = getv function %tmp.16 :sin;
+        %tmp.19 = lgetv %ll.1;
+        %tmp.20 = invoke %tmp.16 %tmp.17(%tmp.19);
+        %tmp.21 = mul %tmp.14 %tmp.20;
+        lputv %x.3 %tmp.21;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 214 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_start" "C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_stop" ]
+        %y.4 = local;
+        %tmp.23 = getv ? :cos_lat_view_center;
+        %tmp.25 = getv ? :Math;
+        %tmp.26 = getv function %tmp.25 :sin;
+        %tmp.28 = lgetv %lat;
+        %tmp.29 = invoke %tmp.25 %tmp.26(%tmp.28);
+        %tmp.30 = mul %tmp.23 %tmp.29;
+        %tmp.32 = getv ? :sin_lat_view_center;
+        %tmp.34 = lgetv %cosLat.2;
+        %tmp.35 = mul %tmp.32 %tmp.34;
+        %tmp.37 = getv ? :Math;
+        %tmp.38 = getv function %tmp.37 :cos;
+        %tmp.40 = lgetv %ll.1;
+        %tmp.41 = invoke %tmp.37 %tmp.38(%tmp.40);
+        %tmp.42 = mul %tmp.35 %tmp.41;
+        %tmp.43 = sub %tmp.30 %tmp.42;
+        lputv %y.4 %tmp.43;
+[ "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc" 219 4 ]
+        %tmp.44 = newa 2;
+        %tmp.45 = lgetv %x.3;
+        %tmp.46 = getv function %tmp.45 :toFloat;
+        %tmp.47 = invoke %tmp.45 %tmp.46();
+        %tmp.48 = dup %tmp.44;
+        %tmp.49 = aputv %tmp.48 0 %tmp.47;
+        %tmp.50 = lgetv %y.4;
+        %tmp.51 = getv function %tmp.50 :toFloat;
+        %tmp.52 = invoke %tmp.50 %tmp.51();
+        %tmp.53 = dup %tmp.49;
+        %tmp.54 = aputv %tmp.53 1 %tmp.52;
+        ret %tmp.54;
+C_Users_RandomGuy2_1_garmin_apps_shared_BreadcrumbTrack_mc_210_68_220_2_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\BreadcrumbTrack.mc"; @line = 1; ]
+<init> {
+}

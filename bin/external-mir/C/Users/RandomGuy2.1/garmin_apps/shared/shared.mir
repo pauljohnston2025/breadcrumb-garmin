@@ -1,0 +1,21 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\shared.mc"; @line = 1; ]
+import Toybox.Activity;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\shared.mc"; @line = 2; ]
+import Toybox.Lang;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\shared.mc"; @line = 3; ]
+import Toybox.Time;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\shared.mc"; @line = 4; ]
+import Toybox.WatchUi;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\shared.mc"; @line = 5; ]
+import Toybox.Communications;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\shared.mc"; @line = 6; ]
+import Toybox.Graphics;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\shared.mc"; @line = 8; ]
+module shared {
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\shared.mc"; @line = 8; ]
+    <init> {
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\shared\shared.mc"; @line = 1; ]
+<init> {
+}

@@ -1,0 +1,95 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 1; ]
+import Toybox.WatchUi;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 2; ]
+import Toybox.System;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 4; ]
+class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 4; ]
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 4; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 5; @position = 6; ]
+    var _view as BreadcrumbDataFieldView;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 7; ]
+    function initialize(view as BreadcrumbDataFieldView) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldDelegate_mc_7_55_10_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc" 8 4 ]
+        %tmp.2 = lgetv %view;
+        putv self :_view %tmp.2;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc" 9 4 ]
+        %tmp.4 = getv ? :InputDelegate;
+        %tmp.5 = getv function %tmp.4 :initialize;
+        invoke %tmp.4 %tmp.5();
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldDelegate_mc_7_55_10_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 12; ]
+    function onKey(keyEvent as WatchUi.KeyEvent) {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldDelegate_mc_12_47_15_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc" 13 4 ]
+        %tmp.1 = getm $.Toybox.System;
+        %tmp.2 = getv function %tmp.1 :println;
+        %tmp.3 = lgetv %keyEvent;
+        %tmp.4 = getv function %tmp.3 :getKey;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        invoke %tmp.1 %tmp.2(%tmp.5);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc" 14 4 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldDelegate_mc_12_47_15_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 17; ]
+    function onTap(evt as WatchUi.ClickEvent) {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldDelegate_mc_17_44_22_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc" 18 4 ]
+        %tmp.2 = getv ? :_view;
+        %tmp.3 = getv function %tmp.2 :onTap;
+        %tmp.5 = lgetv %evt;
+        invoke %tmp.2 %tmp.3(%tmp.5);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc" 19 4 ]
+        %tmp.6 = getm $.Toybox.System;
+        %tmp.7 = getv function %tmp.6 :println;
+        %tmp.8 = "tap (x,y): (";
+        %tmp.9 = lgetv %evt;
+        %tmp.10 = getv function %tmp.9 :getCoordinates;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        %tmp.12 = 0;
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        %tmp.14 = add %tmp.8 %tmp.13;
+        %tmp.15 = ",";
+        %tmp.16 = add %tmp.14 %tmp.15;
+        %tmp.17 = lgetv %evt;
+        %tmp.18 = getv function %tmp.17 :getCoordinates;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        %tmp.20 = 1;
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        %tmp.22 = add %tmp.16 %tmp.21;
+        %tmp.23 = ")";
+        %tmp.24 = add %tmp.22 %tmp.23;
+        invoke %tmp.6 %tmp.7(%tmp.24);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc" 21 4 ]
+        %tmp.25 = true;
+        ret %tmp.25;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldDelegate_mc_17_44_22_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 24; ]
+    function onSwipe(swipeEvent as WatchUi.SwipeEvent) {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldDelegate_mc_24_53_27_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc" 25 4 ]
+        %tmp.1 = getm $.Toybox.System;
+        %tmp.2 = getv function %tmp.1 :println;
+        %tmp.3 = lgetv %swipeEvent;
+        %tmp.4 = getv function %tmp.3 :getDirection;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        invoke %tmp.1 %tmp.2(%tmp.5);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc" 26 4 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbDataFieldDelegate_mc_24_53_27_2_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbDataFieldDelegate.mc"; @line = 1; ]
+<init> {
+}

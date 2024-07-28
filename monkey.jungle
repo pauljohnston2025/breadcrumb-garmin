@@ -1,0 +1,6 @@
+project.manifest = manifest.xml
+# prefer this over barrels, alolows ctrl-click and auto recompile on barrel change
+# https://forums.garmin.com/developer/connect-iq/f/discussion/360387/is-there-a-way-to-detect-changes-in-a-barrel-during-development-and-rebuild-it-when-i-run-my-app
+srcBase=source
+shared=..\shared
+base.sourcePath=$(srcBase);$(shared)
