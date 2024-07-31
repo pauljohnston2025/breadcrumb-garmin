@@ -29,24 +29,40 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
   }
 
   function compute(info as Activity.Info) as Void {
-    System.println("computing data field");
+    // System.println("computing data field");
     _breadcrumbContext.track().onActivityInfo(info);
     _breadcrumbContext.trackRenderer().onActivityInfo(info);
   }
 
   function onUpdate(dc as Dc) as Void {
-    System.println("onUpdate data field");
+    // System.println("onUpdate data field");
 
     dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
     dc.clear();
 
     var renderer = _breadcrumbContext.trackRenderer();
-    var route = _breadcrumbContext.route();
-
     renderer.renderUi(dc);
-    if (route != null) {
-      renderer.renderTrack(dc, route, Graphics.COLOR_BLUE);
+
+    var route = _breadcrumbContext.route();
+    var track = _breadcrumbContext.track();
+
+    // be smarter about this, but for now render the loaded track coordinates if it is provided
+    if (route != null && route.boundingBoxCenter != null) {
+      var centerPoint = route.boundingBoxCenter;
+
+      renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint);
+      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint);
+      return;
     }
-    renderer.renderTrack(dc, _breadcrumbContext.track(), Graphics.COLOR_RED);
+
+
+    if (track.coordinates.size() >= 1) {
+      var centerPoint = track.coordinates[track.coordinates.size() - 1];
+
+      if (route != null) {
+        renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint);
+      }
+      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint);
+    }
   }
 }
