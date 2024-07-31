@@ -57,6 +57,8 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
             route.addPointRaw(rawData[i].toFloat(), rawData[i + 1].toFloat(),
                               rawData[i + 2].toFloat());
           }
+
+          route.writeToDisk(ROUTE_KEY);
           return;
         }
 

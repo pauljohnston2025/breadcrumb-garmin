@@ -42,15 +42,19 @@ class BreadcrumbRenderer {
     dc.drawRectangle(xHalf - widthScaled / 2, yHalf - widthScaled / 2,
                      widthScaled, widthScaled);
 
-    if (breadcrumb.coordinates.size() > 1) {
-      for (var i = 0; i < breadcrumb.coordinates.size() - 1; i++) {
-        var start = breadcrumb.coordinates[i];
-        var end = breadcrumb.coordinates[i + 1];
+    if (breadcrumb.coordinates.size() > 5) {
+      for (var i = 0; i < breadcrumb.coordinates.size() - 3; i+=3) {
+        var startX = breadcrumb.coordinates[i];
+        var startY = breadcrumb.coordinates[i + 1];
+        // var startZ = breadcrumb.coordinates[i + 2];
+        var endX = breadcrumb.coordinates[i + 3];
+        var endY = breadcrumb.coordinates[i + 4];
+        // var endZ = breadcrumb.coordinates[i + 5];
 
-        dc.drawLine((start.x - currentPosition.x) * _scale + xHalf,
-                    (start.y - currentPosition.y) * _scale + yHalf,
-                    (end.x - currentPosition.x) * _scale + xHalf,
-                    (end.y - currentPosition.y) * _scale + yHalf);
+        dc.drawLine((startX - currentPosition.x) * _scale + xHalf,
+                    (startY - currentPosition.y) * _scale + yHalf,
+                    (endX - currentPosition.x) * _scale + xHalf,
+                    (endY - currentPosition.y) * _scale + yHalf);
       }
     }
   }

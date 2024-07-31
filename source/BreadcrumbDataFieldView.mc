@@ -46,8 +46,9 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     var route = _breadcrumbContext.route();
     var track = _breadcrumbContext.track();
 
-    // be smarter about this, but for now render the loaded track coordinates if it is provided
-    if (route != null && route.boundingBoxCenter != null) {
+    // be smarter about this, but for now render the loaded track coordinates if
+    // it is provided
+    if (route != null) {
       var centerPoint = route.boundingBoxCenter;
 
       renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint);
@@ -55,12 +56,14 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
       return;
     }
 
-
-    if (track.coordinates.size() >= 1) {
-      var centerPoint = track.coordinates[track.coordinates.size() - 1];
+    if (track.coordinates.size() >= 3) {
+      var centerPoint =
+          new RectangularPoint(track.coordinates[track.coordinates.size() - 3],
+                               track.coordinates[track.coordinates.size() - 2],
+                               track.coordinates[track.coordinates.size() - 1]);
 
       if (route != null) {
-        renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint);
+        renderer.renderTrack(dc, route as BreadcrumbTrack, Graphics.COLOR_BLUE, centerPoint);
       }
       renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint);
     }

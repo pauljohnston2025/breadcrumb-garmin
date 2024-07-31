@@ -2,6 +2,7 @@ import Toybox.Position;
 import Toybox.Lang;
 import Toybox.Activity;
 import Toybox.Math;
+import Toybox.Application;
 
 class RectangularPoint {
   var x as Float;
@@ -21,24 +22,67 @@ class BreadcrumbTrack {
   // suspect 1 would result in faster itteration when drawing
   // shall store them as poit classes for now, and can convert to using just
   // arrays
-  var coordinates as Array<RectangularPoint> = [];
+  var coordinates as Array<Float> = [];
 
   // start as minumum area, and is reduced as poins are added
   var boundingBox as[Float, Float, Float, Float] =
       [ FLOAT_MAX, FLOAT_MAX, FLOAT_MIN, FLOAT_MIN ];
-  var boundingBoxCenter as RectangularPoint = new RectangularPoint(0.0f, 0.0f, 0.0f);
+  var boundingBoxCenter as RectangularPoint =
+      new RectangularPoint(0.0f, 0.0f, 0.0f);
+
+  function writeToDisk(key as String) as Void {
+    Storage.setValue(key + "bb", boundingBox);
+    Storage.setValue(key + "bbc", [
+      boundingBoxCenter.x, boundingBoxCenter.y, boundingBoxCenter.altitude
+    ]);
+    Storage.setValue(key + "coords", coordinates);
+  }
+
+  static function readFromDisk(key as String) as BreadcrumbTrack or Null {
+    try {
+      var bb = Storage.getValue(key + "bb");
+      if (bb == null) {
+        return null;
+      }
+      var bbc = Storage.getValue(key + "bbc");
+      if (bbc == null) {
+        return null;
+      }
+      var coords = Storage.getValue(key + "coords");
+      if (coords == null) {
+        return null;
+      }
+
+      var track = new BreadcrumbTrack();
+      track.boundingBox = bb as[Float, Float, Float, Float];
+      if (track.boundingBox.size() != 4) {
+        return null;
+      }
+      track.boundingBoxCenter = new RectangularPoint(
+          bbc[0] as Float, bbc[1] as Float, bbc[2] as Float);
+      track.coordinates = coords as Array<Float>;
+      if (track.coordinates.size() % 3 != 0) {
+        return null;
+      }
+      return track;
+    } catch (e) {
+      return null;
+    }
+  }
 
   function clear() as Void { coordinates = []; }
 
   function addPointRaw(lat as Float, lon as Float, altitude as Float) as Void {
     System.println("adding coordinate: " + lat + "," + lon);
     var point = latLon2xy(lat, lon, altitude);
-    coordinates.add(point);
+    coordinates.add(point.x);
+    coordinates.add(point.y);
+    coordinates.add(point.altitude);
     updateBoundingBox(point);
     // System.println("do some track maths");
   }
 
-  function updateBoundingBox(point as RectangularPoint) {
+  function updateBoundingBox(point as RectangularPoint) as Void {
     boundingBox[0] = minF(boundingBox[0], point.x);
     boundingBox[1] = minF(boundingBox[1], point.y);
     boundingBox[2] = maxF(boundingBox[2], point.x);
