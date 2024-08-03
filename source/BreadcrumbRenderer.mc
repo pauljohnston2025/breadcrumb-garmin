@@ -32,6 +32,7 @@ class BreadcrumbRenderer {
                        colour as Graphics.ColorType,
                        currentPosition as RectangularPoint) as Void {
     dc.setColor(colour, Graphics.COLOR_BLACK);
+    dc.setPenWidth(4);
 
     // test square
     // make this a const
@@ -42,14 +43,19 @@ class BreadcrumbRenderer {
     dc.drawRectangle(xHalf - widthScaled / 2, yHalf - widthScaled / 2,
                      widthScaled, widthScaled);
 
-    if (breadcrumb.coordinates.size() > 5) {
-      for (var i = 0; i < breadcrumb.coordinates.size() - 3; i+=3) {
-        var startX = breadcrumb.coordinates[i];
-        var startY = breadcrumb.coordinates[i + 1];
-        // var startZ = breadcrumb.coordinates[i + 2];
-        var endX = breadcrumb.coordinates[i + 3];
-        var endY = breadcrumb.coordinates[i + 4];
-        // var endZ = breadcrumb.coordinates[i + 5];
+    var size = breadcrumb.coordinates.size();
+    var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
+
+    // note: size is using the overload of memeory safe array
+    // but we draw from the raw points
+    if (size > 5) {
+      for (var i = 0; i < size - 3; i+=3) {
+        var startX = coordinatesRaw[i];
+        var startY = coordinatesRaw[i + 1];
+        // var startZ = coordinatesRaw[i + 2];
+        var endX = coordinatesRaw[i + 3];
+        var endY = coordinatesRaw[i + 4];
+        // var endZ = coordinatesRaw[i + 5];
 
         dc.drawLine((startX - currentPosition.x) * _scale + xHalf,
                     (startY - currentPosition.y) * _scale + yHalf,

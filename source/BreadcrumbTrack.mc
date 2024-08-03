@@ -4,6 +4,8 @@ import Toybox.Activity;
 import Toybox.Math;
 import Toybox.Application;
 
+const MAX_POINTS = 10;
+
 class RectangularPoint {
   var x as Float;
   var y as Float;
@@ -22,7 +24,8 @@ class BreadcrumbTrack {
   // suspect 1 would result in faster itteration when drawing
   // shall store them as poit classes for now, and can convert to using just
   // arrays
-  var coordinates as Array<Float> = [];
+  var coordinates = new MemorySafeArray();
+  var _computeCounter = 0;
 
   // start as minumum area, and is reduced as poins are added
   var boundingBox as[Float, Float, Float, Float] =
@@ -35,7 +38,8 @@ class BreadcrumbTrack {
     Storage.setValue(key + "bbc", [
       boundingBoxCenter.x, boundingBoxCenter.y, boundingBoxCenter.altitude
     ]);
-    Storage.setValue(key + "coords", coordinates);
+    Storage.setValue(key + "coords", coordinates._internalArrayBuffer);
+    Storage.setValue(key + "coordsSize", coordinates._size);
   }
 
   static function readFromDisk(key as String) as BreadcrumbTrack or Null {
@@ -53,6 +57,11 @@ class BreadcrumbTrack {
         return null;
       }
 
+      var coordsSize = Storage.getValue(key + "coordsSize");
+      if (coordsSize == null) {
+        return null;
+      }
+
       var track = new BreadcrumbTrack();
       track.boundingBox = bb as[Float, Float, Float, Float];
       if (track.boundingBox.size() != 4) {
@@ -60,7 +69,8 @@ class BreadcrumbTrack {
       }
       track.boundingBoxCenter = new RectangularPoint(
           bbc[0] as Float, bbc[1] as Float, bbc[2] as Float);
-      track.coordinates = coords as Array<Float>;
+      track.coordinates._internalArrayBuffer = coords as Array<Float>;
+      track.coordinates._size = coordsSize as Number;
       if (track.coordinates.size() % 3 != 0) {
         return null;
       }
@@ -70,16 +80,41 @@ class BreadcrumbTrack {
     }
   }
 
-  function clear() as Void { coordinates = []; }
+  function clear() as Void { coordinates.resize(0); }
 
   function addPointRaw(lat as Float, lon as Float, altitude as Float) as Void {
-    System.println("adding coordinate: " + lat + "," + lon);
     var point = latLon2xy(lat, lon, altitude);
     coordinates.add(point.x);
     coordinates.add(point.y);
     coordinates.add(point.altitude);
     updateBoundingBox(point);
-    // System.println("do some track maths");
+    restrictPoints();
+  }
+
+  function restrictPoints() {
+    // make sure we only have an acceptancbe amount of points
+    // current process is to cull every second point
+    // this means near the end of the track, we will have lots of close points
+    // the start of the track will start getting more and more granular every
+    // time we cull points
+    // 3 items per point
+    if (coordinates.size() / 3 < MAX_POINTS) {
+      return;
+    }
+
+    // we need to do this without creating a new array, since we do not want to
+    // double the memory size temporarily
+    // slice() will create a new array, we avoid this by using our custom class
+    var rawCoordinates = coordinates._internalArrayBuffer;
+    var j = 0;
+    for (var i = 0; i < coordinates.size(); i += 6) {
+      rawCoordinates[j] = rawCoordinates[i];
+      rawCoordinates[j + 1] = rawCoordinates[i + 1];
+      rawCoordinates[j + 2] = rawCoordinates[i + 2];
+      j += 3;
+    }
+
+    coordinates.resize(3 * MAX_POINTS / 2);
   }
 
   function updateBoundingBox(point as RectangularPoint) as Void {
@@ -94,6 +129,16 @@ class BreadcrumbTrack {
   }
 
   function onActivityInfo(activityInfo as Activity.Info) as Void {
+    // System.println("computing data field");
+    _computeCounter++;
+    // slow down the calls to onActivityInfo as its a heavy operation checking
+    // the distance we don't really need data much faster than this anyway
+    if (_computeCounter != 5) {
+      return;
+    }
+
+    _computeCounter = 0;
+
     // todo skip if 'last logged' is not large enough (we don't want to do
     // complex calcualtions all the time)
     var loc = activityInfo.currentLocation;

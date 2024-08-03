@@ -29,7 +29,6 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
   }
 
   function compute(info as Activity.Info) as Void {
-    // System.println("computing data field");
     _breadcrumbContext.track().onActivityInfo(info);
     _breadcrumbContext.trackRenderer().onActivityInfo(info);
   }
@@ -63,7 +62,8 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                                track.coordinates[track.coordinates.size() - 1]);
 
       if (route != null) {
-        renderer.renderTrack(dc, route as BreadcrumbTrack, Graphics.COLOR_BLUE, centerPoint);
+        renderer.renderTrack(dc, route as BreadcrumbTrack, Graphics.COLOR_BLUE,
+                             centerPoint);
       }
       renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint);
     }
