@@ -50,10 +50,11 @@ class BreadcrumbRenderer {
     return 360.0 / maxDistanceM * 0.75;
   }
 
-  function renderTrack(
-      dc as Dc, breadcrumb as BreadcrumbTrack, colour as Graphics.ColorType,
-      currentPosition as RectangularPoint,
-      outerBoundingBox as[Float, Float, Float, Float]) as Void {
+  function renderTrack(dc as Dc, breadcrumb as BreadcrumbTrack,
+                       colour as Graphics.ColorType,
+                       centerPosition as RectangularPoint,
+                       outerBoundingBox as[Float, Float, Float, Float],
+                       usersLastLocation as RectangularPoint or Null) as Void {
     dc.setColor(colour, Graphics.COLOR_BLACK);
     dc.setPenWidth(4);
     var scale = calculateScale(outerBoundingBox);
@@ -73,10 +74,10 @@ class BreadcrumbRenderer {
         var endY = coordinatesRaw[i + 4];
         // var endZ = coordinatesRaw[i + 5];
 
-        var xStartScaledAtCenter = (startX - currentPosition.x) * scale;
-        var yStartScaledAtCenter = (startY - currentPosition.y) * scale;
-        var xEndScaledAtCenter = (endX - currentPosition.x) * scale;
-        var yEndScaledAtCenter = (endY - currentPosition.y) * scale;
+        var xStartScaledAtCenter = (startX - centerPosition.x) * scale;
+        var yStartScaledAtCenter = (startY - centerPosition.y) * scale;
+        var xEndScaledAtCenter = (endX - centerPosition.x) * scale;
+        var yEndScaledAtCenter = (endY - centerPosition.y) * scale;
 
         var xStartRotated = _rotateCos * xStartScaledAtCenter -
                             _rotateSin * yStartScaledAtCenter;
@@ -94,6 +95,33 @@ class BreadcrumbRenderer {
 
     // dc.drawText(0, _yHalf + 50, Graphics.FONT_XTINY, "Head: " + _rotationRad,
     //             Graphics.TEXT_JUSTIFY_LEFT);
+
+    if (usersLastLocation != null) {
+      var triangleSizeY = 10;
+      var triangleSizeX = 4;
+      var userPosUnrotatedX = (usersLastLocation.x - centerPosition.x) * scale;
+      var userPosUnrotatedY = (usersLastLocation.y - centerPosition.y) * scale;
+
+      var userPosRotatedX =
+          _rotateCos * userPosUnrotatedX - _rotateSin * userPosUnrotatedY;
+      var userPosRotatedY =
+          _rotateSin * userPosUnrotatedX + _rotateCos * userPosUnrotatedY;
+
+      var triangleTopX = userPosRotatedX + _xHalf;
+      var triangleTopY = userPosRotatedY + _yHalf - triangleSizeY;
+
+      var triangleLeftX = triangleTopX - triangleSizeX;
+      var triangleLeftY = triangleTopY + triangleSizeY * 2;
+
+      var triangleRightX = triangleTopX + triangleSizeX;
+      var triangleRightY = triangleLeftY;
+
+      dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_BLACK);
+      dc.setPenWidth(6);
+      dc.drawLine(triangleTopX, triangleTopY, triangleRightX, triangleRightY);
+      dc.drawLine(triangleRightX, triangleRightY, triangleLeftX, triangleLeftY);
+      dc.drawLine(triangleLeftX, triangleLeftY, triangleTopX, triangleTopY);
+    }
   }
 
   // maybe put this into another class that handle ui touch events etc.
@@ -129,8 +157,8 @@ class BreadcrumbRenderer {
 
     // auto
     if (_scale != null) {
-      dc.drawText(dc.getWidth(), _yHalf, Graphics.FONT_XTINY, "S: " + _scale.format("%.2f"),
-                  Graphics.TEXT_JUSTIFY_RIGHT);
+      dc.drawText(dc.getWidth(), _yHalf, Graphics.FONT_XTINY,
+                  "S: " + _scale.format("%.2f"), Graphics.TEXT_JUSTIFY_RIGHT);
     } else {
       dc.drawText(dc.getWidth(), _yHalf, Graphics.FONT_XTINY, "Auto",
                   Graphics.TEXT_JUSTIFY_RIGHT);
@@ -147,6 +175,11 @@ class BreadcrumbRenderer {
     }
     dc.drawText(lineFromEdge, _yHalf, Graphics.FONT_XTINY, fvText,
                 Graphics.TEXT_JUSTIFY_LEFT);
+
+    // north facing N with litle cross
+    var nPosX = 295;
+    var nPosY = 85;
+    
   }
 
   function incScale() as Void {

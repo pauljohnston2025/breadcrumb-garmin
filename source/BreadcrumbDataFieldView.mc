@@ -50,12 +50,14 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     var route = _breadcrumbContext.route();
     var track = _breadcrumbContext.track();
 
+    var lastPoint = track.lastPoint();
+
     var speedHighEnough = _speedMPS > 1.0;
     // if we are moving at some pace
     if (!_breadcrumbContext.fullViewLocked && speedHighEnough &&
         track.coordinates.size() >= 3) {
       // render around the current position
-      var centerPoint = track.lastPoint();
+      var centerPoint = lastPoint;
       if (centerPoint == null) {
         throw new Exception();
       }
@@ -69,14 +71,15 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
 
       if (route != null) {
         renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint,
-                             outerBoundingBox);
+                             outerBoundingBox, null);
       }
       renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint,
-                           outerBoundingBox);
+                           outerBoundingBox, lastPoint);
       return;
     }
 
-    // when the scale is locked, we need to be where the user is, otherwise we could see a blank part at the center of the map
+    // when the scale is locked, we need to be where the user is, otherwise we
+    // could see a blank part at the center of the map
     var useUserLocation = renderer._scale != null;
 
     // we are in 'full render mode', so do the entire extent
@@ -96,30 +99,25 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
               (outerBoundingBox[3] - outerBoundingBox[1]) / 2.0,
           0.0f);
 
-      var lastLocation = track.lastPoint();
-      if (useUserLocation && lastLocation != null) {
-        centerPoint = lastLocation;
+      if (useUserLocation && lastPoint != null) {
+        centerPoint = lastPoint;
       }
 
       renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint,
-                           outerBoundingBox);
+                           outerBoundingBox, null);
       renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint,
-                           outerBoundingBox);
+                           outerBoundingBox, lastPoint);
       return;
     }
 
-    if (useUserLocation) {
+    if (useUserLocation && lastPoint != null) {
       // render the track if we do not have a route
       // we are in 'full render mode', so do the entire extent
-      var lastPoint = track.lastPoint();
-      if (lastPoint != null) {
-        renderer.renderTrack(dc, track, Graphics.COLOR_RED, lastPoint,
-                             track.boundingBox);
-      }
-      return;
+      renderer.renderTrack(dc, track, Graphics.COLOR_RED, lastPoint,
+                           track.boundingBox, lastPoint);
     }
 
     renderer.renderTrack(dc, track, Graphics.COLOR_RED, track.boundingBoxCenter,
-                         track.boundingBox);
+                         track.boundingBox, lastPoint);
   }
 }
