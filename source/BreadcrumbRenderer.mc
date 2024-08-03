@@ -126,7 +126,8 @@ class BreadcrumbRenderer {
 
   // maybe put this into another class that handle ui touch events etc.
   function renderUi(dc as Dc) as Void {
-    dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_BLACK);
+    dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_BLACK);
+    dc.setPenWidth(1);
 
     // single line across the screen
     // dc.drawLine(0, yHalf, dc.getWidth(), yHalf);
@@ -142,8 +143,8 @@ class BreadcrumbRenderer {
     //             Graphics.TEXT_JUSTIFY_LEFT);
 
     // make this a const
-    var halfLineLength = 15;
-    var lineFromEdge = 25;
+    var halfLineLength = 10;
+    var lineFromEdge = 10;
 
     // plus at the top of screen
     dc.drawLine(_xHalf - halfLineLength, lineFromEdge, _xHalf + halfLineLength,
@@ -157,11 +158,11 @@ class BreadcrumbRenderer {
 
     // auto
     if (_scale != null) {
-      dc.drawText(dc.getWidth(), _yHalf, Graphics.FONT_XTINY,
+      dc.drawText(dc.getWidth() - lineFromEdge, _yHalf, Graphics.FONT_XTINY,
                   "S: " + _scale.format("%.2f"), Graphics.TEXT_JUSTIFY_RIGHT);
     } else {
-      dc.drawText(dc.getWidth(), _yHalf, Graphics.FONT_XTINY, "Auto",
-                  Graphics.TEXT_JUSTIFY_RIGHT);
+      dc.drawText(dc.getWidth() - lineFromEdge, _yHalf, Graphics.FONT_XTINY,
+                  "A", Graphics.TEXT_JUSTIFY_RIGHT);
     }
 
     // FV - full view
@@ -179,7 +180,6 @@ class BreadcrumbRenderer {
     // north facing N with litle cross
     var nPosX = 295;
     var nPosY = 85;
-    
   }
 
   function incScale() as Void {
