@@ -16,6 +16,7 @@ import Toybox.Graphics;
 // real device)
 class BreadcrumbDataFieldView extends WatchUi.DataField {
   var _breadcrumbContext as BreadcrumbContext;
+  var _speedMPS as Float = 0.0;  // start at no speed
 
   // Set the label of the data field here.
   function initialize(breadcrumbContext as BreadcrumbContext) {
@@ -31,6 +32,10 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
   function compute(info as Activity.Info) as Void {
     _breadcrumbContext.track().onActivityInfo(info);
     _breadcrumbContext.trackRenderer().onActivityInfo(info);
+    var currentSpeed = info.currentSpeed;
+    if (currentSpeed != null) {
+      _speedMPS = currentSpeed;
+    }
   }
 
   function onUpdate(dc as Dc) as Void {
@@ -45,27 +50,59 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     var route = _breadcrumbContext.route();
     var track = _breadcrumbContext.track();
 
-    // be smarter about this, but for now render the loaded track coordinates if
-    // it is provided
-    if (route != null) {
-      var centerPoint = route.boundingBoxCenter;
+    // if we are moving at some pace
+    if (_speedMPS > 10 && track.coordinates.size() >= 3) {
+      // render around the current position
+      var centerPoint =
+          new RectangularPoint(track.coordinates[track.coordinates.size() - 3],
+                               track.coordinates[track.coordinates.size() - 2],
+                               track.coordinates[track.coordinates.size() - 1]);
+      var renderDistanceM = 100;
+      var outerBoundingBox = [
+        centerPoint.x - renderDistanceM,
+        centerPoint.y - renderDistanceM,
+        centerPoint.x + renderDistanceM,
+        centerPoint.y + renderDistanceM,
+      ];
 
-      renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint);
-      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint);
+      if (route != null) {
+        renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint,
+                             outerBoundingBox);
+      }
+      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint,
+                           outerBoundingBox);
       return;
     }
 
+    if (route != null) {
+      // render the whole track and route if we stop
+      var outerBoundingBox = [
+        minF(route.boundingBox[0], track.boundingBox[0]),
+        minF(route.boundingBox[1], track.boundingBox[1]),
+        maxF(route.boundingBox[2], track.boundingBox[2]),
+        maxF(route.boundingBox[3], track.boundingBox[3]),
+      ];
+
+      var centerPoint =
+          new RectangularPoint(outerBoundingBox[0] + (outerBoundingBox[2] - outerBoundingBox[0]) / 2.0,
+                               outerBoundingBox[1] + (outerBoundingBox[3] - outerBoundingBox[1]) / 2.0,
+                               0.0f);
+
+      renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint,
+                           outerBoundingBox);
+      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint,
+                           outerBoundingBox);
+      return;
+    }
+
+    // render the track if we do not have a route
     if (track.coordinates.size() >= 3) {
       var centerPoint =
           new RectangularPoint(track.coordinates[track.coordinates.size() - 3],
                                track.coordinates[track.coordinates.size() - 2],
                                track.coordinates[track.coordinates.size() - 1]);
 
-      if (route != null) {
-        renderer.renderTrack(dc, route as BreadcrumbTrack, Graphics.COLOR_BLUE,
-                             centerPoint);
-      }
-      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint);
+      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint, track.boundingBox);
     }
   }
 }

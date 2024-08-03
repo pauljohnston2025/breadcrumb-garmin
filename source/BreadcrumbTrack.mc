@@ -4,7 +4,7 @@ import Toybox.Activity;
 import Toybox.Math;
 import Toybox.Application;
 
-const MAX_POINTS = 10;
+const MAX_POINTS = 1000;
 
 class RectangularPoint {
   var x as Float;
