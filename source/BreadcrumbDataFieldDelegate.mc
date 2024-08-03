@@ -20,13 +20,23 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
     System.println("got tap (x,y): (" + evt.getCoordinates()[0] + "," +
                    evt.getCoordinates()[1] + ")");
 
+    var coords = evt.getCoordinates();
+    var x = coords[0];
+    var y = coords[1];
+
     // perhaps put this into new class to handle touch events, and have a
     // renderer for that ui would allow us to switch out ui and handle touched
     // differently also will alow setting the scren height
-    if (evt.getCoordinates()[1] < 180) {
+    if (y < 50) {
       _breadcrumbContext.trackRenderer().incScale();
-    } else {
+    } else if(y > 310) {
       _breadcrumbContext.trackRenderer().decScale();
+    }
+    else if(x > 310) {
+      _breadcrumbContext.trackRenderer().resetScale();
+    }
+    else if(x < 50) {
+      _breadcrumbContext.toggleFullView();
     }
     return false;
   }

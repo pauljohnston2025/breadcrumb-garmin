@@ -12,10 +12,10 @@ class MemorySafeArray {
   var _internalArrayBuffer as Array<Float> = [];
   var _size = 0;
 
-  // function get(i as Number) as Float
-  // {
-  //   return _internalArrayBuffer[i];
-  // }
+  function get(i as Number) as Float
+  {
+    return _internalArrayBuffer[i];
+  }
 
   function add(item as Float) as Void
   {

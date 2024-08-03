@@ -50,13 +50,15 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     var route = _breadcrumbContext.route();
     var track = _breadcrumbContext.track();
 
+    var speedHighEnough = _speedMPS > 1.0;
     // if we are moving at some pace
-    if (_speedMPS > 10 && track.coordinates.size() >= 3) {
+    if (!_breadcrumbContext.fullViewLocked && speedHighEnough &&
+        track.coordinates.size() >= 3) {
       // render around the current position
-      var centerPoint =
-          new RectangularPoint(track.coordinates[track.coordinates.size() - 3],
-                               track.coordinates[track.coordinates.size() - 2],
-                               track.coordinates[track.coordinates.size() - 1]);
+      var centerPoint = track.lastPoint();
+      if (centerPoint == null) {
+        throw new Exception();
+      }
       var renderDistanceM = 100;
       var outerBoundingBox = [
         centerPoint.x - renderDistanceM,
@@ -74,6 +76,10 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
       return;
     }
 
+    // when the scale is locked, we need to be where the user is, otherwise we could see a blank part at the center of the map
+    var useUserLocation = renderer._scale != null;
+
+    // we are in 'full render mode', so do the entire extent
     if (route != null) {
       // render the whole track and route if we stop
       var outerBoundingBox = [
@@ -83,10 +89,17 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
         maxF(route.boundingBox[3], track.boundingBox[3]),
       ];
 
-      var centerPoint =
-          new RectangularPoint(outerBoundingBox[0] + (outerBoundingBox[2] - outerBoundingBox[0]) / 2.0,
-                               outerBoundingBox[1] + (outerBoundingBox[3] - outerBoundingBox[1]) / 2.0,
-                               0.0f);
+      var centerPoint = new RectangularPoint(
+          outerBoundingBox[0] +
+              (outerBoundingBox[2] - outerBoundingBox[0]) / 2.0,
+          outerBoundingBox[1] +
+              (outerBoundingBox[3] - outerBoundingBox[1]) / 2.0,
+          0.0f);
+
+      var lastLocation = track.lastPoint();
+      if (useUserLocation && lastLocation != null) {
+        centerPoint = lastLocation;
+      }
 
       renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint,
                            outerBoundingBox);
@@ -95,14 +108,18 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
       return;
     }
 
-    // render the track if we do not have a route
-    if (track.coordinates.size() >= 3) {
-      var centerPoint =
-          new RectangularPoint(track.coordinates[track.coordinates.size() - 3],
-                               track.coordinates[track.coordinates.size() - 2],
-                               track.coordinates[track.coordinates.size() - 1]);
-
-      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint, track.boundingBox);
+    if (useUserLocation) {
+      // render the track if we do not have a route
+      // we are in 'full render mode', so do the entire extent
+      var lastPoint = track.lastPoint();
+      if (lastPoint != null) {
+        renderer.renderTrack(dc, track, Graphics.COLOR_RED, lastPoint,
+                             track.boundingBox);
+      }
+      return;
     }
+
+    renderer.renderTrack(dc, track, Graphics.COLOR_RED, track.boundingBoxCenter,
+                         track.boundingBox);
   }
 }

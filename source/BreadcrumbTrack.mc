@@ -16,9 +16,22 @@ class RectangularPoint {
     y = _y;
     altitude = _altitude;
   }
+
+  function distanceTo(point as RectangularPoint) as Float
+  {
+      var xDist = point.x - x;
+      var yDist = point.y - y;
+      return Math.sqrt(xDist * xDist + yDist * yDist);
+  }
 }
 
 class BreadcrumbTrack {
+  // cached values
+  // we should probbaly do this per latitude to get an estimate and just use a lookup table
+  var _lonConversion = 20037508.34f / 180.0f;
+  var _pi360 = Math.PI / 360.0f;
+  var _pi180 = Math.PI / 180.0f;
+
   // unscaled cordinates in
   // not sure if its more performant to have these as one array or 2
   // suspect 1 would result in faster itteration when drawing
@@ -82,12 +95,29 @@ class BreadcrumbTrack {
 
   function clear() as Void { coordinates.resize(0); }
 
+  function lastPoint() as RectangularPoint or Null 
+  {
+    if (coordinates.size() < 3) {
+      return null;
+    }
+
+    return new RectangularPoint(coordinates.get(coordinates.size() - 3),
+                              coordinates.get(coordinates.size() - 2),
+                              coordinates.get(coordinates.size() - 1));
+  }
+
   function addPointRaw(lat as Float, lon as Float, altitude as Float) as Void {
-    var point = latLon2xy(lat, lon, altitude);
-    coordinates.add(point.x);
-    coordinates.add(point.y);
-    coordinates.add(point.altitude);
-    updateBoundingBox(point);
+    var newPoint = latLon2xy(lat, lon, altitude);
+    var lastPoint = lastPoint();
+    if (lastPoint != null && lastPoint.distanceTo(newPoint) < 5)
+    {
+      // no need to add points closer than this
+      return;
+    }
+    coordinates.add(newPoint.x);
+    coordinates.add(newPoint.y);
+    coordinates.add(newPoint.altitude);
+    updateBoundingBox(newPoint);
     restrictPoints();
   }
 
@@ -163,11 +193,10 @@ class BreadcrumbTrack {
   // inverse of https://gis.stackexchange.com/a/387677
   function latLon2xy(lat as Float, lon as Float,
                      altitude as Float) as RectangularPoint {
+
     // todo cache all these as constants
-    var latRect =
-        ((Math.ln(Math.tan((90 + lat) * Math.PI / 360.0)) / (Math.PI / 180.0)) *
-         (20037508.34 / 180.0));
-    var lonRect = lon * 20037508.34 / 180.0;
+    var latRect = ((Math.ln(Math.tan((90 + lat) * _pi360)) / _pi180) * _lonConversion);
+    var lonRect = lon * _lonConversion;
 
     return new RectangularPoint(latRect.toFloat(), lonRect.toFloat(), altitude);
   }
