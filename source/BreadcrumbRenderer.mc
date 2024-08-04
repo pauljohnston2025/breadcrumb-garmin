@@ -24,15 +24,24 @@ class BreadcrumbRenderer {
   // chace some important maths to make everything faster
   var _xHalf = 360 / 2.0f;
   var _yHalf = 360 / 2.0f;
-  // might be a good idea to store points as Graphix.Points2D
-  // but we need to offset them from center anyway and make a new point
-  // could also use another matrix for matrix.translate()
-  // could possibly do
-  // moveToWatchface.TransformPoints(rotate.TransformPoints(scale.TransformPoints(offsetFromCenter.TransformPoints(currentPoints))))
-  // not sure if all the array iteration will make it worse, or it will be done
-  // in native caode and be faster suspect the marshalling between object
-  // creation will make it slower
-  var _rotationMatrix = new Graphics.AffineTransform();
+
+  // benchmark same track loaded (just render track no activity running) using
+  // average time over 1min of benchmark 
+  // (just route means we always have a heap of points, and a small track does not bring the average down)
+  // 13307us or 17718us - renderTrack manual code (_rotateCos, _rotateSin) 
+  // 15681us or 17338us or 11996us - renderTrack manual code (rotateCosLocal, rotateSinLocal)  - use local variables might be faster lookup? 
+  // 11162us or 18114us - rotateCosLocal, rotateSinLocal and hard code 180 as xhalf/yhalf
+  // 22297us - renderTrack Graphics.AffineTransform
+
+  // https://developer.garmin.com/connect-iq/reference-guides/monkey-c-reference/
+  // Monkey C is a message-passed language. When a function is called, the virtual machine searches a hierarchy at runtime in the following order to find the function:
+  // Instance members of the class
+  // Members of the superclass
+  // Static members of the class
+  // Members of the parent module, and the parent modules up to the global namespace
+  // Members of the superclass’s parent module up to the global namespace
+  var _rotateCos = Math.cos(_rotationRad);
+  var _rotateSin = Math.sin(_rotationRad);
 
   function initialize() {}
 
@@ -45,7 +54,8 @@ class BreadcrumbRenderer {
       // -ve since x values increase down the page
       // extra 90 deg so it points to top of page
       _rotationRad = -currentHeading - Math.toRadians(90);
-      _rotationMatrix.setToRotation(_rotationRad);
+      _rotateCos = Math.cos(_rotationRad);
+      _rotateSin = Math.sin(_rotationRad);
     }
   }
 
@@ -107,11 +117,13 @@ class BreadcrumbRenderer {
     var userPosUnrotatedY =
         (usersLastLocation.y - centerPosition.y) * _currentScale;
 
-    var rotated = _rotationMatrix.transformPoint(
-        [ userPosUnrotatedX, userPosUnrotatedY ]);
+    var userPosRotatedX =
+        _rotateCos * userPosUnrotatedX - _rotateSin * userPosUnrotatedY;
+    var userPosRotatedY =
+        _rotateSin * userPosUnrotatedX + _rotateCos * userPosUnrotatedY;
 
-    var triangleTopX = rotated[0] + _xHalf;
-    var triangleTopY = rotated[1] + _yHalf - triangleSizeY;
+    var triangleTopX = userPosRotatedX + _xHalf;
+    var triangleTopY = userPosRotatedY + _yHalf - triangleSizeY;
 
     var triangleLeftX = triangleTopX - triangleSizeX;
     var triangleLeftY = triangleTopY + triangleSizeY * 2;
@@ -135,6 +147,9 @@ class BreadcrumbRenderer {
     var size = breadcrumb.coordinates.size();
     var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
 
+    var rotateCosLocal = _rotateCos;
+    var rotateSinLocal = _rotateSin;
+
     // note: size is using the overload of memeory safe array
     // but we draw from the raw points
     if (size > 5) {
@@ -142,10 +157,10 @@ class BreadcrumbRenderer {
           (coordinatesRaw[0] - centerPosition.x) * _currentScale;
       var firstYScaledAtCenter =
           (coordinatesRaw[1] - centerPosition.y) * _currentScale;
-      var lastRotated = _rotationMatrix.transformPoint(
-          [ firstXScaledAtCenter, firstYScaledAtCenter ]);
-      lastRotated[0] += _xHalf;
-      lastRotated[1] += _yHalf;
+      var lastXRotated = _xHalf + rotateCosLocal * firstXScaledAtCenter -
+                         rotateSinLocal * firstYScaledAtCenter;
+      var lastYRotated = _yHalf + rotateSinLocal * firstXScaledAtCenter +
+                         rotateCosLocal * firstYScaledAtCenter;
       for (var i = 3; i < size; i += 3) {
         var nextX = coordinatesRaw[i];
         var nextY = coordinatesRaw[i + 1];
@@ -153,15 +168,15 @@ class BreadcrumbRenderer {
         var nextXScaledAtCenter = (nextX - centerPosition.x) * _currentScale;
         var nextYScaledAtCenter = (nextY - centerPosition.y) * _currentScale;
 
-        var nextRotated = _rotationMatrix.transformPoint(
-            [ nextXScaledAtCenter, nextYScaledAtCenter ]);
-        nextRotated[0] += _xHalf;
-        nextRotated[1] += _yHalf;
+        var nextXRotated = _xHalf + rotateCosLocal * nextXScaledAtCenter -
+                           rotateSinLocal * nextYScaledAtCenter;
+        var nextYRotated = _yHalf + rotateSinLocal * nextXScaledAtCenter +
+                           rotateCosLocal * nextYScaledAtCenter;
 
-        dc.drawLine(lastRotated[0], lastRotated[1], nextRotated[0],
-                    nextRotated[1]);
+        dc.drawLine(lastXRotated, lastYRotated, nextXRotated, nextYRotated);
 
-        lastRotated = nextRotated;
+        lastXRotated = nextXRotated;
+        lastYRotated = nextYRotated;
       }
     }
 
