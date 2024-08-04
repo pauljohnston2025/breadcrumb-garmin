@@ -24,8 +24,15 @@ class BreadcrumbRenderer {
   // chace some important maths to make everything faster
   var _xHalf = 360 / 2.0f;
   var _yHalf = 360 / 2.0f;
-  var _rotateCos = Math.cos(_rotationRad);
-  var _rotateSin = Math.sin(_rotationRad);
+  // might be a good idea to store points as Graphix.Points2D
+  // but we need to offset them from center anyway and make a new point
+  // could also use another matrix for matrix.translate()
+  // could possibly do
+  // moveToWatchface.TransformPoints(rotate.TransformPoints(scale.TransformPoints(offsetFromCenter.TransformPoints(currentPoints))))
+  // not sure if all the array iteration will make it worse, or it will be done
+  // in native caode and be faster suspect the marshalling between object
+  // creation will make it slower
+  var _rotationMatrix = new Graphics.AffineTransform();
 
   function initialize() {}
 
@@ -38,8 +45,7 @@ class BreadcrumbRenderer {
       // -ve since x values increase down the page
       // extra 90 deg so it points to top of page
       _rotationRad = -currentHeading - Math.toRadians(90);
-      _rotateCos = Math.cos(_rotationRad);
-      _rotateSin = Math.sin(_rotationRad);
+      _rotationMatrix.setToRotation(_rotationRad);
     }
   }
 
@@ -101,13 +107,11 @@ class BreadcrumbRenderer {
     var userPosUnrotatedY =
         (usersLastLocation.y - centerPosition.y) * _currentScale;
 
-    var userPosRotatedX =
-        _rotateCos * userPosUnrotatedX - _rotateSin * userPosUnrotatedY;
-    var userPosRotatedY =
-        _rotateSin * userPosUnrotatedX + _rotateCos * userPosUnrotatedY;
+    var rotated = _rotationMatrix.transformPoint(
+        [ userPosUnrotatedX, userPosUnrotatedY ]);
 
-    var triangleTopX = userPosRotatedX + _xHalf;
-    var triangleTopY = userPosRotatedY + _yHalf - triangleSizeY;
+    var triangleTopX = rotated[0] + _xHalf;
+    var triangleTopY = rotated[1] + _yHalf - triangleSizeY;
 
     var triangleLeftX = triangleTopX - triangleSizeX;
     var triangleLeftY = triangleTopY + triangleSizeY * 2;
@@ -138,10 +142,10 @@ class BreadcrumbRenderer {
           (coordinatesRaw[0] - centerPosition.x) * _currentScale;
       var firstYScaledAtCenter =
           (coordinatesRaw[1] - centerPosition.y) * _currentScale;
-      var lastXRotated = _xHalf + _rotateCos * firstXScaledAtCenter -
-                         _rotateSin * firstYScaledAtCenter;
-      var lastYRotated = _yHalf + _rotateSin * firstXScaledAtCenter +
-                         _rotateCos * firstYScaledAtCenter;
+      var lastRotated = _rotationMatrix.transformPoint(
+          [ firstXScaledAtCenter, firstYScaledAtCenter ]);
+      lastRotated[0] += _xHalf;
+      lastRotated[1] += _yHalf;
       for (var i = 3; i < size; i += 3) {
         var nextX = coordinatesRaw[i];
         var nextY = coordinatesRaw[i + 1];
@@ -149,15 +153,15 @@ class BreadcrumbRenderer {
         var nextXScaledAtCenter = (nextX - centerPosition.x) * _currentScale;
         var nextYScaledAtCenter = (nextY - centerPosition.y) * _currentScale;
 
-        var nextXRotated = _xHalf + _rotateCos * nextXScaledAtCenter -
-                           _rotateSin * nextYScaledAtCenter;
-        var nextYRotated = _yHalf + _rotateSin * nextXScaledAtCenter +
-                           _rotateCos * nextYScaledAtCenter;
+        var nextRotated = _rotationMatrix.transformPoint(
+            [ nextXScaledAtCenter, nextYScaledAtCenter ]);
+        nextRotated[0] += _xHalf;
+        nextRotated[1] += _yHalf;
 
-        dc.drawLine(lastXRotated, lastYRotated, nextXRotated, nextYRotated);
+        dc.drawLine(lastRotated[0], lastRotated[1], nextRotated[0],
+                    nextRotated[1]);
 
-        lastXRotated = nextXRotated;
-        lastYRotated = nextYRotated;
+        lastRotated = nextRotated;
       }
     }
 
