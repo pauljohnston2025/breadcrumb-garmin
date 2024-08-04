@@ -7,7 +7,6 @@ class BreadcrumbContext {
   var _breadcrumbRenderer as BreadcrumbRenderer;
   var _route as BreadcrumbTrack or Null;
   var _track as BreadcrumbTrack;
-  var fullViewLocked = false;
 
   // Set the label of the data field here.
   function initialize() {
@@ -22,7 +21,6 @@ class BreadcrumbContext {
   }
 
   function trackRenderer() as BreadcrumbRenderer { return _breadcrumbRenderer; }
-  function toggleFullView() as Void { fullViewLocked = !fullViewLocked; }
   function track() as BreadcrumbTrack { return _track; }
   function route() as BreadcrumbTrack or Null { return _route; }
   function newRoute() as BreadcrumbTrack {

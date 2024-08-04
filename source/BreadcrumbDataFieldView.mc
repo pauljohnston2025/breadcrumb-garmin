@@ -5,6 +5,9 @@ import Toybox.WatchUi;
 import Toybox.Communications;
 import Toybox.Graphics;
 
+const ROUTE_COLOUR = Graphics.COLOR_BLUE;
+const TRACK_COLOUR = Graphics.COLOR_GREEN;
+
 // note to get this to work on the simulator need to modify simulator.json and
 // add isTouchable this is already on edgo devices with touch, but not the
 // venu2s, even though I tested and it worked on the actual device
@@ -17,6 +20,7 @@ import Toybox.Graphics;
 class BreadcrumbDataFieldView extends WatchUi.DataField {
   var _breadcrumbContext as BreadcrumbContext;
   var _speedMPS as Float = 0.0;  // start at no speed
+  // var _renderCounter = 0;
 
   // Set the label of the data field here.
   function initialize(breadcrumbContext as BreadcrumbContext) {
@@ -39,7 +43,19 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
   }
 
   function onUpdate(dc as Dc) as Void {
-    // System.println("onUpdate data field");
+    // _renderCounter++;
+    // // slow down the calls to onUpdate as its a heavy operation, we will only render every second time (effectively 2 seconds)
+    // // this should save some battery, and hopefully the screen stays as the old renderred value
+    // // this will mean that we will need to wait this long for the inital render too
+    // // perhaps we could base it on speed or 'user is looking at watch'
+    // // and have a touch override?
+    // if (_renderCounter != 2) {
+    //   View.onUpdate(dc);
+    //   return;
+    // }
+
+    // _renderCounter = 0;
+    // looks like view must do a render (not doing a render causes flashes), perhaps we can store our rendered state to a buffer to load from?
 
     dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
     dc.clear();
@@ -51,35 +67,49 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     var track = _breadcrumbContext.track();
 
     var lastPoint = track.lastPoint();
-
-    var speedHighEnough = _speedMPS > 1.0;
-    // if we are moving at some pace
-    if (!_breadcrumbContext.fullViewLocked && speedHighEnough &&
-        track.coordinates.size() >= 3) {
-      // render around the current position
-      var centerPoint = lastPoint;
-      if (centerPoint == null) {
-        throw new Exception();
-      }
-      var renderDistanceM = 100;
-      var outerBoundingBox = [
-        centerPoint.x - renderDistanceM,
-        centerPoint.y - renderDistanceM,
-        centerPoint.x + renderDistanceM,
-        centerPoint.y + renderDistanceM,
-      ];
-
+    if (lastPoint == null) {
+      // edge case on startup when we have not got any readings yet (also when
+      // viewing in settings) just render the route if we have one
       if (route != null) {
-        renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint,
-                             outerBoundingBox, null);
+        renderer.updateCurrentScale(route.boundingBox);
+        renderer.renderTrack(dc, route, ROUTE_COLOUR, route.boundingBoxCenter);
+        renderer.renderCurrentScale(dc);
       }
-      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint,
-                           outerBoundingBox, lastPoint);
+
       return;
     }
 
+    // if we are moving at some pace check the mode we are in to determine if we
+    // zoom in or out
+    if (_speedMPS > 1.0) {
+      if (renderer._zoomAtPace) {
+        renderCloseAroundCurrentPosition(dc, renderer, lastPoint, route, track);
+        return;
+      }
+
+      renderZoomedOut(dc, renderer, lastPoint, route, track);
+      return;
+    }
+
+    // we are not at speed, so invert logic (this allows us to zoom in when
+    // stopped, and zoom out when running) mostly useful for cheking close route
+    // whilst stopped but also allows quick zoom in before setting manual zoom
+    // (rather than having to manually zoom in from the outer level) once zoomed
+    // in we lock onto the user position anyway
+    if (renderer._zoomAtPace) {
+      renderZoomedOut(dc, renderer, lastPoint, route, track);
+      return;
+    }
+
+    renderCloseAroundCurrentPosition(dc, renderer, lastPoint, route, track);
+  }
+
+  function renderZoomedOut(
+      dc as Dc, renderer as BreadcrumbRenderer, lastPoint as RectangularPoint,
+      route as BreadcrumbTrack or Null, track as BreadcrumbTrack) as Void {
     // when the scale is locked, we need to be where the user is, otherwise we
-    // could see a blank part at the center of the map
+    // could see a blank part of the map, when we are zoomed in and have no
+    // context
     var useUserLocation = renderer._scale != null;
 
     // we are in 'full render mode', so do the entire extent
@@ -99,25 +129,50 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
               (outerBoundingBox[3] - outerBoundingBox[1]) / 2.0,
           0.0f);
 
-      if (useUserLocation && lastPoint != null) {
+      if (useUserLocation) {
         centerPoint = lastPoint;
       }
 
-      renderer.renderTrack(dc, route, Graphics.COLOR_BLUE, centerPoint,
-                           outerBoundingBox, null);
-      renderer.renderTrack(dc, track, Graphics.COLOR_RED, centerPoint,
-                           outerBoundingBox, lastPoint);
+      renderer.updateCurrentScale(outerBoundingBox);
+      renderer.renderTrack(dc, route, ROUTE_COLOUR, centerPoint);
+      renderer.renderTrack(dc, track, TRACK_COLOUR, centerPoint);
+      renderer.renderUser(dc, centerPoint, lastPoint);
+      renderer.renderCurrentScale(dc);
       return;
     }
 
-    if (useUserLocation && lastPoint != null) {
-      // render the track if we do not have a route
-      // we are in 'full render mode', so do the entire extent
-      renderer.renderTrack(dc, track, Graphics.COLOR_RED, lastPoint,
-                           track.boundingBox, lastPoint);
+    var centerPoint = track.boundingBoxCenter;
+    if (useUserLocation) {
+      centerPoint = lastPoint;
     }
 
-    renderer.renderTrack(dc, track, Graphics.COLOR_RED, track.boundingBoxCenter,
-                         track.boundingBox, lastPoint);
+    renderer.updateCurrentScale(track.boundingBox);
+    renderer.renderTrack(dc, track, TRACK_COLOUR, centerPoint);
+    renderer.renderUser(dc, centerPoint, lastPoint);
+    renderer.renderCurrentScale(dc);
+  }
+
+  function renderCloseAroundCurrentPosition(
+      dc as Dc, renderer as BreadcrumbRenderer, lastPoint as RectangularPoint,
+      route as BreadcrumbTrack or Null, track as BreadcrumbTrack) as Void {
+    // note: this renders around the users position, but may result in a
+    // different zoom level if the scale is set in the renderer render around
+    // the current position
+    var renderDistanceM = 100;
+    var outerBoundingBox = [
+      lastPoint.x - renderDistanceM,
+      lastPoint.y - renderDistanceM,
+      lastPoint.x + renderDistanceM,
+      lastPoint.y + renderDistanceM,
+    ];
+
+    renderer.updateCurrentScale(outerBoundingBox);
+
+    if (route != null) {
+      renderer.renderTrack(dc, route, ROUTE_COLOUR, lastPoint);
+    }
+    renderer.renderTrack(dc, track, TRACK_COLOUR, lastPoint);
+    renderer.renderUser(dc, lastPoint, lastPoint);
+    renderer.renderCurrentScale(dc);
   }
 }

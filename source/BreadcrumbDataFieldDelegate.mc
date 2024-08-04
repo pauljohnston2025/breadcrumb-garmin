@@ -36,7 +36,7 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
       _breadcrumbContext.trackRenderer().resetScale();
     }
     else if(x < 50) {
-      _breadcrumbContext.toggleFullView();
+      _breadcrumbContext.trackRenderer().toggleFullView();
     }
     return false;
   }

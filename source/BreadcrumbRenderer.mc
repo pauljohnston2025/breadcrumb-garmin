@@ -8,8 +8,18 @@ import Toybox.Graphics;
 
 class BreadcrumbRenderer {
   var _scale as Float or Null = null;
-  var _lastUsedScale = 0.0;
+  var _currentScale = 0.0;
   var _rotationRad as Float = 90.0;  // heading in radians
+  var _zoomAtPace = true;
+
+  // units in meters to label
+  var SCALE_NAMES = {
+      10 => "10m",     20 => "20m",     30 => "30m",       40 => "40m",
+      50 => "50m",     100 => "100m",   250 => "250m",     500 => "500m",
+      1000 => "1km",   2000 => "2km",   3000 => "3km",     4000 => "4km",
+      5000 => "5km",   10000 => "10km", 20000 => "20km",   30000 => "30km",
+      40000 => "40km", 50000 => "50km", 100000 => "100km",
+  };
 
   // chace some important maths to make everything faster
   var _xHalf = 360 / 2.0f;
@@ -50,15 +60,73 @@ class BreadcrumbRenderer {
     return 360.0 / maxDistanceM * 0.75;
   }
 
+  function updateCurrentScale(outerBoundingBox as[Float, Float, Float, Float]) {
+    _currentScale = calculateScale(outerBoundingBox);
+  }
+
+  function renderCurrentScale(dc as Dc) {
+    var desiredPixeleWidth = 100;
+    var foundName = "unknown";
+    var foundPixelWidth = 0;
+    // get the closest without going over
+    // keys loads them in random order, we want the smallest first
+    var keys = SCALE_NAMES.keys();
+    keys.sort(null);
+    for (var i = 0; i < keys.size(); ++i) {
+      var distanceM = keys[i];
+      var testPixelWidth = distanceM * _currentScale;
+      if (testPixelWidth > desiredPixeleWidth) {
+        break;
+      }
+
+      foundPixelWidth = testPixelWidth;
+      foundName = SCALE_NAMES[distanceM];
+    }
+
+    var y = 340;
+    dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
+    dc.setPenWidth(4);
+    dc.drawLine(_xHalf - foundPixelWidth / 2.0f, y,
+                _xHalf + foundPixelWidth / 2.0f, y);
+    dc.drawText(_xHalf, y - 30, Graphics.FONT_XTINY, foundName,
+                Graphics.TEXT_JUSTIFY_CENTER);
+  }
+
+  function renderUser(dc as Dc, centerPosition as RectangularPoint,
+                      usersLastLocation as RectangularPoint) as Void {
+    var triangleSizeY = 10;
+    var triangleSizeX = 4;
+    var userPosUnrotatedX =
+        (usersLastLocation.x - centerPosition.x) * _currentScale;
+    var userPosUnrotatedY =
+        (usersLastLocation.y - centerPosition.y) * _currentScale;
+
+    var userPosRotatedX =
+        _rotateCos * userPosUnrotatedX - _rotateSin * userPosUnrotatedY;
+    var userPosRotatedY =
+        _rotateSin * userPosUnrotatedX + _rotateCos * userPosUnrotatedY;
+
+    var triangleTopX = userPosRotatedX + _xHalf;
+    var triangleTopY = userPosRotatedY + _yHalf - triangleSizeY;
+
+    var triangleLeftX = triangleTopX - triangleSizeX;
+    var triangleLeftY = triangleTopY + triangleSizeY * 2;
+
+    var triangleRightX = triangleTopX + triangleSizeX;
+    var triangleRightY = triangleLeftY;
+
+    dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_BLACK);
+    dc.setPenWidth(6);
+    dc.drawLine(triangleTopX, triangleTopY, triangleRightX, triangleRightY);
+    dc.drawLine(triangleRightX, triangleRightY, triangleLeftX, triangleLeftY);
+    dc.drawLine(triangleLeftX, triangleLeftY, triangleTopX, triangleTopY);
+  }
+
   function renderTrack(dc as Dc, breadcrumb as BreadcrumbTrack,
                        colour as Graphics.ColorType,
-                       centerPosition as RectangularPoint,
-                       outerBoundingBox as[Float, Float, Float, Float],
-                       usersLastLocation as RectangularPoint or Null) as Void {
+                       centerPosition as RectangularPoint) as Void {
     dc.setColor(colour, Graphics.COLOR_BLACK);
     dc.setPenWidth(4);
-    var scale = calculateScale(outerBoundingBox);
-    _lastUsedScale = scale;
 
     var size = breadcrumb.coordinates.size();
     var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
@@ -66,62 +134,35 @@ class BreadcrumbRenderer {
     // note: size is using the overload of memeory safe array
     // but we draw from the raw points
     if (size > 5) {
-      for (var i = 0; i < size - 3; i += 3) {
-        var startX = coordinatesRaw[i];
-        var startY = coordinatesRaw[i + 1];
-        // var startZ = coordinatesRaw[i + 2];
-        var endX = coordinatesRaw[i + 3];
-        var endY = coordinatesRaw[i + 4];
-        // var endZ = coordinatesRaw[i + 5];
+      var firstXScaledAtCenter =
+          (coordinatesRaw[0] - centerPosition.x) * _currentScale;
+      var firstYScaledAtCenter =
+          (coordinatesRaw[1] - centerPosition.y) * _currentScale;
+      var lastXRotated = _xHalf + _rotateCos * firstXScaledAtCenter -
+                         _rotateSin * firstYScaledAtCenter;
+      var lastYRotated = _yHalf + _rotateSin * firstXScaledAtCenter +
+                         _rotateCos * firstYScaledAtCenter;
+      for (var i = 3; i < size; i += 3) {
+        var nextX = coordinatesRaw[i];
+        var nextY = coordinatesRaw[i + 1];
 
-        var xStartScaledAtCenter = (startX - centerPosition.x) * scale;
-        var yStartScaledAtCenter = (startY - centerPosition.y) * scale;
-        var xEndScaledAtCenter = (endX - centerPosition.x) * scale;
-        var yEndScaledAtCenter = (endY - centerPosition.y) * scale;
+        var nextXScaledAtCenter = (nextX - centerPosition.x) * _currentScale;
+        var nextYScaledAtCenter = (nextY - centerPosition.y) * _currentScale;
 
-        var xStartRotated = _rotateCos * xStartScaledAtCenter -
-                            _rotateSin * yStartScaledAtCenter;
-        var yStartRotated = _rotateSin * xStartScaledAtCenter +
-                            _rotateCos * yStartScaledAtCenter;
-        var xEndRotated =
-            _rotateCos * xEndScaledAtCenter - _rotateSin * yEndScaledAtCenter;
-        var yEndRotated =
-            _rotateSin * xEndScaledAtCenter + _rotateCos * yEndScaledAtCenter;
+        var nextXRotated = _xHalf + _rotateCos * nextXScaledAtCenter -
+                           _rotateSin * nextYScaledAtCenter;
+        var nextYRotated = _yHalf + _rotateSin * nextXScaledAtCenter +
+                           _rotateCos * nextYScaledAtCenter;
 
-        dc.drawLine(xStartRotated + _xHalf, yStartRotated + _yHalf,
-                    xEndRotated + _xHalf, yEndRotated + _yHalf);
+        dc.drawLine(lastXRotated, lastYRotated, nextXRotated, nextYRotated);
+
+        lastXRotated = nextXRotated;
+        lastYRotated = nextYRotated;
       }
     }
 
     // dc.drawText(0, _yHalf + 50, Graphics.FONT_XTINY, "Head: " + _rotationRad,
     //             Graphics.TEXT_JUSTIFY_LEFT);
-
-    if (usersLastLocation != null) {
-      var triangleSizeY = 10;
-      var triangleSizeX = 4;
-      var userPosUnrotatedX = (usersLastLocation.x - centerPosition.x) * scale;
-      var userPosUnrotatedY = (usersLastLocation.y - centerPosition.y) * scale;
-
-      var userPosRotatedX =
-          _rotateCos * userPosUnrotatedX - _rotateSin * userPosUnrotatedY;
-      var userPosRotatedY =
-          _rotateSin * userPosUnrotatedX + _rotateCos * userPosUnrotatedY;
-
-      var triangleTopX = userPosRotatedX + _xHalf;
-      var triangleTopY = userPosRotatedY + _yHalf - triangleSizeY;
-
-      var triangleLeftX = triangleTopX - triangleSizeX;
-      var triangleLeftY = triangleTopY + triangleSizeY * 2;
-
-      var triangleRightX = triangleTopX + triangleSizeX;
-      var triangleRightY = triangleLeftY;
-
-      dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_BLACK);
-      dc.setPenWidth(6);
-      dc.drawLine(triangleTopX, triangleTopY, triangleRightX, triangleRightY);
-      dc.drawLine(triangleRightX, triangleRightY, triangleLeftX, triangleLeftY);
-      dc.drawLine(triangleLeftX, triangleLeftY, triangleTopX, triangleTopY);
-    }
   }
 
   // maybe put this into another class that handle ui touch events etc.
@@ -131,7 +172,7 @@ class BreadcrumbRenderer {
 
     // single line across the screen
     // dc.drawLine(0, yHalf, dc.getWidth(), yHalf);
-    // var text = "LU Scale: " + _lastUsedScale;
+    // var text = "LU Scale: " + _currentScale;
     // var font = Graphics.FONT_XTINY;
     // var textHeight = dc.getTextDimensions(text, font)[1];
     // dc.drawText(0, _yHalf - textHeight - 0.1, font, text,
@@ -165,14 +206,14 @@ class BreadcrumbRenderer {
                   "A", Graphics.TEXT_JUSTIFY_RIGHT);
     }
 
-    // FV - full view
-    // CV - zoom view based on speed, or located at user coordinates
-    var fvText = "ZV";
+    // M - default, moving is zoomed view, stopped if full view
+    // S - stopped is zoomed view, moving is entire view
+    var fvText = "M";
     // dirty hack, should pass the bool in another way
     // ui should be its own class, as should states
-    if (Application.getApp()._breadcrumbContext.fullViewLocked) {
+    if (!_zoomAtPace) {
       // zoom view
-      fvText = "FV";
+      fvText = "S";
     }
     dc.drawText(lineFromEdge, _yHalf, Graphics.FONT_XTINY, fvText,
                 Graphics.TEXT_JUSTIFY_LEFT);
@@ -184,14 +225,14 @@ class BreadcrumbRenderer {
 
   function incScale() as Void {
     if (_scale == null) {
-      _scale = _lastUsedScale;
+      _scale = _currentScale;
     }
     _scale += 0.05;
   }
 
   function decScale() as Void {
     if (_scale == null) {
-      _scale = _lastUsedScale;
+      _scale = _currentScale;
     }
     _scale -= 0.05;
 
@@ -203,4 +244,5 @@ class BreadcrumbRenderer {
   }
 
   function resetScale() as Void { _scale = null; }
+  function toggleFullView() as Void { _zoomAtPace = !_zoomAtPace; }
 }
