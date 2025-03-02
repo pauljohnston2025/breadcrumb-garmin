@@ -29,5 +29,6 @@ class BreadcrumbContext {
   }
   function clearRoute() as Void {
     newRoute();
+    _route.writeToDisk(ROUTE_KEY);
   }
 }

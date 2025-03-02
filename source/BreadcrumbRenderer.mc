@@ -13,6 +13,10 @@ class BreadcrumbRenderer {
   var _rotationRad as Float = 90.0;  // heading in radians
   var _zoomAtPace = true;
   var _clearRouteProgress = 0;
+  var _desiredScalePixeleWidth = 100.0d;
+
+
+  var MIN_SCALE = _desiredScalePixeleWidth / 100000.0d;
 
   // units in meters to label
   var SCALE_NAMES = {
@@ -86,30 +90,44 @@ class BreadcrumbRenderer {
     _currentScale = calculateScale(outerBoundingBox);
   }
 
-  function renderCurrentScale(dc as Dc) {
-    var desiredPixeleWidth = 100;
+  function getScaleSize() as [Number, Number] {
     var foundName = "unknown";
     var foundPixelWidth = 0;
+    var distanceM = 10;
     // get the closest without going over
     // keys loads them in random order, we want the smallest first
     var keys = SCALE_NAMES.keys();
     keys.sort(null);
     for (var i = 0; i < keys.size(); ++i) {
-      var distanceM = keys[i];
+      distanceM = keys[i];
       var testPixelWidth = distanceM * _currentScale;
-      if (testPixelWidth > desiredPixeleWidth) {
+      if (testPixelWidth > _desiredScalePixeleWidth) {
         break;
       }
 
       foundPixelWidth = testPixelWidth;
-      foundName = SCALE_NAMES[distanceM];
     }
+
+    return [foundPixelWidth, distanceM];
+  }
+
+  function renderCurrentScale(dc as Dc) {
+    
+    var scaleData = getScaleSize();
+    var pixelWidth = scaleData[0];
+    var distanceM = scaleData[1];
+    if (pixelWidth == 0)
+    {
+      return;
+    }
+
+    var foundName = SCALE_NAMES[distanceM];
 
     var y = 340;
     dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
     dc.setPenWidth(4);
-    dc.drawLine(_xHalf - foundPixelWidth / 2.0f, y,
-                _xHalf + foundPixelWidth / 2.0f, y);
+    dc.drawLine(_xHalf - pixelWidth / 2.0f, y,
+                _xHalf + pixelWidth / 2.0f, y);
     dc.drawText(_xHalf, y - 30, Graphics.FONT_XTINY, foundName,
                 Graphics.TEXT_JUSTIFY_CENTER);
   }
@@ -202,6 +220,7 @@ class BreadcrumbRenderer {
         break;
       case 1:
       case 3:
+      {
         // press right to confirm, left cancels
         dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_RED);
         dc.fillRectangle(0, 0, _xHalf, _screenSize);
@@ -216,7 +235,9 @@ class BreadcrumbRenderer {
         dc.drawText(_xHalf, topText, Graphics.FONT_XTINY,
                   text, Graphics.TEXT_JUSTIFY_CENTER);
         return true;
+      }
       case 2:
+      {
         // press left to confirm, right cancels
         dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_GREEN);
         dc.fillRectangle(0, 0, _xHalf, _screenSize);
@@ -231,6 +252,7 @@ class BreadcrumbRenderer {
         dc.drawText(_xHalf, topText, Graphics.FONT_XTINY,
                   text, Graphics.TEXT_JUSTIFY_CENTER);
         return true;
+      }
     }
 
     // single line across the screen
@@ -287,25 +309,72 @@ class BreadcrumbRenderer {
     // north facing N with litle cross
     var nPosX = 295;
     var nPosY = 85;
+    return false;
+  }
+
+  function getDecIncAmount(direction as Number) as Float {
+    var scaleData = getScaleSize();
+    var currentPixelDistance = scaleData[0];
+    var distanceToDesired = _desiredScalePixeleWidth - currentPixelDistance;
+    // we are really close to the pixel distance, due to float rounding, we will consider this already 
+    // there, and go up 2 windows instead of 1
+    // think at this point I should just set the new scale, but id need to do something similar anyway
+    // or if its really small, same issue
+    // i really should store the index of the key for the scale, then calculate the float scale on the fly
+    // that way index is determined and no round trip floating point errors.
+    // the current strategy results in some zooms needing to be clicked twice, others once.
+    if (distanceToDesired < 20 || currentPixelDistance < 20)
+    {
+      direction = direction * 2;
+    }
+    var currentDistanceM = scaleData[1];
+    var keys = SCALE_NAMES.keys();
+    keys.sort(null);
+    for (var i = 0; i < keys.size(); ++i) {
+      var distanceM = keys[i];
+      if (currentDistanceM == distanceM)
+      {
+          var nextScaleIndex = i - direction;
+          if (nextScaleIndex >= keys.size())
+          {
+            nextScaleIndex = keys.size() - 1;
+          }
+
+          if (nextScaleIndex < 0)
+          {
+            nextScaleIndex = 0;
+          }
+          
+          // we want the result to be 
+          // _desiredScalePixeleWidth = keys[nextScaleIndex] * _scale;
+          var desiredScale = _desiredScalePixeleWidth / keys[nextScaleIndex];
+          // System.println("next scale: " + keys[nextScaleIndex]);
+          // need some fudge factor to cross boundaries when needed
+          var toInc = (desiredScale - _scale) - direction * 0.0001;
+          return toInc;
+      }
+    }
+
+    return direction * MIN_SCALE;
   }
 
   function incScale() as Void {
     if (_scale == null) {
       _scale = _currentScale;
     }
-    _scale += 0.05;
+    _scale += getDecIncAmount(1);
   }
 
   function decScale() as Void {
     if (_scale == null) {
       _scale = _currentScale;
     }
-    _scale -= 0.05;
+    _scale += getDecIncAmount(-1);
 
     // prevent negative values
     // may need to go to lower scales to display larger maps (maybe like 0.05?)
-    if (_scale < 0.05) {
-      _scale = 0.05;
+    if (_scale < MIN_SCALE) {
+      _scale = MIN_SCALE;
     }
   }
 
@@ -318,6 +387,7 @@ class BreadcrumbRenderer {
           _clearRouteProgress = 1;
           return true;
         }
+        return false;
       case 1:
         // press right to confirm, left cancels
         if (x > _xHalf)
