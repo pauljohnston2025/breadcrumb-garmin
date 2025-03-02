@@ -91,24 +91,24 @@ class BreadcrumbRenderer {
   }
 
   function getScaleSize() as [Number, Number] {
-    var foundName = "unknown";
+    var foundDistanceM = 10;
     var foundPixelWidth = 0;
-    var distanceM = 10;
     // get the closest without going over
     // keys loads them in random order, we want the smallest first
     var keys = SCALE_NAMES.keys();
     keys.sort(null);
     for (var i = 0; i < keys.size(); ++i) {
-      distanceM = keys[i];
+      var distanceM = keys[i];
       var testPixelWidth = distanceM * _currentScale;
       if (testPixelWidth > _desiredScalePixeleWidth) {
         break;
       }
 
       foundPixelWidth = testPixelWidth;
+      foundDistanceM = distanceM;
     }
 
-    return [foundPixelWidth, distanceM];
+    return [foundPixelWidth, foundDistanceM];
   }
 
   function renderCurrentScale(dc as Dc) {
@@ -323,10 +323,10 @@ class BreadcrumbRenderer {
     // i really should store the index of the key for the scale, then calculate the float scale on the fly
     // that way index is determined and no round trip floating point errors.
     // the current strategy results in some zooms needing to be clicked twice, others once.
-    if (distanceToDesired < 20 || currentPixelDistance < 20)
-    {
-      direction = direction * 2;
-    }
+    // if (distanceToDesired < 2 || currentPixelDistance < 2)
+    // {
+    //   direction = direction * 2;
+    // }
     var currentDistanceM = scaleData[1];
     var keys = SCALE_NAMES.keys();
     keys.sort(null);
@@ -349,8 +349,8 @@ class BreadcrumbRenderer {
           // _desiredScalePixeleWidth = keys[nextScaleIndex] * _scale;
           var desiredScale = _desiredScalePixeleWidth / keys[nextScaleIndex];
           // System.println("next scale: " + keys[nextScaleIndex]);
-          // need some fudge factor to cross boundaries when needed
-          var toInc = (desiredScale - _scale) - direction * 0.0001;
+          // need some fudge factor to cross floating point error boundaries when needed
+          var toInc = (desiredScale - _scale);
           return toInc;
       }
     }
