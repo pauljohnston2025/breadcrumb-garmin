@@ -1,0 +1,7 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\Constants.mc"; @line = 1; ]
+import Toybox.Lang;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\Constants.mc"; @line = 3; @position = 6; ]
+const ROUTE_KEY = "route";
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\Constants.mc"; @line = 1; ]
+<init> {
+}

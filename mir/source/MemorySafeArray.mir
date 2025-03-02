@@ -1,0 +1,112 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 1; ]
+import Toybox.Position;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 2; ]
+import Toybox.Lang;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 3; ]
+import Toybox.Activity;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 4; ]
+import Toybox.Math;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 5; ]
+import Toybox.Application;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 11; ]
+class MemorySafeArray{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 11; ]
+    <init> {
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 12 6 ]
+        %tmp.1 = newa 0;
+        putv self :_internalArrayBuffer %tmp.1;
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 11; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 12; @position = 6; ]
+    var _internalArrayBuffer as Array<Float>;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 13; @position = 6; ]
+    var _size = 0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 15; ]
+    function get(i as Number) as Float {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_16_2_18_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 17 4 ]
+        %tmp.2 = getv ? :_internalArrayBuffer;
+        %tmp.4 = lgetv %i;
+        %tmp.5 = agetv %tmp.2 %tmp.4;
+        ret %tmp.5;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_16_2_18_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 20; ]
+    function add(item as Float) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_21_2_32_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 22 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_22_4_27_4_if_stmt:
+        %tmp.2 = getv ? :_size;
+        %tmp.4 = getv ? :_internalArrayBuffer;
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.2 %tmp.6;
+        bf %tmp.7 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_22_4_27_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_22_4_27_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_23_4_27_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 24 8 ]
+        %tmp.8 = getv self :_internalArrayBuffer;
+        %tmp.10 = lgetv %item;
+        %tmp.12 = getv ? :_size;
+        aputv %tmp.8 %tmp.12 %tmp.10;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 25 8 ]
+        %tmp.15 = getv ? :_size;
+        %tmp.16 = add %tmp.15 1;
+        putv self :_size dup %tmp.16;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 26 8 ]
+        ret ?;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_23_4_27_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_22_4_27_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_22_4_27_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 29 4 ]
+        %tmp.18 = getv ? :_internalArrayBuffer;
+        %tmp.19 = getv function %tmp.18 :add;
+        %tmp.21 = lgetv %item;
+        invoke %tmp.18 %tmp.19(%tmp.21);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 31 4 ]
+        %tmp.23 = getv ? :_internalArrayBuffer;
+        %tmp.24 = getv function %tmp.23 :size;
+        %tmp.25 = invoke %tmp.23 %tmp.24();
+        putv self :_size %tmp.25;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_21_2_32_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 34; ]
+    function size() as Number {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_35_2_37_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 36 4 ]
+        %tmp.2 = getv ? :_size;
+        ret %tmp.2;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_35_2_37_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 39; ]
+    function resize(size as Number) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_40_2_47_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 41 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_41_4_44_4_if_stmt:
+        %tmp.2 = lgetv %size;
+        %tmp.4 = getv ? :_internalArrayBuffer;
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = gt %tmp.2 %tmp.6;
+        bf %tmp.7 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_41_4_44_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_41_4_44_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_42_4_44_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 43 8 ]
+        %tmp.11 = getv ? :Exception;
+        %tmp.8 = newc %tmp.11 ();
+        throw %tmp.8;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_42_4_44_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_41_4_44_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_41_4_44_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc" 46 4 ]
+        %tmp.13 = lgetv %size;
+        putv self :_size %tmp.13;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_MemorySafeArray_mc_40_2_47_2_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\MemorySafeArray.mc"; @line = 1; ]
+<init> {
+}

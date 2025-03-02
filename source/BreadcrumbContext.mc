@@ -10,7 +10,7 @@ class BreadcrumbContext {
 
   // Set the label of the data field here.
   function initialize() {
-    _breadcrumbRenderer = new BreadcrumbRenderer();
+    _breadcrumbRenderer = new BreadcrumbRenderer(me);
     _route = null;
     _track = new BreadcrumbTrack();
 
@@ -26,5 +26,8 @@ class BreadcrumbContext {
   function newRoute() as BreadcrumbTrack {
     _route = new BreadcrumbTrack();
     return _route;
+  }
+  function clearRoute() as Void {
+    newRoute();
   }
 }

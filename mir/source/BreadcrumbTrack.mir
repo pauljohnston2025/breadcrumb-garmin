@@ -1,0 +1,873 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 1; ]
+import Toybox.Position;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 2; ]
+import Toybox.Lang;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 3; ]
+import Toybox.Activity;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 4; ]
+import Toybox.Math;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 5; ]
+import Toybox.Application;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 7; @position = 6; ]
+const MAX_POINTS = 1000;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 9; ]
+class RectangularPoint{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 9; ]
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 10; @position = 6; ]
+    var x as Float;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 11; @position = 6; ]
+    var y as Float;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 12; @position = 6; ]
+    var altitude as Float;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 14; ]
+    function initialize(_x as Float, _y as Float, _altitude as Float) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_14_68_18_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 15 4 ]
+        %tmp.2 = lgetv %_x;
+        putv self :x %tmp.2;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 16 4 ]
+        %tmp.4 = lgetv %_y;
+        putv self :y %tmp.4;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 17 4 ]
+        %tmp.6 = lgetv %_altitude;
+        putv self :altitude %tmp.6;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_14_68_18_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 20; ]
+    function distanceTo(point as RectangularPoint) as Float {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_21_2_25_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 22 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_21_2_25_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_21_2_25_2_stop" ]
+        %xDist.1 = local;
+        %tmp.1 = lgetv %point;
+        %tmp.2 = getv %tmp.1 :x;
+        %tmp.4 = getv ? :x;
+        %tmp.5 = sub %tmp.2 %tmp.4;
+        lputv %xDist.1 %tmp.5;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 23 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_21_2_25_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_21_2_25_2_stop" ]
+        %yDist.2 = local;
+        %tmp.6 = lgetv %point;
+        %tmp.7 = getv %tmp.6 :y;
+        %tmp.9 = getv ? :y;
+        %tmp.10 = sub %tmp.7 %tmp.9;
+        lputv %yDist.2 %tmp.10;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 24 6 ]
+        %tmp.11 = getm $.Toybox.Math;
+        %tmp.12 = getv function %tmp.11 :sqrt;
+        %tmp.14 = lgetv %xDist.1;
+        %tmp.16 = lgetv %xDist.1;
+        %tmp.17 = mul %tmp.14 %tmp.16;
+        %tmp.19 = lgetv %yDist.2;
+        %tmp.21 = lgetv %yDist.2;
+        %tmp.22 = mul %tmp.19 %tmp.21;
+        %tmp.23 = add %tmp.17 %tmp.22;
+        %tmp.24 = invoke %tmp.11 %tmp.12(%tmp.23);
+        ret %tmp.24;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_21_2_25_2_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 28; ]
+class BreadcrumbTrack{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 28; ]
+    <init> {
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 31 6 ]
+        %tmp.25 = 20037508.34f;
+        %tmp.26 = 180.0f;
+        %tmp.27 = div %tmp.25 %tmp.26;
+        putv self :_lonConversion %tmp.27;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 32 6 ]
+        %tmp.28 = getm $.Toybox.Math;
+        %tmp.29 = getv %tmp.28 :PI;
+        %tmp.30 = 360.0f;
+        %tmp.31 = div %tmp.29 %tmp.30;
+        putv self :_pi360 %tmp.31;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 33 6 ]
+        %tmp.32 = getm $.Toybox.Math;
+        %tmp.33 = getv %tmp.32 :PI;
+        %tmp.34 = 180.0f;
+        %tmp.35 = div %tmp.33 %tmp.34;
+        putv self :_pi180 %tmp.35;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 40 6 ]
+        %tmp.39 = getv ? :MemorySafeArray;
+        %tmp.36 = newc %tmp.39 ();
+        putv self :coordinates %tmp.36;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 44 6 ]
+        %tmp.40 = newa 4;
+        %tmp.42 = getv ? :FLOAT_MAX;
+        %tmp.43 = dup %tmp.40;
+        %tmp.44 = aputv %tmp.43 0 %tmp.42;
+        %tmp.46 = getv ? :FLOAT_MAX;
+        %tmp.47 = dup %tmp.44;
+        %tmp.48 = aputv %tmp.47 1 %tmp.46;
+        %tmp.50 = getv ? :FLOAT_MIN;
+        %tmp.51 = dup %tmp.48;
+        %tmp.52 = aputv %tmp.51 2 %tmp.50;
+        %tmp.54 = getv ? :FLOAT_MIN;
+        %tmp.55 = dup %tmp.52;
+        %tmp.56 = aputv %tmp.55 3 %tmp.54;
+        putv self :boundingBox %tmp.56;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 46 6 ]
+        %tmp.60 = getv ? :RectangularPoint;
+        %tmp.61 = 0.0f;
+        %tmp.62 = 0.0f;
+        %tmp.63 = 0.0f;
+        %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.63);
+        putv self :boundingBoxCenter %tmp.57;
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 28; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 31; @position = 6; ]
+    var _lonConversion;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 32; @position = 6; ]
+    var _pi360;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 33; @position = 6; ]
+    var _pi180;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 40; @position = 6; ]
+    var coordinates;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 41; @position = 6; ]
+    var _computeCounter = 0;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 44; @position = 6; ]
+    var boundingBox as [Float, Float, Float, Float];
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 46; @position = 6; ]
+    var boundingBoxCenter as RectangularPoint;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 49; ]
+    function writeToDisk(key as String) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_49_46_56_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 50 4 ]
+        %tmp.2 = getv ? :Storage;
+        %tmp.3 = getv function %tmp.2 :setValue;
+        %tmp.5 = lgetv %key;
+        %tmp.6 = "bb";
+        %tmp.7 = add %tmp.5 %tmp.6;
+        %tmp.9 = getv ? :boundingBox;
+        invoke %tmp.2 %tmp.3(%tmp.7, %tmp.9);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 51 4 ]
+        %tmp.11 = getv ? :Storage;
+        %tmp.12 = getv function %tmp.11 :setValue;
+        %tmp.14 = lgetv %key;
+        %tmp.15 = "bbc";
+        %tmp.16 = add %tmp.14 %tmp.15;
+        %tmp.17 = newa 3;
+        %tmp.19 = getv ? :boundingBoxCenter;
+        %tmp.20 = getv %tmp.19 :x;
+        %tmp.21 = dup %tmp.17;
+        %tmp.22 = aputv %tmp.21 0 %tmp.20;
+        %tmp.24 = getv ? :boundingBoxCenter;
+        %tmp.25 = getv %tmp.24 :y;
+        %tmp.26 = dup %tmp.22;
+        %tmp.27 = aputv %tmp.26 1 %tmp.25;
+        %tmp.29 = getv ? :boundingBoxCenter;
+        %tmp.30 = getv %tmp.29 :altitude;
+        %tmp.31 = dup %tmp.27;
+        %tmp.32 = aputv %tmp.31 2 %tmp.30;
+        invoke %tmp.11 %tmp.12(%tmp.16, %tmp.32);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 54 4 ]
+        %tmp.34 = getv ? :Storage;
+        %tmp.35 = getv function %tmp.34 :setValue;
+        %tmp.37 = lgetv %key;
+        %tmp.38 = "coords";
+        %tmp.39 = add %tmp.37 %tmp.38;
+        %tmp.41 = getv ? :coordinates;
+        %tmp.42 = getv %tmp.41 :_internalArrayBuffer;
+        invoke %tmp.34 %tmp.35(%tmp.39, %tmp.42);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 55 4 ]
+        %tmp.44 = getv ? :Storage;
+        %tmp.45 = getv function %tmp.44 :setValue;
+        %tmp.47 = lgetv %key;
+        %tmp.48 = "coordsSize";
+        %tmp.49 = add %tmp.47 %tmp.48;
+        %tmp.51 = getv ? :coordinates;
+        %tmp.52 = getv %tmp.51 :_size;
+        invoke %tmp.44 %tmp.45(%tmp.49, %tmp.52);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_49_46_56_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 58; ]
+    static
+    function readFromDisk(key as String) as BreadcrumbTrack or Null {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_58_73_94_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 59 4 ]
+        try @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_beginTry @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_endTry @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_catch @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_beginTry:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 60 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_stop" ]
+        %bb.1 = local;
+        %tmp.2 = getv ? :Storage;
+        %tmp.3 = getv function %tmp.2 :getValue;
+        %tmp.5 = lgetv %key;
+        %tmp.6 = "bb";
+        %tmp.7 = add %tmp.5 %tmp.6;
+        %tmp.8 = invoke %tmp.2 %tmp.3(%tmp.7);
+        lputv %bb.1 %tmp.8;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 61 6 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_61_6_63_6_if_stmt:
+        %tmp.10 = lgetv %bb.1;
+        %tmp.11 = null;
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_61_6_63_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_61_6_63_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_61_22_63_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 62 8 ]
+        %tmp.13 = null;
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        ret %tmp.13;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_61_22_63_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_61_6_63_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_61_6_63_6_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 64 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_stop" ]
+        %bbc.2 = local;
+        %tmp.15 = getv ? :Storage;
+        %tmp.16 = getv function %tmp.15 :getValue;
+        %tmp.18 = lgetv %key;
+        %tmp.19 = "bbc";
+        %tmp.20 = add %tmp.18 %tmp.19;
+        %tmp.21 = invoke %tmp.15 %tmp.16(%tmp.20);
+        lputv %bbc.2 %tmp.21;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 65 6 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_65_6_67_6_if_stmt:
+        %tmp.23 = lgetv %bbc.2;
+        %tmp.24 = null;
+        %tmp.25 = eq %tmp.23 %tmp.24;
+        bf %tmp.25 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_65_6_67_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_65_6_67_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_65_23_67_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 66 8 ]
+        %tmp.26 = null;
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        ret %tmp.26;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_65_23_67_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_65_6_67_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_65_6_67_6_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 68 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_stop" ]
+        %coords.3 = local;
+        %tmp.28 = getv ? :Storage;
+        %tmp.29 = getv function %tmp.28 :getValue;
+        %tmp.31 = lgetv %key;
+        %tmp.32 = "coords";
+        %tmp.33 = add %tmp.31 %tmp.32;
+        %tmp.34 = invoke %tmp.28 %tmp.29(%tmp.33);
+        lputv %coords.3 %tmp.34;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 69 6 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_69_6_71_6_if_stmt:
+        %tmp.36 = lgetv %coords.3;
+        %tmp.37 = null;
+        %tmp.38 = eq %tmp.36 %tmp.37;
+        bf %tmp.38 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_69_6_71_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_69_6_71_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_69_26_71_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 70 8 ]
+        %tmp.39 = null;
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        ret %tmp.39;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_69_26_71_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_69_6_71_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_69_6_71_6_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 73 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_stop" ]
+        %coordsSize.4 = local;
+        %tmp.41 = getv ? :Storage;
+        %tmp.42 = getv function %tmp.41 :getValue;
+        %tmp.44 = lgetv %key;
+        %tmp.45 = "coordsSize";
+        %tmp.46 = add %tmp.44 %tmp.45;
+        %tmp.47 = invoke %tmp.41 %tmp.42(%tmp.46);
+        lputv %coordsSize.4 %tmp.47;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 74 6 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_74_6_76_6_if_stmt:
+        %tmp.49 = lgetv %coordsSize.4;
+        %tmp.50 = null;
+        %tmp.51 = eq %tmp.49 %tmp.50;
+        bf %tmp.51 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_74_6_76_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_74_6_76_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_74_30_76_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 75 8 ]
+        %tmp.52 = null;
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        ret %tmp.52;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_74_30_76_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_74_6_76_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_74_6_76_6_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 78 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_stop" ]
+        %track.5 = local;
+        %tmp.56 = getv ? :BreadcrumbTrack;
+        %tmp.53 = newc %tmp.56 ();
+        lputv %track.5 %tmp.53;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 79 6 ]
+        %tmp.57 = lgetv %track.5;
+        %tmp.59 = lgetv %bb.1;
+        %tmp.60 = as %tmp.59 [Float, Float, Float, Float];
+        putv %tmp.57 :boundingBox %tmp.60;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 80 6 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_80_6_82_6_if_stmt:
+        %tmp.61 = lgetv %track.5;
+        %tmp.62 = getv %tmp.61 :boundingBox;
+        %tmp.63 = getv function %tmp.62 :size;
+        %tmp.64 = invoke %tmp.62 %tmp.63();
+        %tmp.65 = 4;
+        %tmp.66 = ne %tmp.64 %tmp.65;
+        bf %tmp.66 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_80_6_82_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_80_6_82_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_80_41_82_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 81 8 ]
+        %tmp.67 = null;
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        ret %tmp.67;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_80_41_82_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_80_6_82_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_80_6_82_6_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 83 6 ]
+        %tmp.68 = lgetv %track.5;
+        %tmp.72 = getv ? :RectangularPoint;
+        %tmp.74 = lgetv %bbc.2;
+        %tmp.75 = 0;
+        %tmp.76 = agetv %tmp.74 %tmp.75;
+        %tmp.77 = as %tmp.76 Float;
+        %tmp.79 = lgetv %bbc.2;
+        %tmp.80 = 1;
+        %tmp.81 = agetv %tmp.79 %tmp.80;
+        %tmp.82 = as %tmp.81 Float;
+        %tmp.84 = lgetv %bbc.2;
+        %tmp.85 = 2;
+        %tmp.86 = agetv %tmp.84 %tmp.85;
+        %tmp.87 = as %tmp.86 Float;
+        %tmp.69 = newc %tmp.72 (%tmp.77, %tmp.82, %tmp.87);
+        putv %tmp.68 :boundingBoxCenter %tmp.69;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 85 6 ]
+        %tmp.88 = lgetv %track.5;
+        %tmp.89 = getv %tmp.88 :coordinates;
+        %tmp.91 = lgetv %coords.3;
+        %tmp.92 = as %tmp.91 Array<Float>;
+        putv %tmp.89 :_internalArrayBuffer %tmp.92;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 86 6 ]
+        %tmp.93 = lgetv %track.5;
+        %tmp.94 = getv %tmp.93 :coordinates;
+        %tmp.96 = lgetv %coordsSize.4;
+        %tmp.97 = as %tmp.96 Number;
+        putv %tmp.94 :_size %tmp.97;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 87 6 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_87_6_89_6_if_stmt:
+        %tmp.98 = lgetv %track.5;
+        %tmp.99 = getv %tmp.98 :coordinates;
+        %tmp.100 = getv function %tmp.99 :size;
+        %tmp.101 = invoke %tmp.99 %tmp.100();
+        %tmp.102 = 3;
+        %tmp.103 = mod %tmp.101 %tmp.102;
+        %tmp.104 = 0;
+        %tmp.105 = ne %tmp.103 %tmp.104;
+        bf %tmp.105 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_87_6_89_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_87_6_89_6_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_87_45_89_6_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 88 8 ]
+        %tmp.106 = null;
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        ret %tmp.106;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_87_45_89_6_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_87_6_89_6_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_87_6_89_6_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 90 6 ]
+        %tmp.108 = lgetv %track.5;
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        ret %tmp.108;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_8_91_4_stop:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_endTry:
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_catch:
+        %tmp.109 = exception;
+        push %tmp.109;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 91 6 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_catch" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_91_6_93_4_end" ]
+        %e.6 = local;
+        %tmp.110 = dup %tmp.109;
+        lputv %e.6 %tmp.110;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_91_16_93_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 92 6 ]
+        pop;
+        %tmp.111 = null;
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        ret %tmp.111;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_91_16_93_4_stop:
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        pop;
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_91_6_93_4_end:
+        try @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_catch @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_91_6_93_4_end @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_91_6_93_4_end @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        jsr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally;
+        throw %tmp.109;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_finally:
+        jsrret;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_59_4_93_4_end:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_58_73_94_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 96; ]
+    function clear() as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_96_27_96_52_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 96 29 ]
+        %tmp.2 = getv ? :coordinates;
+        %tmp.3 = getv function %tmp.2 :resize;
+        %tmp.4 = 0;
+        invoke %tmp.2 %tmp.3(%tmp.4);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_96_27_96_52_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 98; ]
+    function lastPoint() as RectangularPoint or Null {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_99_2_107_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 100 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_100_4_102_4_if_stmt:
+        %tmp.2 = getv ? :coordinates;
+        %tmp.3 = getv function %tmp.2 :size;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        %tmp.5 = 3;
+        %tmp.6 = lt %tmp.4 %tmp.5;
+        bf %tmp.6 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_100_4_102_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_100_4_102_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_100_32_102_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 101 6 ]
+        %tmp.7 = null;
+        ret %tmp.7;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_100_32_102_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_100_4_102_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_100_4_102_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 104 4 ]
+        %tmp.11 = getv ? :RectangularPoint;
+        %tmp.13 = getv ? :coordinates;
+        %tmp.14 = getv function %tmp.13 :get;
+        %tmp.16 = getv ? :coordinates;
+        %tmp.17 = getv function %tmp.16 :size;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        %tmp.19 = 3;
+        %tmp.20 = sub %tmp.18 %tmp.19;
+        %tmp.21 = invoke %tmp.13 %tmp.14(%tmp.20);
+        %tmp.23 = getv ? :coordinates;
+        %tmp.24 = getv function %tmp.23 :get;
+        %tmp.26 = getv ? :coordinates;
+        %tmp.27 = getv function %tmp.26 :size;
+        %tmp.28 = invoke %tmp.26 %tmp.27();
+        %tmp.29 = 2;
+        %tmp.30 = sub %tmp.28 %tmp.29;
+        %tmp.31 = invoke %tmp.23 %tmp.24(%tmp.30);
+        %tmp.33 = getv ? :coordinates;
+        %tmp.34 = getv function %tmp.33 :get;
+        %tmp.36 = getv ? :coordinates;
+        %tmp.37 = getv function %tmp.36 :size;
+        %tmp.38 = invoke %tmp.36 %tmp.37();
+        %tmp.39 = 1;
+        %tmp.40 = sub %tmp.38 %tmp.39;
+        %tmp.41 = invoke %tmp.33 %tmp.34(%tmp.40);
+        %tmp.8 = newc %tmp.11 (%tmp.21, %tmp.31, %tmp.41);
+        ret %tmp.8;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_99_2_107_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 109; ]
+    function addPointRaw(lat as Float, lon as Float, altitude as Float) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_109_78_122_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 110 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_109_78_122_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_109_78_122_2_stop" ]
+        %newPoint.1 = local;
+        %tmp.1 = self;
+        %tmp.2 = getv function %tmp.1 :latLon2xy;
+        %tmp.4 = lgetv %lat;
+        %tmp.6 = lgetv %lon;
+        %tmp.8 = lgetv %altitude;
+        %tmp.9 = invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6, %tmp.8);
+        lputv %newPoint.1 %tmp.9;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 111 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_109_78_122_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_109_78_122_2_stop" ]
+        %lastPoint.2 = local;
+        %tmp.10 = self;
+        %tmp.11 = getv function %tmp.10 :lastPoint;
+        %tmp.12 = invoke %tmp.10 %tmp.11();
+        lputv %lastPoint.2 %tmp.12;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 112 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_4_116_4_if_stmt:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_8_112_62_begin:
+        %tmp.14 = lgetv %lastPoint.2;
+        %tmp.15 = null;
+        %tmp.16 = ne %tmp.14 %tmp.15;
+        bf %tmp.16 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_4_116_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_29_112_62_true:
+        %tmp.17 = lgetv %lastPoint.2;
+        %tmp.18 = as %tmp.17 { (!Null) };
+        %tmp.19 = getv function %tmp.18 :distanceTo;
+        %tmp.21 = lgetv %newPoint.1;
+        %tmp.22 = invoke %tmp.18 %tmp.19(%tmp.21);
+        %tmp.23 = 5;
+        %tmp.24 = lt %tmp.22 %tmp.23;
+        push %tmp.24;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_29_112_62_end:
+        %tmp.25 = phi [%tmp.16 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_8_112_62_begin] [%tmp.24 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_29_112_62_true] [%tmp.25 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_29_112_62_end];
+        bf %tmp.25 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_4_116_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_4_116_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_113_4_116_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 115 6 ]
+        ret ?;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_113_4_116_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_4_116_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_112_4_116_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 117 4 ]
+        %tmp.27 = getv ? :coordinates;
+        %tmp.28 = getv function %tmp.27 :add;
+        %tmp.29 = lgetv %newPoint.1;
+        %tmp.30 = getv %tmp.29 :x;
+        invoke %tmp.27 %tmp.28(%tmp.30);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 118 4 ]
+        %tmp.32 = getv ? :coordinates;
+        %tmp.33 = getv function %tmp.32 :add;
+        %tmp.34 = lgetv %newPoint.1;
+        %tmp.35 = getv %tmp.34 :y;
+        invoke %tmp.32 %tmp.33(%tmp.35);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 119 4 ]
+        %tmp.37 = getv ? :coordinates;
+        %tmp.38 = getv function %tmp.37 :add;
+        %tmp.39 = lgetv %newPoint.1;
+        %tmp.40 = getv %tmp.39 :altitude;
+        invoke %tmp.37 %tmp.38(%tmp.40);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 120 4 ]
+        %tmp.41 = self;
+        %tmp.42 = getv function %tmp.41 :updateBoundingBox;
+        %tmp.44 = lgetv %newPoint.1;
+        invoke %tmp.41 %tmp.42(%tmp.44);
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 121 4 ]
+        %tmp.45 = self;
+        %tmp.46 = getv function %tmp.45 :restrictPoints;
+        invoke %tmp.45 %tmp.46();
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_109_78_122_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 124; ]
+    function restrictPoints() {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_124_28_148_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 131 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_131_4_133_4_if_stmt:
+        %tmp.2 = getv ? :coordinates;
+        %tmp.3 = getv function %tmp.2 :size;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        %tmp.5 = 3;
+        %tmp.6 = div %tmp.4 %tmp.5;
+        %tmp.8 = getv ? :MAX_POINTS;
+        %tmp.9 = lt %tmp.6 %tmp.8;
+        bf %tmp.9 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_131_4_133_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_131_4_133_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_131_45_133_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 132 6 ]
+        ret ?;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_131_45_133_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_131_4_133_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_131_4_133_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 138 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_124_28_148_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_124_28_148_2_stop" ]
+        %rawCoordinates.1 = local;
+        %tmp.11 = getv ? :coordinates;
+        %tmp.12 = getv %tmp.11 :_internalArrayBuffer;
+        lputv %rawCoordinates.1 %tmp.12;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 139 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_124_28_148_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_124_28_148_2_stop" ]
+        %j.2 = local;
+        %tmp.13 = 0;
+        lputv %j.2 %tmp.13;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 140 4 ]
+        for @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_test @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_incr @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_init:
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_begin" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_end" ]
+        %i.3 = local;
+        %tmp.14 = 0;
+        lputv %i.3 %tmp.14;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_test:
+        %tmp.16 = lgetv %i.3;
+        %tmp.18 = getv ? :coordinates;
+        %tmp.19 = getv function %tmp.18 :size;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        %tmp.21 = lt %tmp.16 %tmp.20;
+        bf %tmp.21 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_begin:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_52_145_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 141 6 ]
+        %tmp.22 = lgetv %rawCoordinates.1;
+        %tmp.24 = lgetv %rawCoordinates.1;
+        %tmp.26 = lgetv %i.3;
+        %tmp.27 = agetv %tmp.24 %tmp.26;
+        %tmp.29 = lgetv %j.2;
+        aputv %tmp.22 %tmp.29 %tmp.27;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 142 6 ]
+        %tmp.30 = lgetv %rawCoordinates.1;
+        %tmp.32 = lgetv %rawCoordinates.1;
+        %tmp.34 = lgetv %i.3;
+        %tmp.35 = 1;
+        %tmp.36 = add %tmp.34 %tmp.35;
+        %tmp.37 = agetv %tmp.32 %tmp.36;
+        %tmp.39 = lgetv %j.2;
+        %tmp.40 = 1;
+        %tmp.41 = add %tmp.39 %tmp.40;
+        aputv %tmp.30 %tmp.41 %tmp.37;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 143 6 ]
+        %tmp.42 = lgetv %rawCoordinates.1;
+        %tmp.44 = lgetv %rawCoordinates.1;
+        %tmp.46 = lgetv %i.3;
+        %tmp.47 = 2;
+        %tmp.48 = add %tmp.46 %tmp.47;
+        %tmp.49 = agetv %tmp.44 %tmp.48;
+        %tmp.51 = lgetv %j.2;
+        %tmp.52 = 2;
+        %tmp.53 = add %tmp.51 %tmp.52;
+        aputv %tmp.42 %tmp.53 %tmp.49;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 144 6 ]
+        %tmp.54 = lgetv %j.2;
+        %tmp.55 = 3;
+        %tmp.56 = add %tmp.54 %tmp.55;
+        lputv %j.2 %tmp.56;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_52_145_4_stop:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_incr:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 140 ]
+        %tmp.57 = lgetv %i.3;
+        %tmp.58 = 6;
+        %tmp.59 = add %tmp.57 %tmp.58;
+        lputv %i.3 %tmp.59;
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_test;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_140_4_145_4_for_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 147 4 ]
+        %tmp.61 = getv ? :coordinates;
+        %tmp.62 = getv function %tmp.61 :resize;
+        %tmp.63 = 3;
+        %tmp.65 = getv ? :MAX_POINTS;
+        %tmp.66 = mul %tmp.63 %tmp.65;
+        %tmp.67 = 2;
+        %tmp.68 = div %tmp.66 %tmp.67;
+        invoke %tmp.61 %tmp.62(%tmp.68);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_124_28_148_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 150; ]
+    function updateBoundingBox(point as RectangularPoint) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_150_64_159_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 151 4 ]
+        %tmp.1 = getv self :boundingBox;
+        %tmp.2 = self;
+        %tmp.3 = getv function %tmp.2 :minF;
+        %tmp.5 = getv ? :boundingBox;
+        %tmp.6 = 0;
+        %tmp.7 = agetv %tmp.5 %tmp.6;
+        %tmp.8 = lgetv %point;
+        %tmp.9 = getv %tmp.8 :x;
+        %tmp.10 = invoke %tmp.2 %tmp.3(%tmp.7, %tmp.9);
+        %tmp.11 = 0;
+        aputv %tmp.1 %tmp.11 %tmp.10;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 152 4 ]
+        %tmp.12 = getv self :boundingBox;
+        %tmp.13 = self;
+        %tmp.14 = getv function %tmp.13 :minF;
+        %tmp.16 = getv ? :boundingBox;
+        %tmp.17 = 1;
+        %tmp.18 = agetv %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %point;
+        %tmp.20 = getv %tmp.19 :y;
+        %tmp.21 = invoke %tmp.13 %tmp.14(%tmp.18, %tmp.20);
+        %tmp.22 = 1;
+        aputv %tmp.12 %tmp.22 %tmp.21;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 153 4 ]
+        %tmp.23 = getv self :boundingBox;
+        %tmp.24 = self;
+        %tmp.25 = getv function %tmp.24 :maxF;
+        %tmp.27 = getv ? :boundingBox;
+        %tmp.28 = 2;
+        %tmp.29 = agetv %tmp.27 %tmp.28;
+        %tmp.30 = lgetv %point;
+        %tmp.31 = getv %tmp.30 :x;
+        %tmp.32 = invoke %tmp.24 %tmp.25(%tmp.29, %tmp.31);
+        %tmp.33 = 2;
+        aputv %tmp.23 %tmp.33 %tmp.32;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 154 4 ]
+        %tmp.34 = getv self :boundingBox;
+        %tmp.35 = self;
+        %tmp.36 = getv function %tmp.35 :maxF;
+        %tmp.38 = getv ? :boundingBox;
+        %tmp.39 = 3;
+        %tmp.40 = agetv %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %point;
+        %tmp.42 = getv %tmp.41 :y;
+        %tmp.43 = invoke %tmp.35 %tmp.36(%tmp.40, %tmp.42);
+        %tmp.44 = 3;
+        aputv %tmp.34 %tmp.44 %tmp.43;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 156 4 ]
+        %tmp.48 = getv ? :RectangularPoint;
+        %tmp.50 = getv ? :boundingBox;
+        %tmp.51 = 0;
+        %tmp.52 = agetv %tmp.50 %tmp.51;
+        %tmp.54 = getv ? :boundingBox;
+        %tmp.55 = 2;
+        %tmp.56 = agetv %tmp.54 %tmp.55;
+        %tmp.58 = getv ? :boundingBox;
+        %tmp.59 = 0;
+        %tmp.60 = agetv %tmp.58 %tmp.59;
+        %tmp.61 = sub %tmp.56 %tmp.60;
+        %tmp.62 = 2.0;
+        %tmp.63 = div %tmp.61 %tmp.62;
+        %tmp.64 = add %tmp.52 %tmp.63;
+        %tmp.66 = getv ? :boundingBox;
+        %tmp.67 = 1;
+        %tmp.68 = agetv %tmp.66 %tmp.67;
+        %tmp.70 = getv ? :boundingBox;
+        %tmp.71 = 3;
+        %tmp.72 = agetv %tmp.70 %tmp.71;
+        %tmp.74 = getv ? :boundingBox;
+        %tmp.75 = 1;
+        %tmp.76 = agetv %tmp.74 %tmp.75;
+        %tmp.77 = sub %tmp.72 %tmp.76;
+        %tmp.78 = 2.0;
+        %tmp.79 = div %tmp.77 %tmp.78;
+        %tmp.80 = add %tmp.68 %tmp.79;
+        %tmp.81 = 0.0f;
+        %tmp.45 = newc %tmp.48 (%tmp.64, %tmp.80, %tmp.81);
+        putv self :boundingBoxCenter %tmp.45;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_150_64_159_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 161; ]
+    function onActivityInfo(activityInfo as Activity.Info) as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 163 4 ]
+        %tmp.3 = getv ? :_computeCounter;
+        %tmp.4 = add %tmp.3 1;
+        putv self :_computeCounter dup %tmp.4;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 166 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_166_4_168_4_if_stmt:
+        %tmp.6 = getv ? :_computeCounter;
+        %tmp.7 = 5;
+        %tmp.8 = ne %tmp.6 %tmp.7;
+        bf %tmp.8 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_166_4_168_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_166_4_168_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_166_30_168_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 167 6 ]
+        ret ?;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_166_30_168_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_166_4_168_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_166_4_168_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 170 4 ]
+        %tmp.9 = 0;
+        putv self :_computeCounter %tmp.9;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 174 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_stop" ]
+        %loc.1 = local;
+        %tmp.10 = lgetv %activityInfo;
+        %tmp.11 = getv %tmp.10 :currentLocation;
+        lputv %loc.1 %tmp.11;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 175 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_175_4_177_4_if_stmt:
+        %tmp.13 = lgetv %loc.1;
+        %tmp.14 = null;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        bf %tmp.15 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_175_4_177_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_175_4_177_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_175_21_177_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 176 6 ]
+        ret ?;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_175_21_177_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_175_4_177_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_175_4_177_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 179 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_stop" ]
+        %altitude.2 = local;
+        %tmp.16 = lgetv %activityInfo;
+        %tmp.17 = getv %tmp.16 :altitude;
+        lputv %altitude.2 %tmp.17;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 180 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_180_4_182_4_if_stmt:
+        %tmp.19 = lgetv %altitude.2;
+        %tmp.20 = null;
+        %tmp.21 = eq %tmp.19 %tmp.20;
+        bf %tmp.21 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_180_4_182_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_180_4_182_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_180_26_182_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 181 6 ]
+        ret ?;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_180_26_182_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_180_4_182_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_180_4_182_4_if_end:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 187 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_stop" ]
+        %asDeg.3 = local;
+        %tmp.22 = lgetv %loc.1;
+        %tmp.23 = getv function %tmp.22 :toDegrees;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        lputv %asDeg.3 %tmp.24;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 188 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_stop" ]
+        %lat.4 = local;
+        %tmp.26 = lgetv %asDeg.3;
+        %tmp.27 = 0;
+        %tmp.28 = agetv %tmp.26 %tmp.27;
+        %tmp.29 = getv function %tmp.28 :toFloat;
+        %tmp.30 = invoke %tmp.28 %tmp.29();
+        lputv %lat.4 %tmp.30;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 189 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_stop" ]
+        %lon.5 = local;
+        %tmp.32 = lgetv %asDeg.3;
+        %tmp.33 = 1;
+        %tmp.34 = agetv %tmp.32 %tmp.33;
+        %tmp.35 = getv function %tmp.34 :toFloat;
+        %tmp.36 = invoke %tmp.34 %tmp.35();
+        lputv %lon.5 %tmp.36;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 190 4 ]
+        %tmp.37 = self;
+        %tmp.38 = getv function %tmp.37 :addPointRaw;
+        %tmp.40 = lgetv %lat.4;
+        %tmp.42 = lgetv %lon.5;
+        %tmp.44 = lgetv %altitude.2;
+        invoke %tmp.37 %tmp.38(%tmp.40, %tmp.42, %tmp.44);
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_161_65_191_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 194; ]
+    function latLon2xy(lat as Float, lon as Float, altitude as Float) as RectangularPoint {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_195_60_202_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 198 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_195_60_202_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_195_60_202_2_stop" ]
+        %latRect.1 = local;
+        %tmp.1 = getm $.Toybox.Math;
+        %tmp.2 = getv function %tmp.1 :ln;
+        %tmp.3 = getm $.Toybox.Math;
+        %tmp.4 = getv function %tmp.3 :tan;
+        %tmp.5 = 90;
+        %tmp.7 = lgetv %lat;
+        %tmp.8 = add %tmp.5 %tmp.7;
+        %tmp.10 = getv ? :_pi360;
+        %tmp.11 = mul %tmp.8 %tmp.10;
+        %tmp.12 = invoke %tmp.3 %tmp.4(%tmp.11);
+        %tmp.13 = invoke %tmp.1 %tmp.2(%tmp.12);
+        %tmp.15 = getv ? :_pi180;
+        %tmp.16 = div %tmp.13 %tmp.15;
+        %tmp.18 = getv ? :_lonConversion;
+        %tmp.19 = mul %tmp.16 %tmp.18;
+        lputv %latRect.1 %tmp.19;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 199 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_195_60_202_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_195_60_202_2_stop" ]
+        %lonRect.2 = local;
+        %tmp.21 = lgetv %lon;
+        %tmp.23 = getv ? :_lonConversion;
+        %tmp.24 = mul %tmp.21 %tmp.23;
+        lputv %lonRect.2 %tmp.24;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc" 201 4 ]
+        %tmp.28 = getv ? :RectangularPoint;
+        %tmp.29 = lgetv %latRect.1;
+        %tmp.30 = getv function %tmp.29 :toFloat;
+        %tmp.31 = invoke %tmp.29 %tmp.30();
+        %tmp.32 = lgetv %lonRect.2;
+        %tmp.33 = getv function %tmp.32 :toFloat;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.36 = lgetv %altitude;
+        %tmp.25 = newc %tmp.28 (%tmp.31, %tmp.34, %tmp.36);
+        ret %tmp.25;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbTrack_mc_195_60_202_2_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbTrack.mc"; @line = 1; ]
+<init> {
+}

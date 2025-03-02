@@ -61,7 +61,10 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     dc.clear();
 
     var renderer = _breadcrumbContext.trackRenderer();
-    renderer.renderUi(dc);
+    if (renderer.renderUi(dc))
+    {
+      return;
+    }
 
     var route = _breadcrumbContext.route();
     var track = _breadcrumbContext.track();

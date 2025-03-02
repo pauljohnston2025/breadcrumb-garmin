@@ -1,0 +1,102 @@
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 1; ]
+import Toybox.Position;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 2; ]
+import Toybox.Lang;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 3; ]
+import Toybox.Activity;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 4; ]
+import Toybox.Application;
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 6; ]
+class BreadcrumbContext{
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 6; ]
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 6; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 7; @position = 6; ]
+    var _breadcrumbRenderer as BreadcrumbRenderer;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 8; @position = 6; ]
+    var _route as BreadcrumbTrack or Null;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 9; @position = 6; ]
+    var _track as BreadcrumbTrack;
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 12; ]
+    function initialize() as Void {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_12_24_21_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 13 4 ]
+        %tmp.4 = getv ? :BreadcrumbRenderer;
+        %tmp.1 = newc %tmp.4 ();
+        putv self :_breadcrumbRenderer %tmp.1;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 14 4 ]
+        %tmp.5 = null;
+        putv self :_route %tmp.5;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 15 4 ]
+        %tmp.9 = getv ? :BreadcrumbTrack;
+        %tmp.6 = newc %tmp.9 ();
+        putv self :_track %tmp.6;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 17 4 ]
+        [ "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_12_24_21_2_start" "C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_12_24_21_2_stop" ]
+        %route.1 = local;
+        %tmp.11 = getv ? :BreadcrumbTrack;
+        %tmp.12 = getv function %tmp.11 :readFromDisk;
+        %tmp.14 = getv ? :ROUTE_KEY;
+        %tmp.15 = invoke %tmp.11 %tmp.12(%tmp.14);
+        lputv %route.1 %tmp.15;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 18 4 ]
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_18_4_20_4_if_stmt:
+        %tmp.17 = lgetv %route.1;
+        %tmp.18 = null;
+        %tmp.19 = ne %tmp.17 %tmp.18;
+        bf %tmp.19 @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_18_4_20_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_18_4_20_4_if_true:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_18_23_20_4_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 19 6 ]
+        %tmp.21 = lgetv %route.1;
+        %tmp.22 = as %tmp.21 { (!Null) };
+        putv self :_route %tmp.22;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_18_23_20_4_stop:
+        goto @C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_18_4_20_4_if_end;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_18_4_20_4_if_end:
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_12_24_21_2_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 23; ]
+    function trackRenderer() as BreadcrumbRenderer {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_23_49_23_79_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 23 51 ]
+        %tmp.2 = getv ? :_breadcrumbRenderer;
+        ret %tmp.2;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_23_49_23_79_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 24; ]
+    function track() as BreadcrumbTrack {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_24_38_24_55_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 24 40 ]
+        %tmp.2 = getv ? :_track;
+        ret %tmp.2;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_24_38_24_55_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 25; ]
+    function route() as BreadcrumbTrack or Null {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_25_46_25_63_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 25 48 ]
+        %tmp.2 = getv ? :_route;
+        ret %tmp.2;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_25_46_25_63_stop:
+    }
+    [ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 26; ]
+    function newRoute() as BreadcrumbTrack {
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_26_41_29_2_start:
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 27 4 ]
+        %tmp.4 = getv ? :BreadcrumbTrack;
+        %tmp.1 = newc %tmp.4 ();
+        putv self :_route %tmp.1;
+[ "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc" 28 4 ]
+        %tmp.6 = getv ? :_route;
+        ret %tmp.6;
+C_Users_RandomGuy2_1_garmin_apps_BreadcrumbDataField_source_BreadcrumbContext_mc_26_41_29_2_stop:
+    }
+}
+[ @file = "C:\Users\RandomGuy2.1\garmin_apps\BreadcrumbDataField\source\BreadcrumbContext.mc"; @line = 1; ]
+<init> {
+}

@@ -7,10 +7,12 @@ import Toybox.Communications;
 import Toybox.Graphics;
 
 class BreadcrumbRenderer {
+  var _breadcrumbContext as BreadcrumbContext;
   var _scale as Float or Null = null;
   var _currentScale = 0.0;
   var _rotationRad as Float = 90.0;  // heading in radians
   var _zoomAtPace = true;
+  var _clearRouteProgress = 0;
 
   // units in meters to label
   var SCALE_NAMES = {
@@ -21,9 +23,11 @@ class BreadcrumbRenderer {
       40000 => "40km", 50000 => "50km", 100000 => "100km",
   };
 
-  // chace some important maths to make everything faster
-  var _xHalf = 360 / 2.0f;
-  var _yHalf = 360 / 2.0f;
+  // cache some important maths to make everything faster
+  var _screenSize = 360.0f;
+  var _xHalf = _screenSize / 2.0f;
+  var _yHalf = _screenSize / 2.0f;
+  
 
   // benchmark same track loaded (just render track no activity running) using
   // average time over 1min of benchmark 
@@ -43,7 +47,9 @@ class BreadcrumbRenderer {
   var _rotateCos = Math.cos(_rotationRad);
   var _rotateSin = Math.sin(_rotationRad);
 
-  function initialize() {}
+  function initialize(breadcrumbContext as BreadcrumbContext) {
+    _breadcrumbContext = breadcrumbContext;
+  }
 
   function onActivityInfo(activityInfo as Activity.Info) as Void {
     // System.println(
@@ -73,7 +79,7 @@ class BreadcrumbRenderer {
     // venu 2s
     // but this would only work for sqaures, so 0.75 fudge factor for circle
     // watch face
-    return 360.0 / maxDistanceM * 0.75;
+    return _screenSize / maxDistanceM * 0.75;
   }
 
   function updateCurrentScale(outerBoundingBox as[Float, Float, Float, Float]) {
@@ -185,9 +191,47 @@ class BreadcrumbRenderer {
   }
 
   // maybe put this into another class that handle ui touch events etc.
-  function renderUi(dc as Dc) as Void {
+  function renderUi(dc as Dc) as Boolean {
     dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_BLACK);
     dc.setPenWidth(1);
+
+    var padding = _xHalf / 2.0f;
+    var topText = _yHalf / 2.0f;
+    switch(_clearRouteProgress) {
+      case 0:
+        break;
+      case 1:
+      case 3:
+        // press right to confirm, left cancels
+        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_RED);
+        dc.fillRectangle(0, 0, _xHalf, _screenSize);
+        dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_GREEN);
+        dc.fillRectangle(_xHalf, 0, _xHalf, _screenSize);
+        dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_xHalf - padding, _yHalf, Graphics.FONT_XTINY,
+                  "N", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_xHalf + padding, _yHalf, Graphics.FONT_XTINY,
+                  "Y", Graphics.TEXT_JUSTIFY_CENTER);
+        var text = _clearRouteProgress == 1 ? "Clearing route, are you sure?" : "Last chance!!!";
+        dc.drawText(_xHalf, topText, Graphics.FONT_XTINY,
+                  text, Graphics.TEXT_JUSTIFY_CENTER);
+        return true;
+      case 2:
+        // press left to confirm, right cancels
+        dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_GREEN);
+        dc.fillRectangle(0, 0, _xHalf, _screenSize);
+        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_RED);
+        dc.fillRectangle(_xHalf, 0, _xHalf, _screenSize);
+        dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_xHalf - padding, _yHalf, Graphics.FONT_XTINY,
+                  "Y", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_xHalf + padding, _yHalf, Graphics.FONT_XTINY,
+                  "N", Graphics.TEXT_JUSTIFY_CENTER);
+        var text = "Confirm route clear";
+        dc.drawText(_xHalf, topText, Graphics.FONT_XTINY,
+                  text, Graphics.TEXT_JUSTIFY_CENTER);
+        return true;
+    }
 
     // single line across the screen
     // dc.drawLine(0, yHalf, dc.getWidth(), yHalf);
@@ -237,6 +281,9 @@ class BreadcrumbRenderer {
     dc.drawText(lineFromEdge, _yHalf, Graphics.FONT_XTINY, fvText,
                 Graphics.TEXT_JUSTIFY_LEFT);
 
+    // clear route
+    dc.drawText(65, 75, Graphics.FONT_XTINY, "C", Graphics.TEXT_JUSTIFY_RIGHT);
+
     // north facing N with litle cross
     var nPosX = 295;
     var nPosY = 85;
@@ -260,6 +307,47 @@ class BreadcrumbRenderer {
     if (_scale < 0.05) {
       _scale = 0.05;
     }
+  }
+
+  function handleClearRoute(x as Number, y as Number) as Boolean
+  {
+    switch(_clearRouteProgress) {
+      case 0:
+        // press top left to start clear route
+        if (y > 50 && y < 100 && x > 40 && x < 90) {
+          _clearRouteProgress = 1;
+          return true;
+        }
+      case 1:
+        // press right to confirm, left cancels
+        if (x > _xHalf)
+        {
+            _clearRouteProgress = 2;
+            return true;
+        }
+        _clearRouteProgress = 0;
+        return true;
+      
+      case 2:
+        // press left to confirm, right cancels
+        if (x < _xHalf)
+        {
+            _clearRouteProgress = 3;
+            return true;
+        }
+        _clearRouteProgress = 0;
+        return true;
+      case 3:
+        // press right to confirm, left cancels
+        if (x > _xHalf)
+        {
+            _breadcrumbContext.clearRoute();
+        }
+        _clearRouteProgress = 0;
+        return true;
+    }
+
+    return false;
   }
 
   function resetScale() as Void { _scale = null; }
