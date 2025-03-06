@@ -32,7 +32,8 @@ class BreadcrumbTrack {
   // shall store them as poit classes for now, and can convert to using just
   // arrays
   var coordinates as PointArray = new PointArray();
-  var restartCoordinates as PointArray = new PointArray();
+  var seenStartupPoints as Number = 0;
+  var possibleBadPointsAdded as Number = 0;
   var inRestartMode as Boolean = true;
   var _computeCounter as Number = 0;
 
@@ -156,8 +157,59 @@ class BreadcrumbTrack {
   function onTimerResume() as Void
   {
     // check from startup
-    restartCoordinates.clear();
+    seenStartupPoints = 0;
+    possibleBadPointsAdded = 0;
     inRestartMode = true;
+  }
+
+  function handlePointAddStartup(newPoint as RectangularPoint) as Void
+  {
+    // genreal p-lan of this function is
+    // add data to both startup array and raw array (so we can start drawing points immediately, without the need for patching both arrays together)
+    // on unstable points, remove points from both arrays
+    // if the main coordinates array has been sliced in half through `restrictPoints()` 
+    // this may remove more points than needed, but is not a huge concern
+    var lastStartupPoint = coordinates.lastPoint();
+    if (lastStartupPoint == null || seenStartupPoints == 0)
+    {
+      // nothing to compare against, add the point to both arrays
+      // setting to 1 instead of incrementing, just incase they do not get cleaed when they should
+      seenStartupPoints = 1;
+      possibleBadPointsAdded = 1;
+      addPointRaw(newPoint);
+      return;
+    }
+
+    var stabilityCheckDistance = lastStartupPoint.distanceTo(newPoint);
+    if (stabilityCheckDistance < MIN_DISTANCE_M)
+    {
+      // point too close, no need to add, but its still a good point
+      seenStartupPoints++;
+      return;
+    }
+
+    if (stabilityCheckDistance > STABILITY_MAX_DISTANCE_M)
+    {
+        // we are unstable, remove all points
+        seenStartupPoints = 0;
+        coordinates.removeLastCountPoints(possibleBadPointsAdded);
+        possibleBadPointsAdded = 0;
+        updateBoundingBoxFromAllPoints();
+        return;
+    }
+
+    // we are stable, see if we can break out of startup
+    seenStartupPoints++;
+    possibleBadPointsAdded++;
+    addPointRaw(newPoint);
+    
+    if (seenStartupPoints == RESTART_STABILITY_POINT_COUNT)
+    {
+      // we have enough stable points that we can exist restart mode and just handle them as normal points
+      inRestartMode = false;
+      seenStartupPoints = 0;
+      possibleBadPointsAdded = 0;
+    }
   }
 
   function onActivityInfo(activityInfo as Activity.Info) as Void {
@@ -195,51 +247,18 @@ class BreadcrumbTrack {
     {
       return;
     }
+    
     if (inRestartMode)
     {
-      // genreal p-lan of this function is
-      // add data to both startup array and raw array (so we can start drawing points immediately, without the need for patching both arrays together)
-      // on unstable points, remove points from both arrays
-      // if the main coordinates array has been sliced in half through `restrictPoints()` 
-      // this may remove more points than needed, but is not a huge concern
-      var lastStartupPoint = restartCoordinates.lastPoint();
-      if (lastStartupPoint == null)
-      {
-        // nothing to compare against, add the point to both arrays
-        restartCoordinates.add(newPoint);
-        addPointRaw(newPoint);
-        return;
-      }
-
-      var stabilityCheckDistance = lastStartupPoint.distanceTo(newPoint);
-      if (stabilityCheckDistance > STABILITY_MAX_DISTANCE_M)
-      {
-         // we are unstable, remove all points
-         var pointsAdded = restartCoordinates.pointSize();
-         restartCoordinates.clear();
-         coordinates.removeLastCountPoints(pointsAdded);
-         updateBoundingBoxFromAllPoints();
-         return;
-      }
-
-      // we are stable, see if we can break out of startup
-      restartCoordinates.add(newPoint);
-      addPointRaw(newPoint);
-      
-      if (restartCoordinates.pointSize() == RESTART_STABILITY_POINT_COUNT)
-      {
-        // we have enough stable points that we can exist restart mode and just handle them as normal points
-        inRestartMode = false;
-      }
-
+      handlePointAddStartup(newPoint);
       return;
     }
     
-
     var lastPoint = lastPoint();
     if (lastPoint == null)
     {
-      // startup mode should have set at least one point
+      // startup mode should have set at least one point, revert to startup mode, something has gone wrong
+      onTimerResume();
       return;
     }
 
