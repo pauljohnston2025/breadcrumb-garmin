@@ -6,17 +6,16 @@ import Toybox.WatchUi;
 import Toybox.Communications;
 import Toybox.Graphics;
 
+const DESIRED_SCALE_PIXEL_WIDTH as Float = 100.0f;
+const MIN_SCALE as Float = DESIRED_SCALE_PIXEL_WIDTH / 100000.0f;
+
 class BreadcrumbRenderer {
   var _breadcrumbContext as BreadcrumbContext;
   var _scale as Float or Null = null;
-  var _currentScale = 0.0;
+  var _currentScale as Float = 0.0;
   var _rotationRad as Float = 90.0;  // heading in radians
-  var _zoomAtPace = true;
-  var _clearRouteProgress = 0;
-  var _desiredScalePixeleWidth = 100.0d;
-
-
-  var MIN_SCALE = _desiredScalePixeleWidth / 100000.0d;
+  var _zoomAtPace as Boolean = true;
+  var _clearRouteProgress as Number = 0;
 
   // units in meters to label
   var SCALE_NAMES = {
@@ -28,9 +27,9 @@ class BreadcrumbRenderer {
   };
 
   // cache some important maths to make everything faster
-  var _screenSize = 360.0f;
-  var _xHalf = _screenSize / 2.0f;
-  var _yHalf = _screenSize / 2.0f;
+  var _screenSize as Float = 360.0f;
+  var _xHalf as Float = _screenSize / 2.0f;
+  var _yHalf as Float = _screenSize / 2.0f;
   
 
   // benchmark same track loaded (just render track no activity running) using
@@ -79,6 +78,12 @@ class BreadcrumbRenderer {
     var yDistanceM = outerBoundingBox[3] - outerBoundingBox[1];
 
     var maxDistanceM = maxF(xDistanceM, yDistanceM);
+
+    if (maxDistanceM == 0)
+    {
+      // show 1m of space to avaoid division by 0
+      maxDistanceM = 1;
+    }
     // we want the whole map to be show on the screen, we have 360 pixels on the
     // venu 2s
     // but this would only work for sqaures, so 0.75 fudge factor for circle
@@ -86,7 +91,7 @@ class BreadcrumbRenderer {
     return _screenSize / maxDistanceM * 0.75;
   }
 
-  function updateCurrentScale(outerBoundingBox as[Float, Float, Float, Float]) {
+  function updateCurrentScale(outerBoundingBox as[Float, Float, Float, Float]) as Void {
     _currentScale = calculateScale(outerBoundingBox);
   }
 
@@ -100,7 +105,7 @@ class BreadcrumbRenderer {
     for (var i = 0; i < keys.size(); ++i) {
       var distanceM = keys[i];
       var testPixelWidth = distanceM * _currentScale;
-      if (testPixelWidth > _desiredScalePixeleWidth) {
+      if (testPixelWidth > DESIRED_SCALE_PIXEL_WIDTH) {
         break;
       }
 
@@ -176,7 +181,7 @@ class BreadcrumbRenderer {
 
     // note: size is using the overload of memeory safe array
     // but we draw from the raw points
-    if (size > 5) {
+    if (size >= ARRAY_POINT_SIZE * 2) {
       var firstXScaledAtCenter =
           (coordinatesRaw[0] - centerPosition.x) * _currentScale;
       var firstYScaledAtCenter =
@@ -185,7 +190,7 @@ class BreadcrumbRenderer {
                          rotateSinLocal * firstYScaledAtCenter;
       var lastYRotated = _yHalf + rotateSinLocal * firstXScaledAtCenter +
                          rotateCosLocal * firstYScaledAtCenter;
-      for (var i = 3; i < size; i += 3) {
+      for (var i = ARRAY_POINT_SIZE; i < size; i += ARRAY_POINT_SIZE) {
         var nextX = coordinatesRaw[i];
         var nextY = coordinatesRaw[i + 1];
 
@@ -307,15 +312,15 @@ class BreadcrumbRenderer {
     dc.drawText(65, 75, Graphics.FONT_XTINY, "C", Graphics.TEXT_JUSTIFY_RIGHT);
 
     // north facing N with litle cross
-    var nPosX = 295;
-    var nPosY = 85;
+    // var nPosX = 295;
+    // var nPosY = 85;
     return false;
   }
 
   function getDecIncAmount(direction as Number) as Float {
     var scaleData = getScaleSize();
     var currentPixelDistance = scaleData[0];
-    var distanceToDesired = _desiredScalePixeleWidth - currentPixelDistance;
+    // var distanceToDesired = DESIRED_SCALE_PIXEL_WIDTH - currentPixelDistance;
     // we are really close to the pixel distance, due to float rounding, we will consider this already 
     // there, and go up 2 windows instead of 1
     // think at this point I should just set the new scale, but id need to do something similar anyway
@@ -346,8 +351,8 @@ class BreadcrumbRenderer {
           }
           
           // we want the result to be 
-          // _desiredScalePixeleWidth = keys[nextScaleIndex] * _scale;
-          var desiredScale = _desiredScalePixeleWidth / keys[nextScaleIndex];
+          // DESIRED_SCALE_PIXEL_WIDTH = keys[nextScaleIndex] * _scale;
+          var desiredScale = DESIRED_SCALE_PIXEL_WIDTH / keys[nextScaleIndex];
           // System.println("next scale: " + keys[nextScaleIndex]);
           // need some fudge factor to cross floating point error boundaries when needed
           var toInc = (desiredScale - _scale);

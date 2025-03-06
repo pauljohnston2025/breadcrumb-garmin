@@ -37,8 +37,7 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
           return [ _view, new BreadcrumbDataFieldDelegate(_breadcrumbContext) ];
         }
 
-        function
-        onPhone(msg as Communications.Message) as Void {
+    function onPhone(msg as Communications.Message) as Void {
       var data = msg.data as Array<Number> or Null;
       if (data == null || data.size() < 1) {
         System.println("Bad message: " + data);
@@ -54,7 +53,7 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
         if (rawData.size() % 3 == 0) {
           var route = _breadcrumbContext.newRoute();
           for (var i = 0; i < rawData.size(); i += 3) {
-            route.addPointRaw(rawData[i].toFloat(), rawData[i + 1].toFloat(),
+            route.addLatLongRaw(rawData[i].toFloat(), rawData[i + 1].toFloat(),
                               rawData[i + 2].toFloat());
           }
 

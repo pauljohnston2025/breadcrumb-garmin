@@ -18,3 +18,8 @@ function minF(lhs as Float, rhs as Float) as Float {
 
   return rhs;
 }
+
+// from https://forums.garmin.com/developer/connect-iq/f/discussion/338071/testing-for-nan/1777041#1777041
+function isnan(a as Float) as Boolean {
+  return a != a;
+}
