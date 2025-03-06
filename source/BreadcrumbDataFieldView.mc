@@ -34,11 +34,11 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
   }
 
   function onTimerStart() as Void {
-    _breadcrumbContext.track().onStartRestart();
+    _breadcrumbContext.track().onTimerStart();
   }
   
   function onTimerResume() as Void {
-    _breadcrumbContext.track().onStartRestart();
+    _breadcrumbContext.track().onTimerResume();
   }
   
   function compute(info as Activity.Info) as Void {

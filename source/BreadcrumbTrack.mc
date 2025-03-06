@@ -13,6 +13,11 @@ const STABILITY_MAX_DISTANCE_M = 100; // max distance allowed to move to be cons
 // note: onActivityInfo is called once per second but delayed by DELAY_COMPUTE_COUNT make sure STABILITY_MAX_DISTANCE_M takes that into account
 // ie human averge running speed is 3m/s if DELAY_COMPUTE_COUNT is set to 5 STABILITY_MAX_DISTANCE_M should be set to at least 15
 const DELAY_COMPUTE_COUNT = 5;
+// start as minimum area, and is set to the correct size as points are added
+// we want a 'empty' track to not sway the calculation of what to render
+// note: we cannot do a const, as it assigns the array or point by reference
+function BOUNDING_BOX_DEFAULT() as [Float, Float, Float, Float] {return [FLOAT_MAX, FLOAT_MAX, FLOAT_MIN, FLOAT_MIN];}
+function BOUNDING_BOX_CENTER_DEFAULT() as RectangularPoint {return new RectangularPoint(0.0f, 0.0f, 0.0f);}
 
 class BreadcrumbTrack {
   // cached values
@@ -31,12 +36,8 @@ class BreadcrumbTrack {
   var inRestartMode as Boolean = true;
   var _computeCounter as Number = 0;
 
-  // start as minimum area, and is set to the correct size as points are added
-  // we want a 'empty' track to not sway the calculation of what to render
-  var boundingBox as [Float, Float, Float, Float] =
-      [FLOAT_MAX, FLOAT_MAX, FLOAT_MIN, FLOAT_MIN];
-  var boundingBoxCenter as RectangularPoint =
-      new RectangularPoint(0.0f, 0.0f, 0.0f);
+  var boundingBox as [Float, Float, Float, Float] = BOUNDING_BOX_DEFAULT();
+  var boundingBoxCenter as RectangularPoint = BOUNDING_BOX_CENTER_DEFAULT();
 
   function writeToDisk(key as String) as Void {
     Storage.setValue(key + "bb", boundingBox);
@@ -113,6 +114,23 @@ class BreadcrumbTrack {
     coordinates.restrictPoints(MAX_POINTS);
   }
 
+  function updateBoundingBoxFromAllPoints() as Void
+  {
+    boundingBox = BOUNDING_BOX_DEFAULT();
+    boundingBoxCenter = BOUNDING_BOX_CENTER_DEFAULT();
+    var pointSize = coordinates.pointSize();
+    for (var i = 0; i < pointSize; ++i) {
+      var point = coordinates.getPoint(i);
+      // shoul never be null, but check to be safe
+      if (point == null)
+      {
+        return;
+      }
+
+      updateBoundingBox(point);
+    }
+  }
+
   function updateBoundingBox(point as RectangularPoint) as Void {
     boundingBox[0] = minF(boundingBox[0], point.x);
     boundingBox[1] = minF(boundingBox[1], point.y);
@@ -124,8 +142,20 @@ class BreadcrumbTrack {
         boundingBox[1] + (boundingBox[3] - boundingBox[1]) / 2.0, 0.0f);
   }
 
-  function onStartRestart() as Void
+  function onTimerStart() as Void
   {
+    // check from startup, and also clear the current coordinates, 
+    // anything we got before start is invalid
+    coordinates.clear();
+    // we also need to reset the bounding box, as its only ever expanded, never reduced
+    boundingBox = BOUNDING_BOX_DEFAULT();
+    boundingBoxCenter = BOUNDING_BOX_CENTER_DEFAULT();
+    onTimerResume();
+  }
+
+  function onTimerResume() as Void
+  {
+    // check from startup
     restartCoordinates.clear();
     inRestartMode = true;
   }
@@ -188,6 +218,7 @@ class BreadcrumbTrack {
          var pointsAdded = restartCoordinates.pointSize();
          restartCoordinates.clear();
          coordinates.removeLastCountPoints(pointsAdded);
+         updateBoundingBoxFromAllPoints();
          return;
       }
 

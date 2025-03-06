@@ -58,13 +58,24 @@ class PointArray {
 
   function lastPoint() as RectangularPoint or Null 
   {
-    if (size() < ARRAY_POINT_SIZE) {
+    return getPoint(pointSize() - 1);
+  }
+
+  function getPoint(i as Number) as RectangularPoint or Null 
+  {
+    if (i<0)
+    {
       return null;
     }
 
-    return new RectangularPoint(_internalArrayBuffer[size() - ARRAY_POINT_SIZE],
-                              _internalArrayBuffer[size() - (ARRAY_POINT_SIZE - 1)],
-                              _internalArrayBuffer[size() - (ARRAY_POINT_SIZE - 2)]);
+    if (i>=pointSize())
+    {
+      return null;
+    }
+
+    return new RectangularPoint(_internalArrayBuffer[i * ARRAY_POINT_SIZE],
+                              _internalArrayBuffer[i * ARRAY_POINT_SIZE + 1],
+                              _internalArrayBuffer[i * ARRAY_POINT_SIZE + 2]);
   }
 
   function restrictPoints(maPoints as Number) as Void {
