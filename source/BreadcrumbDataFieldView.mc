@@ -42,6 +42,18 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
   }
   
   function compute(info as Activity.Info) as Void {
+
+    // temp hack for debugging (since it seems altitude does not work when playing activity data from gpx file)
+    // var route = _breadcrumbContext.route();
+    // if (route != null)
+    // {
+    //   var nextPoint = route.coordinates.getPoint(_breadcrumbContext.track().coordinates.pointSize());
+    //   if (nextPoint != null)
+    //   {
+    //     info.altitude = nextPoint.altitude;
+    //   }
+    // }
+
     _breadcrumbContext.track().onActivityInfo(info);
     _breadcrumbContext.trackRenderer().onActivityInfo(info);
     var currentSpeed = info.currentSpeed;
@@ -72,6 +84,14 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     if (renderer.renderUi(dc))
     {
       return;
+    }
+
+    // mode should be wtored here, but is needed for renderring the ui
+    // should structure this way better, but oh well (renderer per mode etc.)
+    if (renderer.mode == MODE_ELEVATION)
+    {
+       rederElevation(dc);
+       return;
     }
 
     var route = _breadcrumbContext.route();
@@ -185,5 +205,39 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     renderer.renderTrack(dc, track, TRACK_COLOUR, lastPoint);
     renderer.renderUser(dc, lastPoint, lastPoint);
     renderer.renderCurrentScale(dc);
+  }
+
+  function rederElevation(dc as Dc) as Void {
+    var route = _breadcrumbContext.route();
+    var track = _breadcrumbContext.track();   
+    var renderer = _breadcrumbContext.trackRenderer();
+
+    var elevationScale = renderer.getElevationScale(track);
+    var hScale = elevationScale[0];
+    var vScale = elevationScale[1];
+    var startAt = elevationScale[2];
+
+    if (route != null)
+    {
+      var routeElevationScale = renderer.getElevationScale(route);
+      hScale = minF(hScale, routeElevationScale[0]);
+      vScale = minF(vScale, routeElevationScale[1]);
+      // leave the start at as the track, we want it to be in the middle of the screen, route can move offscreen if it wants
+      if (track.coordinates.pointSize() < 2)
+      {
+        // we did not have enough points on the track to get good elevation, we cannot use the default start at, 
+        // since our route will be off the screen unless it has elevation that spreads over the default start at
+        // we also do not have any points to get a good distance, so just use the route
+        hScale = routeElevationScale[0];
+        vScale = routeElevationScale[1];
+        startAt = routeElevationScale[2];
+      }
+    }
+
+    renderer.renderElevationChart(dc, hScale, vScale, startAt);
+    if (route != null) {
+      renderer.renderTrackElevtion(dc, route, ROUTE_COLOUR, hScale, vScale, startAt);
+    }
+    renderer.renderTrackElevtion(dc, track, TRACK_COLOUR, hScale, vScale, startAt);
   }
 }

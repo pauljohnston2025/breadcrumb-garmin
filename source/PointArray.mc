@@ -60,6 +60,11 @@ class PointArray {
   {
     return getPoint(pointSize() - 1);
   }
+  
+  function firstPoint() as RectangularPoint or Null 
+  {
+    return getPoint(0);
+  }
 
   function getPoint(i as Number) as RectangularPoint or Null 
   {

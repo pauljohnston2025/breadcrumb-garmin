@@ -9,6 +9,12 @@ import Toybox.Graphics;
 const DESIRED_SCALE_PIXEL_WIDTH as Float = 100.0f;
 const MIN_SCALE as Float = DESIRED_SCALE_PIXEL_WIDTH / 100000.0f;
 
+enum /*Mode*/ {
+  MODE_NORMAL,
+  MODE_ELEVATION,
+  MODE_MAX,
+}
+
 class BreadcrumbRenderer {
   var _breadcrumbContext as BreadcrumbContext;
   var _scale as Float or Null = null;
@@ -16,6 +22,7 @@ class BreadcrumbRenderer {
   var _rotationRad as Float = 90.0;  // heading in radians
   var _zoomAtPace as Boolean = true;
   var _clearRouteProgress as Number = 0;
+  var mode as Number = MODE_NORMAL;
 
   // units in meters to label
   var SCALE_NAMES = {
@@ -96,6 +103,10 @@ class BreadcrumbRenderer {
   }
 
   function getScaleSize() as [Number, Number] {
+    return getScaleSizeGeneric(_currentScale);
+  }
+  
+  function getScaleSizeGeneric(scale as Float) as [Number, Number] {
     var foundDistanceM = 10;
     var foundPixelWidth = 0;
     // get the closest without going over
@@ -104,7 +115,7 @@ class BreadcrumbRenderer {
     keys.sort(null);
     for (var i = 0; i < keys.size(); ++i) {
       var distanceM = keys[i];
-      var testPixelWidth = distanceM * _currentScale;
+      var testPixelWidth = distanceM * scale;
       if (testPixelWidth > DESIRED_SCALE_PIXEL_WIDTH) {
         break;
       }
@@ -311,6 +322,20 @@ class BreadcrumbRenderer {
     // clear route
     dc.drawText(65, 75, Graphics.FONT_XTINY, "C", Graphics.TEXT_JUSTIFY_RIGHT);
 
+    // current mode displayed
+    var modeLetter = "T";
+    switch(mode)
+    {
+      case MODE_NORMAL:
+        modeLetter = "T";
+        break;
+      case MODE_ELEVATION:
+        modeLetter = "E";
+        break;
+    }
+
+    dc.drawText(295, 75, Graphics.FONT_XTINY, modeLetter, Graphics.TEXT_JUSTIFY_LEFT);
+
     // north facing N with litle cross
     // var nPosX = 295;
     // var nPosY = 85;
@@ -427,4 +452,147 @@ class BreadcrumbRenderer {
 
   function resetScale() as Void { _scale = null; }
   function toggleFullView() as Void { _zoomAtPace = !_zoomAtPace; }
+  function cycleMode() as Void
+  {
+    // System.println("mode cycled");
+    // could just add one and check if over MODE_MAX?
+    mode++;
+    if (mode >= MODE_MAX)
+    {
+      mode = MODE_NORMAL;
+    }
+  }
+
+  var _xElevationStart = 50;
+  var _yElevationHeight = 200;
+
+  function renderElevationChart(
+    dc as Dc, 
+    hScale as Float, 
+    vScale as Float,
+    startAt as Float
+  ) as Void {
+    dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_BLACK);
+    dc.setPenWidth(1);
+    
+    dc.drawLine(_xElevationStart, _yHalf - _yElevationHeight / 2.0f, _xElevationStart, _yHalf + _yElevationHeight / 2.0f);
+    dc.drawLine(_xElevationStart, _yHalf, _screenSize - _xElevationStart, _yHalf);
+
+    dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
+    dc.setPenWidth(3);
+
+    var hScaleData = getScaleSizeGeneric(hScale);
+    var hPixelWidth = hScaleData[0];
+    var hDistanceM = hScaleData[1];
+    if (hPixelWidth != 0)
+    {
+      var hFoundName = SCALE_NAMES[hDistanceM];
+
+      var y = 340;
+      dc.drawLine(_xHalf - hPixelWidth / 2.0f, y, _xHalf + hPixelWidth / 2.0f, y);
+      dc.drawText(_xHalf, y - 30, Graphics.FONT_XTINY, hFoundName, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    var vScaleData = getScaleSizeGeneric(vScale);
+    var vPixelWidth = vScaleData[0];
+    var vDistanceM = vScaleData[1];
+    if (vPixelWidth != 0)
+    {
+      var vFoundName = SCALE_NAMES[vDistanceM];
+
+      var xLine = _xElevationStart - 10;
+      var y = _yHalf + _yElevationHeight / 2.0f;
+      var xText = _xElevationStart + 10;
+      dc.drawLine(xLine , _yHalf - vPixelWidth / 2.0f, xLine, _yHalf + vPixelWidth / 2.0f);
+      dc.drawText(xText, y, Graphics.FONT_XTINY, vFoundName, Graphics.TEXT_JUSTIFY_LEFT);
+      // var vectorFont = Graphics.getVectorFont(
+      //   {
+      //     // font face from https://developer.garmin.com/connect-iq/reference-guides/devices-reference/
+      //     :face=>["VeraSans"], 
+      //     :size=>16, 
+      //     // :font=>Graphics.FONT_XTINY, 
+      //     // :scale=>1.0f
+      //   }
+      // );
+      // dc.drawAngledText(0, _yHalf, vectorFont, vFoundName, Graphics.TEXT_JUSTIFY_LEFT, 90);
+      // dc.drawRadialText(0, _yHalf, vectorFont, vFoundName, Graphics.TEXT_JUSTIFY_LEFT, 90, 0, Graphics.RADIAL_TEXT_DIRECTION_COUNTER_CLOCKWISE);
+      // drawAngledText and drawRadialText not available :(
+    }
+  }
+
+  function getElevationScale(track as BreadcrumbTrack) as [Float, Float, Float] {
+    // clip to a a square (since we cannot see the edges of the circle)
+    var totalXDistance = _screenSize - 2 * _xElevationStart;
+    var totalYDistance = _yElevationHeight;
+
+    var distance = track.distanceTotal;
+    var elevationChange = abs(track.elevationMax - track.elevationMin); // abs really only needed until we get the first point (then max should always be more than min)
+    var startAt = track.elevationMin + elevationChange / 2;
+
+    if (distance == 0 && elevationChange == 0)
+    {
+      return [0f, 0f, startAt]; // do not divide by 0
+    }
+
+    if (distance == 0)
+    {
+        return [0f, totalYDistance / elevationChange, startAt]; // do not divide by 0
+    }
+
+    if (elevationChange == 0)
+    {
+        return [totalXDistance / distance, 0f, startAt]; // do not divide by 0
+    }
+
+    var hScale = totalXDistance / distance;
+    var vScale = totalYDistance / elevationChange;
+
+    return [hScale, vScale, startAt];
+  }
+
+  function renderTrackElevtion(
+    dc as Dc, 
+    track as BreadcrumbTrack, 
+    colour as Graphics.ColorType, 
+    hScale as Float, 
+    vScale as Float,
+    startAt as Float) as Void {
+    var firstPoint = track.firstPoint();
+
+    if (firstPoint == null)
+    {
+      return;
+    }
+
+    
+    dc.setColor(colour, Graphics.COLOR_TRANSPARENT);
+    dc.setPenWidth(1);
+
+    var pointSize = track.coordinates.pointSize();
+
+    // we do alot of distance calcualtion, much more expensive than the array itteration
+    var prevX = _xElevationStart;
+    // '-' because the corrdinate sytem is inverted in y
+    var prevY = _yHalf - (firstPoint.altitude - startAt) * vScale;
+    for (var i = 1; i < pointSize; i++) {
+      var prevPoint = track.coordinates.getPoint(i - 1);
+      var currPoint = track.coordinates.getPoint(i);
+
+      if (prevPoint == null || currPoint == null)
+      {
+        break; // we cannot draw anymore
+      }
+
+      var xDistance = prevPoint.distanceTo(currPoint);
+      var yDistance = prevPoint.altitude - currPoint.altitude;
+      var currX = prevX + xDistance * hScale;
+      // '-' because the corrdinate sytem is inverted in y
+      var currY = prevY - yDistance * vScale;
+
+      dc.drawLine(prevX, prevY, currX, currY);
+
+      prevX = currX;
+      prevY = currY;
+    }
+  }
 }

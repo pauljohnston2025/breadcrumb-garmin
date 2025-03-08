@@ -39,6 +39,9 @@ class BreadcrumbTrack {
 
   var boundingBox as [Float, Float, Float, Float] = BOUNDING_BOX_DEFAULT();
   var boundingBoxCenter as RectangularPoint = BOUNDING_BOX_CENTER_DEFAULT();
+  var distanceTotal as Float = 0f;
+  var elevationMin as Float = FLOAT_MAX;
+  var elevationMax as Float = FLOAT_MIN;
 
   function writeToDisk(key as String) as Void {
     Storage.setValue(key + "bb", boundingBox);
@@ -47,6 +50,9 @@ class BreadcrumbTrack {
     ]);
     Storage.setValue(key + "coords", coordinates._internalArrayBuffer);
     Storage.setValue(key + "coordsSize", coordinates._size);
+    Storage.setValue(key + "distanceTotal", distanceTotal);
+    Storage.setValue(key + "elevationMin", elevationMin);
+    Storage.setValue(key + "elevationMax", elevationMax);
   }
 
   static function readFromDisk(key as String) as BreadcrumbTrack or Null {
@@ -68,6 +74,21 @@ class BreadcrumbTrack {
       if (coordsSize == null) {
         return null;
       }
+      
+      var distanceTotal = Storage.getValue(key + "distanceTotal");
+      if (distanceTotal == null) {
+        return null;
+      }
+      
+      var elevationMin = Storage.getValue(key + "elevationMin");
+      if (elevationMin == null) {
+        return null;
+      }
+      
+      var elevationMax = Storage.getValue(key + "elevationMax");
+      if (elevationMax == null) {
+        return null;
+      }
 
       var track = new BreadcrumbTrack();
       track.boundingBox = bb as[Float, Float, Float, Float];
@@ -78,6 +99,9 @@ class BreadcrumbTrack {
           bbc[0] as Float, bbc[1] as Float, bbc[2] as Float);
       track.coordinates._internalArrayBuffer = coords as Array<Float>;
       track.coordinates._size = coordsSize as Number;
+      track.distanceTotal = distanceTotal as Float;
+      track.elevationMin = elevationMin as Float;
+      track.elevationMax = elevationMax as Float;
       if (track.coordinates.size() % ARRAY_POINT_SIZE != 0) {
         return null;
       }
@@ -87,11 +111,14 @@ class BreadcrumbTrack {
     }
   }
 
-  function clear() as Void { coordinates.resize(0); }
-
   function lastPoint() as RectangularPoint or Null 
   {
     return coordinates.lastPoint();
+  }
+
+  function firstPoint() as RectangularPoint or Null 
+  {
+    return coordinates.firstPoint();
   }
 
   function addLatLongRaw(lat as Float, lon as Float, altitude as Float) as Void {
@@ -101,15 +128,26 @@ class BreadcrumbTrack {
       return;
     }
     var lastPoint = lastPoint();
-    if (lastPoint != null && lastPoint.distanceTo(newPoint) < MIN_DISTANCE_M)
+    if (lastPoint == null)
+    {
+      addPointRaw(newPoint, 0f);
+      return;
+    }
+
+    var distance = lastPoint.distanceTo(newPoint);
+
+    if (distance < MIN_DISTANCE_M)
     {
       // no need to add points closer than this
       return;
     }
-    addPointRaw(newPoint);
+
+    addPointRaw(newPoint, distance);
   }
 
-  function addPointRaw(newPoint as RectangularPoint) as Void {
+  function addPointRaw(newPoint as RectangularPoint, distance as Float) as Void {
+    // this might drift on slices, perhaps we should recalculate?
+    distanceTotal += distance;
     coordinates.add(newPoint);
     updateBoundingBox(newPoint);
     coordinates.restrictPoints(MAX_POINTS);
@@ -119,6 +157,8 @@ class BreadcrumbTrack {
   {
     boundingBox = BOUNDING_BOX_DEFAULT();
     boundingBoxCenter = BOUNDING_BOX_CENTER_DEFAULT();
+    elevationMin = FLOAT_MAX;
+    elevationMax = FLOAT_MIN;
     var pointSize = coordinates.pointSize();
     for (var i = 0; i < pointSize; ++i) {
       var point = coordinates.getPoint(i);
@@ -138,6 +178,9 @@ class BreadcrumbTrack {
     boundingBox[2] = maxF(boundingBox[2], point.x);
     boundingBox[3] = maxF(boundingBox[3], point.y);
 
+    elevationMin = minF(elevationMin, point.altitude);
+    elevationMax = maxF(elevationMax, point.altitude);
+
     boundingBoxCenter = new RectangularPoint(
         boundingBox[0] + (boundingBox[2] - boundingBox[0]) / 2.0,
         boundingBox[1] + (boundingBox[3] - boundingBox[1]) / 2.0, 0.0f);
@@ -151,6 +194,9 @@ class BreadcrumbTrack {
     // we also need to reset the bounding box, as its only ever expanded, never reduced
     boundingBox = BOUNDING_BOX_DEFAULT();
     boundingBoxCenter = BOUNDING_BOX_CENTER_DEFAULT();
+    distanceTotal = 0f;
+    elevationMin = FLOAT_MAX;
+    elevationMax = FLOAT_MIN;
     onTimerResume();
   }
 
@@ -176,7 +222,7 @@ class BreadcrumbTrack {
       // setting to 1 instead of incrementing, just incase they do not get cleaed when they should
       seenStartupPoints = 1;
       possibleBadPointsAdded = 1;
-      addPointRaw(newPoint);
+      addPointRaw(newPoint, 0f);
       return;
     }
 
@@ -201,7 +247,7 @@ class BreadcrumbTrack {
     // we are stable, see if we can break out of startup
     seenStartupPoints++;
     possibleBadPointsAdded++;
-    addPointRaw(newPoint);
+    addPointRaw(newPoint, stabilityCheckDistance);
     
     if (seenStartupPoints == RESTART_STABILITY_POINT_COUNT)
     {
@@ -271,11 +317,11 @@ class BreadcrumbTrack {
 
     if (distance > STABILITY_MAX_DISTANCE_M)
     {
-      // its too far away, and likely a glitch
+      // it's too far away, and likely a glitch
       return;
     }
 
-    addPointRaw(newPoint);
+    addPointRaw(newPoint, distance);
   }
 
   // inverse of https://gis.stackexchange.com/a/387677

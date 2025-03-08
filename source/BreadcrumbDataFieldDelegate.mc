@@ -33,7 +33,11 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
     // perhaps put this into new class to handle touch events, and have a
     // renderer for that ui would allow us to switch out ui and handle touched
     // differently also will alow setting the scren height
-    if (y < 50) {
+    if (y > 50 && y < 100 && x > 270 && x < 320) {
+      _breadcrumbContext.trackRenderer().cycleMode();
+      return true;
+    }
+    else if (y < 50) {
       _breadcrumbContext.trackRenderer().incScale();
       return true;
     } else if(y > 310) {
@@ -48,6 +52,7 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
       _breadcrumbContext.trackRenderer().toggleFullView();
       return true;
     }
+    
 
     return false;
   }
