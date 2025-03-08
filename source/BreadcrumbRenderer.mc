@@ -520,14 +520,35 @@ class BreadcrumbRenderer {
     }
   }
 
-  function getElevationScale(track as BreadcrumbTrack) as [Float, Float, Float] {
+  function getElevationScale(track as BreadcrumbTrack, route as BreadcrumbTrack or Null) as [Float, Float, Float] {
+    if (route == null || route.coordinates.pointSize() < 2)
+    {
+      var elevationChange = abs(track.elevationMax - track.elevationMin);
+      return getElevationScaleRaw(track.distanceTotal, elevationChange, track.elevationMin + elevationChange / 2);
+    }
+
+    if (track.coordinates.pointSize() < 2)
+    {
+      // we did not have enough points on the track to get good elevation, we cannot use the default start at, 
+      // since our route will be off the screen unless it has elevation that spreads over the default start at
+      // we also do not have any points to get a good distance, so just use the route
+      var elevationChange = abs(route.elevationMax - route.elevationMin);
+      return getElevationScaleRaw(route.distanceTotal, elevationChange, route.elevationMin + elevationChange / 2);
+    }
+    
+    // a combination of both
+    var distance = maxF(track.distanceTotal, route.distanceTotal);
+    var minElevation = minF(track.elevationMin, route.elevationMin);
+    // abs really only needed until we get the first point (then max should always be more than min)
+    var elevationChange = abs(maxF(track.elevationMax, route.elevationMax) - minElevation);
+    var startAt = minElevation + elevationChange / 2;
+    return getElevationScaleRaw(distance, elevationChange, startAt);
+  }
+
+  function getElevationScaleRaw(distance as Float, elevationChange as Float, startAt as Float) as [Float, Float, Float] {
     // clip to a a square (since we cannot see the edges of the circle)
     var totalXDistance = _screenSize - 2 * _xElevationStart;
     var totalYDistance = _yElevationHeight;
-
-    var distance = track.distanceTotal;
-    var elevationChange = abs(track.elevationMax - track.elevationMin); // abs really only needed until we get the first point (then max should always be more than min)
-    var startAt = track.elevationMin + elevationChange / 2;
 
     if (distance == 0 && elevationChange == 0)
     {
@@ -572,8 +593,7 @@ class BreadcrumbRenderer {
 
     // we do alot of distance calcualtion, much more expensive than the array itteration
     var prevX = _xElevationStart;
-    // '-' because the corrdinate sytem is inverted in y
-    var prevY = _yHalf - (firstPoint.altitude - startAt) * vScale;
+    var prevY = _yHalf + (startAt - firstPoint.altitude) * vScale;
     for (var i = 1; i < pointSize; i++) {
       var prevPoint = track.coordinates.getPoint(i - 1);
       var currPoint = track.coordinates.getPoint(i);
@@ -586,8 +606,7 @@ class BreadcrumbRenderer {
       var xDistance = prevPoint.distanceTo(currPoint);
       var yDistance = prevPoint.altitude - currPoint.altitude;
       var currX = prevX + xDistance * hScale;
-      // '-' because the corrdinate sytem is inverted in y
-      var currY = prevY - yDistance * vScale;
+      var currY = prevY + yDistance * vScale;
 
       dc.drawLine(prevX, prevY, currX, currY);
 

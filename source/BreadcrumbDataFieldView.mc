@@ -212,27 +212,10 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     var track = _breadcrumbContext.track();   
     var renderer = _breadcrumbContext.trackRenderer();
 
-    var elevationScale = renderer.getElevationScale(track);
+    var elevationScale = renderer.getElevationScale(track, route);
     var hScale = elevationScale[0];
     var vScale = elevationScale[1];
     var startAt = elevationScale[2];
-
-    if (route != null)
-    {
-      var routeElevationScale = renderer.getElevationScale(route);
-      hScale = minF(hScale, routeElevationScale[0]);
-      vScale = minF(vScale, routeElevationScale[1]);
-      // leave the start at as the track, we want it to be in the middle of the screen, route can move offscreen if it wants
-      if (track.coordinates.pointSize() < 2)
-      {
-        // we did not have enough points on the track to get good elevation, we cannot use the default start at, 
-        // since our route will be off the screen unless it has elevation that spreads over the default start at
-        // we also do not have any points to get a good distance, so just use the route
-        hScale = routeElevationScale[0];
-        vScale = routeElevationScale[1];
-        startAt = routeElevationScale[2];
-      }
-    }
 
     renderer.renderElevationChart(dc, hScale, vScale, startAt);
     if (route != null) {
