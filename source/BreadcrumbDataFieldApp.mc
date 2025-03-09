@@ -37,7 +37,7 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
           return [ _view, new BreadcrumbDataFieldDelegate(_breadcrumbContext) ];
         }
 
-    function onPhone(msg as Communications.Message) as Void {
+    function onPhone(msg as Communications.PhoneAppMessage) as Void {
       var data = msg.data as Array<Number> or Null;
       if (data == null || data.size() < 1) {
         System.println("Bad message: " + data);

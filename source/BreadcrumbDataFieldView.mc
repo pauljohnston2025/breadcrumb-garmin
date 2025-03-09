@@ -31,6 +31,11 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
   function onLayout(dc as Dc) as Void {
     // for now we render everything in the onUpdate view, and assume only 1 data
     // screen
+    var textDim = dc.getTextDimensions("1234", Graphics.FONT_XTINY);
+    _breadcrumbContext.trackRenderer().setScreenSize(
+      dc.getWidth() * 1.0f,
+      textDim[0] * 1.0f
+    );
   }
 
   function onTimerStart() as Void {

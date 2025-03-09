@@ -42,9 +42,10 @@ class BreadcrumbRenderer {
   };
 
   // cache some important maths to make everything faster
-  var _screenSize as Float = 360.0f;
-  var _xHalf as Float = _screenSize / 2.0f;
-  var _yHalf as Float = _screenSize / 2.0f;
+  // things set to -1 are set by setScreenSize()
+  var _screenSize as Float = 360.0f; // default to venu2s screen size
+  var _xHalf as Float = -1f;
+  var _yHalf as Float = -1f;
   
 
   // benchmark same track loaded (just render track no activity running) using
@@ -67,6 +68,7 @@ class BreadcrumbRenderer {
 
   function initialize(breadcrumbContext as BreadcrumbContext) {
     _breadcrumbContext = breadcrumbContext;
+    setScreenSize(360.0f, 50f); // start with known good size of the venu2s
   }
 
   function onActivityInfo(activityInfo as Activity.Info) as Void {
@@ -147,7 +149,7 @@ class BreadcrumbRenderer {
 
     var foundName = SCALE_NAMES[distanceM];
 
-    var y = 340;
+    var y = _screenSize - 20;
     dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
     dc.setPenWidth(4);
     dc.drawLine(_xHalf - pixelWidth / 2.0f, y,
@@ -293,7 +295,7 @@ class BreadcrumbRenderer {
     //             Graphics.TEXT_JUSTIFY_LEFT);
 
     // clear route
-    dc.drawText(65, 75, Graphics.FONT_XTINY, "C", Graphics.TEXT_JUSTIFY_RIGHT);
+    dc.drawText(clearRouteX, clearRouteY, Graphics.FONT_XTINY, "C", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // current mode displayed
     var modeLetter = "T";
@@ -307,7 +309,7 @@ class BreadcrumbRenderer {
         break;
     }
 
-    dc.drawText(295, 75, Graphics.FONT_XTINY, modeLetter, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(modeSelectX, modeSelectY, Graphics.FONT_XTINY, modeLetter, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
     if (mode == MODE_ELEVATION)
     {
@@ -436,7 +438,11 @@ class BreadcrumbRenderer {
     switch(_clearRouteProgress) {
       case 0:
         // press top left to start clear route
-        if (y > 50 && y < 100 && x > 40 && x < 90) {
+        if (   y > clearRouteY - halfHitboxSize 
+            && y < clearRouteY + halfHitboxSize  
+            && x > clearRouteX - halfHitboxSize
+            && x < clearRouteX + halfHitboxSize)
+        {
           _clearRouteProgress = 1;
           return true;
         }
@@ -500,12 +506,41 @@ class BreadcrumbRenderer {
     }
   }
 
-  var _xElevationStart = 50;
-  var _xElevationEnd = _screenSize - _xElevationStart;
-  var _yElevationHeight = 200;
-  var _halfYElevationHeight = _yElevationHeight / 2.0f;
-  var yElevationTop = _yHalf - _halfYElevationHeight;
-  var yElevationBottom = _yHalf + _halfYElevationHeight;    
+  // things set to -1 are set by setScreenSize()
+  var _xElevationStart as Float = -1f; // think this needs to depend on dpi?
+  var _xElevationEnd as Float = -1f;
+  var _yElevationHeight as Float = -1f;
+  var _halfYElevationHeight as Float = -1f;
+  var yElevationTop as Float = -1f;
+  var yElevationBottom as Float = -1f;
+  var clearRouteX as Float = -1f; 
+  var clearRouteY as Float = -1f; 
+  var modeSelectX as Float = -1f; 
+  var modeSelectY as Float = -1f; 
+  var hitboxSize as Float = 50f;
+  var halfHitboxSize as Float = hitboxSize / 2.0f;
+
+  function setScreenSize(size as Float, xElevationStart as Float) as Void
+  {
+    _xElevationStart = xElevationStart; 
+    _screenSize = size;
+    _xHalf = _screenSize / 2.0f;
+    _yHalf = _screenSize / 2.0f;    
+    _xElevationEnd = _screenSize - _xElevationStart;
+    var xElevationFromCenter = _xHalf - _xElevationStart;
+    _yElevationHeight = Math.sqrt(_xHalf * _xHalf - xElevationFromCenter * xElevationFromCenter) * 2 - 40;
+    _halfYElevationHeight = _yElevationHeight / 2.0f;
+    yElevationTop = _yHalf - _halfYElevationHeight;
+    yElevationBottom = _yHalf + _halfYElevationHeight;    
+    var offsetSize = Math.sqrt((_yHalf - halfHitboxSize )*(_yHalf - halfHitboxSize) / 2);
+    // top left
+    clearRouteX = _xHalf - offsetSize;
+    clearRouteY = _yHalf - offsetSize;
+    
+    // top right
+    modeSelectX = _xHalf + offsetSize;
+    modeSelectY = _yHalf - offsetSize;
+  }
 
   function renderElevationChart(
     dc as Dc, 
@@ -554,7 +589,9 @@ class BreadcrumbRenderer {
     if (vScale != 0) // prevent division by 0
     {
       var topScaleM = startAt + _halfYElevationHeight / vScale;
-      dc.drawText(_xElevationStart, _yHalf - _halfYElevationHeight - 30, Graphics.FONT_XTINY, topScaleM.format("%.0f") + "m", Graphics.TEXT_JUSTIFY_LEFT);
+      var topText = topScaleM.format("%.0f") + "m";
+      var textDim = dc.getTextDimensions(topText, Graphics.FONT_XTINY);
+      dc.drawText(_xElevationStart, _yHalf - _halfYElevationHeight - textDim[1], Graphics.FONT_XTINY, topText, Graphics.TEXT_JUSTIFY_LEFT);
       var bottomScaleM = startAt - _halfYElevationHeight / vScale;
       dc.drawText(_xElevationStart, _yHalf + _halfYElevationHeight, Graphics.FONT_XTINY, bottomScaleM.format("%.0f") + "m", Graphics.TEXT_JUSTIFY_LEFT);
     }
@@ -566,7 +603,7 @@ class BreadcrumbRenderer {
     {
       var hFoundName = SCALE_NAMES[hDistanceM];
 
-      var y = 340;
+      var y = _screenSize - 20;
       dc.drawLine(_xHalf - hPixelWidth / 2.0f, y, _xHalf + hPixelWidth / 2.0f, y);
       dc.drawText(_xHalf, y - 30, Graphics.FONT_XTINY, hFoundName, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -576,7 +613,7 @@ class BreadcrumbRenderer {
       var vFoundName = ELEVATION_SCALE_NAMES[vDistanceM];
 
       var x = _xHalf + DESIRED_SCALE_PIXEL_WIDTH/ 2.0f;
-      var y = 335 - vPixelWidth / 2.0f;
+      var y = _screenSize - 20 - 5 - vPixelWidth / 2.0f;
       dc.drawLine(x , y - vPixelWidth / 2.0f, x, y + vPixelWidth / 2.0f);
       dc.drawText(x + 5, y - 15, Graphics.FONT_XTINY, vFoundName, Graphics.TEXT_JUSTIFY_LEFT);
       // var vectorFont = Graphics.getVectorFont(

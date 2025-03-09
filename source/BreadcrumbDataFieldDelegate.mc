@@ -24,36 +24,42 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
     var coords = evt.getCoordinates();
     var x = coords[0];
     var y = coords[1];
+    var renderer = _breadcrumbContext.trackRenderer();
 
-    if (_breadcrumbContext.trackRenderer().handleClearRoute(x, y))
+    if (renderer.handleClearRoute(x, y))
     {
       return true;
     }
 
+    var hitboxSize = renderer.hitboxSize;
+    var halfHitboxSize = hitboxSize / 2.0f;
+
     // perhaps put this into new class to handle touch events, and have a
     // renderer for that ui would allow us to switch out ui and handle touched
     // differently also will alow setting the scren height
-    if (y > 50 && y < 100 && x > 270 && x < 320) {
-      _breadcrumbContext.trackRenderer().cycleMode();
+    if (  y > renderer.modeSelectY - halfHitboxSize 
+       && y < renderer.modeSelectY + halfHitboxSize  
+       && x > renderer.modeSelectX - halfHitboxSize
+       && x < renderer.modeSelectX + halfHitboxSize) {
+      renderer.cycleMode();
       return true;
     }
-    else if (y < 50) {
-      _breadcrumbContext.trackRenderer().incScale();
+    else if (y < hitboxSize) {
+      renderer.incScale();
       return true;
-    } else if(y > 310) {
-      _breadcrumbContext.trackRenderer().decScale();
-      return true;
-    }
-    else if(x > 310) {
-      _breadcrumbContext.trackRenderer().resetScale();
+    } else if(y > renderer._screenSize - hitboxSize) {
+      renderer.decScale();
       return true;
     }
-    else if(x < 50) {
-      _breadcrumbContext.trackRenderer().toggleZoomAtPace();
+    else if(x > renderer._screenSize - hitboxSize) {
+      renderer.resetScale();
+      return true;
+    }
+    else if(x < hitboxSize) {
+      renderer.toggleZoomAtPace();
       return true;
     }
     
-
     return false;
   }
 }
