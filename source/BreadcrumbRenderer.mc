@@ -7,6 +7,7 @@ import Toybox.Communications;
 import Toybox.Graphics;
 
 const DESIRED_SCALE_PIXEL_WIDTH as Float = 100.0f;
+const DESIRED_ELEV_SCALE_PIXEL_WIDTH as Float = 50.0f;
 const MIN_SCALE as Float = DESIRED_SCALE_PIXEL_WIDTH / 100000.0f;
 
 enum /*Mode*/ {
@@ -103,10 +104,10 @@ class BreadcrumbRenderer {
   }
 
   function getScaleSize() as [Number, Number] {
-    return getScaleSizeGeneric(_currentScale);
+    return getScaleSizeGeneric(_currentScale, DESIRED_SCALE_PIXEL_WIDTH);
   }
   
-  function getScaleSizeGeneric(scale as Float) as [Number, Number] {
+  function getScaleSizeGeneric(scale as Float, desiredWidth as Float) as [Number, Number] {
     var foundDistanceM = 10;
     var foundPixelWidth = 0;
     // get the closest without going over
@@ -116,7 +117,7 @@ class BreadcrumbRenderer {
     for (var i = 0; i < keys.size(); ++i) {
       var distanceM = keys[i];
       var testPixelWidth = distanceM * scale;
-      if (testPixelWidth > DESIRED_SCALE_PIXEL_WIDTH) {
+      if (testPixelWidth > desiredWidth) {
         break;
       }
 
@@ -284,6 +285,28 @@ class BreadcrumbRenderer {
     // dc.drawText(0, _yHalf + textHeight2 + 0.1, font, text2,
     //             Graphics.TEXT_JUSTIFY_LEFT);
 
+    // clear route
+    dc.drawText(65, 75, Graphics.FONT_XTINY, "C", Graphics.TEXT_JUSTIFY_RIGHT);
+
+    // current mode displayed
+    var modeLetter = "T";
+    switch(mode)
+    {
+      case MODE_NORMAL:
+        modeLetter = "T";
+        break;
+      case MODE_ELEVATION:
+        modeLetter = "E";
+        break;
+    }
+
+    dc.drawText(295, 75, Graphics.FONT_XTINY, modeLetter, Graphics.TEXT_JUSTIFY_LEFT);
+
+    if (mode == MODE_ELEVATION)
+    {
+      return false;
+    }
+
     // make this a const
     var halfLineLength = 10;
     var lineFromEdge = 10;
@@ -318,23 +341,6 @@ class BreadcrumbRenderer {
     }
     dc.drawText(lineFromEdge, _yHalf, Graphics.FONT_XTINY, fvText,
                 Graphics.TEXT_JUSTIFY_LEFT);
-
-    // clear route
-    dc.drawText(65, 75, Graphics.FONT_XTINY, "C", Graphics.TEXT_JUSTIFY_RIGHT);
-
-    // current mode displayed
-    var modeLetter = "T";
-    switch(mode)
-    {
-      case MODE_NORMAL:
-        modeLetter = "T";
-        break;
-      case MODE_ELEVATION:
-        modeLetter = "E";
-        break;
-    }
-
-    dc.drawText(295, 75, Graphics.FONT_XTINY, modeLetter, Graphics.TEXT_JUSTIFY_LEFT);
 
     // north facing N with litle cross
     // var nPosX = 295;
@@ -389,6 +395,11 @@ class BreadcrumbRenderer {
   }
 
   function incScale() as Void {
+    if (mode == MODE_ELEVATION)
+    {
+      return;
+    }
+
     if (_scale == null) {
       _scale = _currentScale;
     }
@@ -396,6 +407,11 @@ class BreadcrumbRenderer {
   }
 
   function decScale() as Void {
+    if (mode == MODE_ELEVATION)
+    {
+      return;
+    }
+
     if (_scale == null) {
       _scale = _currentScale;
     }
@@ -450,8 +466,21 @@ class BreadcrumbRenderer {
     return false;
   }
 
-  function resetScale() as Void { _scale = null; }
-  function toggleFullView() as Void { _zoomAtPace = !_zoomAtPace; }
+  function resetScale() as Void { 
+    if (mode == MODE_ELEVATION)
+    {
+      return;
+    }
+    _scale = null; 
+  }
+  function toggleZoomAtPace() as Void { 
+    if (mode == MODE_ELEVATION)
+    {
+      return;
+    }
+
+    _zoomAtPace = !_zoomAtPace; 
+  }
   function cycleMode() as Void
   {
     // System.println("mode cycled");
@@ -464,7 +493,11 @@ class BreadcrumbRenderer {
   }
 
   var _xElevationStart = 50;
+  var _xElevationEnd = _screenSize - _xElevationStart;
   var _yElevationHeight = 200;
+  var _halfYElevationHeight = _yElevationHeight / 2.0f;
+  var yElevationTop = _yHalf - _halfYElevationHeight;
+  var yElevationBottom = _yHalf + _halfYElevationHeight;    
 
   function renderElevationChart(
     dc as Dc, 
@@ -472,19 +505,50 @@ class BreadcrumbRenderer {
     vScale as Float,
     startAt as Float
   ) as Void {
+    var hScaleData = getScaleSizeGeneric(hScale, DESIRED_SCALE_PIXEL_WIDTH);
+    var hPixelWidth = hScaleData[0];
+    var hDistanceM = hScaleData[1];
+    var vScaleData = getScaleSizeGeneric(vScale, DESIRED_ELEV_SCALE_PIXEL_WIDTH);
+    var vPixelWidth = vScaleData[0];
+    var vDistanceM = vScaleData[1];
+
     dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_BLACK);
     dc.setPenWidth(1);
     
-    dc.drawLine(_xElevationStart, _yHalf - _yElevationHeight / 2.0f, _xElevationStart, _yHalf + _yElevationHeight / 2.0f);
-    dc.drawLine(_xElevationStart, _yHalf, _screenSize - _xElevationStart, _yHalf);
+    // vertical and horizontal lines for extreems
+    dc.drawLine(_xElevationStart, yElevationTop, _xElevationStart, yElevationBottom);
+    dc.drawLine(_xElevationStart, _yHalf, _xElevationEnd, _yHalf);
+    // border (does not look great)
+    // dc.drawRectangle(_xElevationStart, _yHalf - _halfYElevationHeight, _screenSize - _xElevationStart * 2, _yElevationHeight);
 
+    // horizontal lines vertical scale
+    for (var i=0; i<_halfYElevationHeight ; i+=vPixelWidth)
+    {
+      var yTop = _yHalf - i;
+      var yBottom = _yHalf + i;
+      dc.drawLine(_xElevationStart, yTop, _xElevationEnd, yTop);
+      dc.drawLine(_xElevationStart, yBottom, _xElevationEnd, yBottom);
+    }
+
+    // vertical lines horizontal scale
+    for (var i=_xElevationStart; i<_xElevationEnd ; i+=hPixelWidth)
+    {
+      dc.drawLine(i, yElevationTop, i, yElevationBottom);
+    }
+
+    dc.drawText(0, _yHalf - 15, Graphics.FONT_XTINY, startAt.format("%.0f"), Graphics.TEXT_JUSTIFY_LEFT);
+    if (vScale != 0) // prevent dvion by 0
+    {
+      var topScaleM = startAt + _halfYElevationHeight / vScale;
+      dc.drawText(_xElevationStart, _yHalf - _halfYElevationHeight - 30, Graphics.FONT_XTINY, topScaleM.format("%.0f") + "m", Graphics.TEXT_JUSTIFY_LEFT);
+      var bottomScaleM = startAt - _halfYElevationHeight / vScale;
+      dc.drawText(_xElevationStart, _yHalf + _halfYElevationHeight, Graphics.FONT_XTINY, bottomScaleM.format("%.0f") + "m", Graphics.TEXT_JUSTIFY_LEFT);
+    }
+    
     dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
     dc.setPenWidth(3);
 
-    var hScaleData = getScaleSizeGeneric(hScale);
-    var hPixelWidth = hScaleData[0];
-    var hDistanceM = hScaleData[1];
-    if (hPixelWidth != 0)
+    if (hPixelWidth != 0) // if statement makes sure that we can get a SCALE_NAMES[hDistanceM]
     {
       var hFoundName = SCALE_NAMES[hDistanceM];
 
@@ -493,18 +557,14 @@ class BreadcrumbRenderer {
       dc.drawText(_xHalf, y - 30, Graphics.FONT_XTINY, hFoundName, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
-    var vScaleData = getScaleSizeGeneric(vScale);
-    var vPixelWidth = vScaleData[0];
-    var vDistanceM = vScaleData[1];
-    if (vPixelWidth != 0)
+    if (vPixelWidth != 0) // if statement makes sure that we can get a SCALE_NAMES[vDistanceM]
     {
       var vFoundName = SCALE_NAMES[vDistanceM];
 
-      var xLine = _xElevationStart - 10;
-      var y = _yHalf + _yElevationHeight / 2.0f;
-      var xText = _xElevationStart + 10;
-      dc.drawLine(xLine , _yHalf - vPixelWidth / 2.0f, xLine, _yHalf + vPixelWidth / 2.0f);
-      dc.drawText(xText, y, Graphics.FONT_XTINY, vFoundName, Graphics.TEXT_JUSTIFY_LEFT);
+      var x = _xHalf + DESIRED_SCALE_PIXEL_WIDTH/ 2.0f;
+      var y = 335 - vPixelWidth / 2.0f;
+      dc.drawLine(x , y - vPixelWidth / 2.0f, x, y + vPixelWidth / 2.0f);
+      dc.drawText(x + 5, y - 15, Graphics.FONT_XTINY, vFoundName, Graphics.TEXT_JUSTIFY_LEFT);
       // var vectorFont = Graphics.getVectorFont(
       //   {
       //     // font face from https://developer.garmin.com/connect-iq/reference-guides/devices-reference/

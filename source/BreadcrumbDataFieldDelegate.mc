@@ -49,7 +49,7 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
       return true;
     }
     else if(x < 50) {
-      _breadcrumbContext.trackRenderer().toggleFullView();
+      _breadcrumbContext.trackRenderer().toggleZoomAtPace();
       return true;
     }
     
