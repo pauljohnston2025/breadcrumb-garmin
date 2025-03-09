@@ -27,10 +27,11 @@ class BreadcrumbRenderer {
 
   // units in meters (float/int) to label
   var SCALE_NAMES as Dictionary = {
-      1 => "1m", 5 => "5m", 10 => "10m", 20 => "20m", 30 => "30m", 40 => "40m", 50 => "50m", 100 => "100m", 250 => "250m",     
-      500 => "500m", 1000 => "1km",   2000 => "2km",   3000 => "3km",     
-      4000 => "4km", 5000 => "5km",   10000 => "10km", 20000 => "20km",   
-      30000 => "30km", 40000 => "40km", 50000 => "50km", 100000 => "100km",
+      1 => "1m", 5 => "5m", 10 => "10m", 20 => "20m", 30 => "30m", 40 => "40m", 
+      50 => "50m", 100 => "100m", 250 => "250m", 500 => "500m", 1000 => "1km", 
+      2000 => "2km", 3000 => "3km", 4000 => "4km", 5000 => "5km", 10000 => "10km", 
+      20000 => "20km", 30000 => "30km", 40000 => "40km", 50000 => "50km", 
+      100000 => "100km", 500000 => "500km", 1000000 => "1000km",
   };
   
   var ELEVATION_SCALE_NAMES as Dictionary = {
@@ -359,19 +360,7 @@ class BreadcrumbRenderer {
 
   function getDecIncAmount(direction as Number) as Float {
     var scaleData = getScaleSize();
-    var currentPixelDistance = scaleData[0];
-    // var distanceToDesired = DESIRED_SCALE_PIXEL_WIDTH - currentPixelDistance;
-    // we are really close to the pixel distance, due to float rounding, we will consider this already 
-    // there, and go up 2 windows instead of 1
-    // think at this point I should just set the new scale, but id need to do something similar anyway
-    // or if its really small, same issue
-    // i really should store the index of the key for the scale, then calculate the float scale on the fly
-    // that way index is determined and no round trip floating point errors.
-    // the current strategy results in some zooms needing to be clicked twice, others once.
-    // if (distanceToDesired < 2 || currentPixelDistance < 2)
-    // {
-    //   direction = direction * 2;
-    // }
+    var iInc = direction;
     var currentDistanceM = scaleData[1];
     var keys = SCALE_NAMES.keys();
     keys.sort(null);
@@ -379,7 +368,7 @@ class BreadcrumbRenderer {
       var distanceM = keys[i];
       if (currentDistanceM == distanceM)
       {
-          var nextScaleIndex = i - direction;
+          var nextScaleIndex = i - iInc;
           if (nextScaleIndex >= keys.size())
           {
             nextScaleIndex = keys.size() - 1;
@@ -391,11 +380,10 @@ class BreadcrumbRenderer {
           }
           
           // we want the result to be 
-          // DESIRED_SCALE_PIXEL_WIDTH = keys[nextScaleIndex] * _scale;
-          var desiredScale = DESIRED_SCALE_PIXEL_WIDTH / keys[nextScaleIndex] as Float;
-          // System.println("next scale: " + keys[nextScaleIndex]);
-          // need some fudge factor to cross floating point error boundaries when needed
-          var toInc = (desiredScale - _scale);
+          var nextDistanceM = keys[nextScaleIndex] as Float;
+          // -2 since we need some fudge factor to make sure we are very close to desired length, but not past it
+          var desiredScale = (DESIRED_SCALE_PIXEL_WIDTH - 2) / nextDistanceM;
+          var toInc = (desiredScale - _scale );
           return toInc;
       }
     }

@@ -1,6 +1,6 @@
 A garmin watch datafield that shows a breadcrumb trail. For watches that do not support breadcrumb navigation out of the box.
 
-commpanion app https://github.com/pauljohnston2025/breadcrumb-mobile.git
+companion app https://github.com/pauljohnston2025/breadcrumb-mobile.git
 Can be used without the companion app, but will only show current track. 
 Use the companion app to add a route that you can follow.
 
