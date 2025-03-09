@@ -83,14 +83,14 @@ class PointArray {
                               _internalArrayBuffer[i * ARRAY_POINT_SIZE + 2]);
   }
 
-  function restrictPoints(maPoints as Number) as Void {
+  function restrictPoints(maPoints as Number) as Boolean {
     // make sure we only have an acceptancbe amount of points
     // current process is to cull every second point
     // this means near the end of the track, we will have lots of close points
     // the start of the track will start getting more and more granular every
     // time we cull points
     if (size() / ARRAY_POINT_SIZE < maPoints) {
-      return;
+      return false;
     }
 
     // we need to do this without creating a new array, since we do not want to
@@ -105,6 +105,7 @@ class PointArray {
     }
 
     resize(ARRAY_POINT_SIZE * maPoints / 2);
+    return true;
   }
 
   function _add(item as Float) as Void

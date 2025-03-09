@@ -25,13 +25,20 @@ class BreadcrumbRenderer {
   var _clearRouteProgress as Number = 0;
   var mode as Number = MODE_NORMAL;
 
-  // units in meters to label
-  var SCALE_NAMES = {
-      1 => "1m", 5 => "5m", 10 => "10m",     20 => "20m",     30 => "30m",       
-      40 => "40m", 50 => "50m",     100 => "100m",   250 => "250m",     
+  // units in meters (float/int) to label
+  var SCALE_NAMES as Dictionary = {
+      1 => "1m", 5 => "5m", 10 => "10m", 20 => "20m", 30 => "30m", 40 => "40m", 50 => "50m", 100 => "100m", 250 => "250m",     
       500 => "500m", 1000 => "1km",   2000 => "2km",   3000 => "3km",     
       4000 => "4km", 5000 => "5km",   10000 => "10km", 20000 => "20km",   
       30000 => "30km", 40000 => "40km", 50000 => "50km", 100000 => "100km",
+  };
+  
+  var ELEVATION_SCALE_NAMES as Dictionary = {
+      // some rediculously small values for level ground (highly unlikely in the wild, but common on simulator)
+      0.001 => "1mm", 0.0025 => "2.5mm", 0.005 => "5mm", 0.01 => "1cm", 
+      0.025 => "2.5cm", 0.05 => "5cm", 0.1 => "10cm", 0.25 => "25cm", 
+      0.5 => "50cm", 1 => "1m", 5 => "5m", 10 => "10m",  20 => "20m", 30 => "30m", 
+      40 => "40m", 50 => "50m", 100 => "100m", 250 => "250m", 500 => "500m"
   };
 
   // cache some important maths to make everything faster
@@ -104,19 +111,19 @@ class BreadcrumbRenderer {
   }
 
   function getScaleSize() as [Number, Number] {
-    return getScaleSizeGeneric(_currentScale, DESIRED_SCALE_PIXEL_WIDTH);
+    return getScaleSizeGeneric(_currentScale, DESIRED_SCALE_PIXEL_WIDTH, SCALE_NAMES);
   }
   
-  function getScaleSizeGeneric(scale as Float, desiredWidth as Float) as [Number, Number] {
+  function getScaleSizeGeneric(scale as Float, desiredWidth as Float, scaleNames as Dictionary) as [Number, Number] {
     var foundDistanceM = 10;
     var foundPixelWidth = 0;
     // get the closest without going over
     // keys loads them in random order, we want the smallest first
-    var keys = SCALE_NAMES.keys();
+    var keys = scaleNames.keys();
     keys.sort(null);
     for (var i = 0; i < keys.size(); ++i) {
       var distanceM = keys[i];
-      var testPixelWidth = distanceM * scale;
+      var testPixelWidth = distanceM as Float * scale;
       if (testPixelWidth > desiredWidth) {
         break;
       }
@@ -383,7 +390,7 @@ class BreadcrumbRenderer {
           
           // we want the result to be 
           // DESIRED_SCALE_PIXEL_WIDTH = keys[nextScaleIndex] * _scale;
-          var desiredScale = DESIRED_SCALE_PIXEL_WIDTH / keys[nextScaleIndex];
+          var desiredScale = DESIRED_SCALE_PIXEL_WIDTH / keys[nextScaleIndex] as Float;
           // System.println("next scale: " + keys[nextScaleIndex]);
           // need some fudge factor to cross floating point error boundaries when needed
           var toInc = (desiredScale - _scale);
@@ -473,6 +480,7 @@ class BreadcrumbRenderer {
     }
     _scale = null; 
   }
+
   function toggleZoomAtPace() as Void { 
     if (mode == MODE_ELEVATION)
     {
@@ -505,10 +513,10 @@ class BreadcrumbRenderer {
     vScale as Float,
     startAt as Float
   ) as Void {
-    var hScaleData = getScaleSizeGeneric(hScale, DESIRED_SCALE_PIXEL_WIDTH);
+    var hScaleData = getScaleSizeGeneric(hScale, DESIRED_SCALE_PIXEL_WIDTH, SCALE_NAMES);
     var hPixelWidth = hScaleData[0];
     var hDistanceM = hScaleData[1];
-    var vScaleData = getScaleSizeGeneric(vScale, DESIRED_ELEV_SCALE_PIXEL_WIDTH);
+    var vScaleData = getScaleSizeGeneric(vScale, DESIRED_ELEV_SCALE_PIXEL_WIDTH, ELEVATION_SCALE_NAMES);
     var vPixelWidth = vScaleData[0];
     var vDistanceM = vScaleData[1];
 
@@ -522,22 +530,28 @@ class BreadcrumbRenderer {
     // dc.drawRectangle(_xElevationStart, _yHalf - _halfYElevationHeight, _screenSize - _xElevationStart * 2, _yElevationHeight);
 
     // horizontal lines vertical scale
-    for (var i=0; i<_halfYElevationHeight ; i+=vPixelWidth)
+    if (vPixelWidth != 0) // do not want infinite for loop
     {
-      var yTop = _yHalf - i;
-      var yBottom = _yHalf + i;
-      dc.drawLine(_xElevationStart, yTop, _xElevationEnd, yTop);
-      dc.drawLine(_xElevationStart, yBottom, _xElevationEnd, yBottom);
+      for (var i=0; i<_halfYElevationHeight ; i+=vPixelWidth)
+      {
+        var yTop = _yHalf - i;
+        var yBottom = _yHalf + i;
+        dc.drawLine(_xElevationStart, yTop, _xElevationEnd, yTop);
+        dc.drawLine(_xElevationStart, yBottom, _xElevationEnd, yBottom);
+      }
     }
 
     // vertical lines horizontal scale
-    for (var i=_xElevationStart; i<_xElevationEnd ; i+=hPixelWidth)
+    if (hPixelWidth != 0) // do not want infinite for loop
     {
-      dc.drawLine(i, yElevationTop, i, yElevationBottom);
+      for (var i=_xElevationStart; i<_xElevationEnd ; i+=hPixelWidth)
+      {
+        dc.drawLine(i, yElevationTop, i, yElevationBottom);
+      }
     }
 
     dc.drawText(0, _yHalf - 15, Graphics.FONT_XTINY, startAt.format("%.0f"), Graphics.TEXT_JUSTIFY_LEFT);
-    if (vScale != 0) // prevent dvion by 0
+    if (vScale != 0) // prevent division by 0
     {
       var topScaleM = startAt + _halfYElevationHeight / vScale;
       dc.drawText(_xElevationStart, _yHalf - _halfYElevationHeight - 30, Graphics.FONT_XTINY, topScaleM.format("%.0f") + "m", Graphics.TEXT_JUSTIFY_LEFT);
@@ -557,9 +571,9 @@ class BreadcrumbRenderer {
       dc.drawText(_xHalf, y - 30, Graphics.FONT_XTINY, hFoundName, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
-    if (vPixelWidth != 0) // if statement makes sure that we can get a SCALE_NAMES[vDistanceM]
+    if (vPixelWidth != 0) // if statement makes sure that we can get a ELEVATION_SCALE_NAMES[vDistanceM]
     {
-      var vFoundName = SCALE_NAMES[vDistanceM];
+      var vFoundName = ELEVATION_SCALE_NAMES[vDistanceM];
 
       var x = _xHalf + DESIRED_SCALE_PIXEL_WIDTH/ 2.0f;
       var y = 335 - vPixelWidth / 2.0f;

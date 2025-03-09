@@ -39,7 +39,7 @@ class BreadcrumbTrack {
 
   var boundingBox as [Float, Float, Float, Float] = BOUNDING_BOX_DEFAULT();
   var boundingBoxCenter as RectangularPoint = BOUNDING_BOX_CENTER_DEFAULT();
-  var distanceTotal as Float = 0f;
+  var distanceTotal as Decimal = 0f;
   var elevationMin as Float = FLOAT_MAX;
   var elevationMax as Float = FLOAT_MIN;
 
@@ -99,7 +99,7 @@ class BreadcrumbTrack {
           bbc[0] as Float, bbc[1] as Float, bbc[2] as Float);
       track.coordinates._internalArrayBuffer = coords as Array<Float>;
       track.coordinates._size = coordsSize as Number;
-      track.distanceTotal = distanceTotal as Float;
+      track.distanceTotal = distanceTotal as Decimal;
       track.elevationMin = elevationMin as Float;
       track.elevationMax = elevationMax as Float;
       if (track.coordinates.size() % ARRAY_POINT_SIZE != 0) {
@@ -146,29 +146,41 @@ class BreadcrumbTrack {
   }
 
   function addPointRaw(newPoint as RectangularPoint, distance as Float) as Void {
-    // this might drift on slices, perhaps we should recalculate?
     distanceTotal += distance;
     coordinates.add(newPoint);
     updateBoundingBox(newPoint);
-    coordinates.restrictPoints(MAX_POINTS);
+    if (coordinates.restrictPoints(MAX_POINTS))
+    {
+      // a resize occured, calculate important data again
+      updatePointDataFromAllPoints();
+    }
   }
 
-  function updateBoundingBoxFromAllPoints() as Void
+  function updatePointDataFromAllPoints() as Void
   {
     boundingBox = BOUNDING_BOX_DEFAULT();
     boundingBoxCenter = BOUNDING_BOX_CENTER_DEFAULT();
     elevationMin = FLOAT_MAX;
     elevationMax = FLOAT_MIN;
+    distanceTotal = 0f;
     var pointSize = coordinates.pointSize();
-    for (var i = 0; i < pointSize; ++i) {
+    var prevPoint = coordinates.firstPoint();
+    if (prevPoint == null)
+    {
+      return;
+    }
+    updateBoundingBox(prevPoint);
+    for (var i = 1; i < pointSize; ++i) {
       var point = coordinates.getPoint(i);
-      // shoul never be null, but check to be safe
+      // should never be null, but check to be safe
       if (point == null)
       {
-        return;
+        break;
       }
 
       updateBoundingBox(point);
+      distanceTotal += prevPoint.distanceTo(point);
+      prevPoint = point;
     }
   }
 
@@ -240,7 +252,7 @@ class BreadcrumbTrack {
         seenStartupPoints = 0;
         coordinates.removeLastCountPoints(possibleBadPointsAdded);
         possibleBadPointsAdded = 0;
-        updateBoundingBoxFromAllPoints();
+        updatePointDataFromAllPoints();
         return;
     }
 
