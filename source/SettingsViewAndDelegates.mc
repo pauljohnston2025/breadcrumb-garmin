@@ -2095,28 +2095,35 @@ class SettingsDataFieldTypeDelegate extends WatchUi.Menu2InputDelegate {
     }
 
     public function onSelect(item as WatchUi.MenuItem) as Void {
-        var id = item.getId();
-        if (id == null) {
-            return;
+        var itemId = item.getId();
+        if (itemId == :settingsDataTypeNone) {
+            callback.invoke(DATA_TYPE_NONE);
+        } else if (itemId == :settingsDataTypeScale) {
+            callback.invoke(DATA_TYPE_SCALE);
+        } else if (itemId == :settingsDataTypeAltitude) {
+            callback.invoke(DATA_TYPE_ALTITUDE);
+        } else if (itemId == :settingsDataTypeAvgHR) {
+            callback.invoke(DATA_TYPE_AVERAGE_HEART_RATE);
+        } else if (itemId == :settingsDataTypeAvgSpeed) {
+            callback.invoke(DATA_TYPE_AVERAGE_SPEED);
+        } else if (itemId == :settingsDataTypeCurHR) {
+            callback.invoke(DATA_TYPE_CURRENT_HEART_RATE);
+        } else if (itemId == :settingsDataTypeCurSpeed) {
+            callback.invoke(DATA_TYPE_CURRENT_SPEED);
+        } else if (itemId == :settingsDataTypeDistance) {
+            callback.invoke(DATA_TYPE_ELAPSED_DISTANCE);
+        } else if (itemId == :settingsDataTypeTime) {
+            callback.invoke(DATA_TYPE_ELAPSED_TIME);
+        } else if (itemId == :settingsDataTypeAscent) {
+            callback.invoke(DATA_TYPE_TOTAL_ASCENT);
+        } else if (itemId == :settingsDataTypeDescent) {
+            callback.invoke(DATA_TYPE_TOTAL_DESCENT);
+        } else if (itemId == :settingsDataTypeAvgPace) {
+            callback.invoke(DATA_TYPE_AVERAGE_PACE);
+        } else if (itemId == :settingsDataTypeCurPace) {
+            callback.invoke(DATA_TYPE_CURRENT_PACE);
         }
-
-        var idStr = id.toString();
-
-        // Check if this is a data type selection
-        if (idStr.find("type_") == 0) {
-            // Extract the number (e.g., "type_5" -> 5)
-            var numberStr = idStr.substring(5, idStr.length());
-            if (numberStr == null) {
-                return;
-            }
-            var typeValue = numberStr.toNumber();
-            if (typeValue == null) {
-                return;
-            }
-            callback.invoke(typeValue);
-            parent.rerender();
-        }
-
+        parent.rerender();
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     }
 }
