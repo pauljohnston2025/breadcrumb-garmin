@@ -418,6 +418,7 @@ class Settings {
     var mapMoveScreenSize as Float = 0.3f; // how far to move the map when the user presses on screen buttons, a fraction of the screen size.
     var zoomAtPaceMode as Number = ZOOM_AT_PACE_MODE_PACE;
     var zoomAtPaceSpeedMPS as Float = 1.0; // meters per second
+    var useTrackAsHeadingSpeedMPS as Float = 1000f; // meters per second
     var uiMode as Number = UI_MODE_SHOW_ALL;
     var fixedLatitude as Float? = null;
     var fixedLongitude as Float? = null;

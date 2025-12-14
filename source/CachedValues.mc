@@ -402,6 +402,14 @@ class CachedValues {
         mapDataCanBeUsed = true;
     }
 
+    // Calculates the heading from p1 to p2 in Radians
+    // 0 = North, PI/2 = East, +/- PI = South, -PI/2 = West
+    function calculateHeading(p1 as RectangularPoint, p2 as RectangularPoint) as Float {
+        // We use (dx, dy) instead of standard (dy, dx) to rotate 
+        // the frame of reference so 0 is North/Up
+        return Math.atan2(p2.x - p1.x, p2.y - p1.y).toFloat();
+    }
+
     /** returns true if a rescale occurred */
     function onActivityInfo(activityInfo as Activity.Info) as Boolean {
         // logT(
@@ -417,10 +425,18 @@ class CachedValues {
         // based on some of the posts here, its better to use currentHeading if we want our compas to work whilst not moving, and track is only supported on some devices
         // https://forums.garmin.com/developer/connect-iq/f/discussion/258978/currentheading
         var currentHeading = activityInfo.currentHeading;
-        if (activityInfo has :track) {
-            var track = activityInfo.track;
-            if (currentHeading == null && track != null) {
-                currentHeading = track;
+        var _currentSpeed = activityInfo.currentSpeed;
+        if (_currentSpeed != null) {
+            currentSpeed = _currentSpeed;
+            if (currentSpeed >= _settings.useTrackAsHeadingSpeedMPS)
+            {
+                var track = getApp()._breadcrumbContext.track;
+                var lastPoint = track.coordinates.lastPoint();
+                var secondLastPoint = track.coordinates.getPoint(track.coordinates.pointSize() - 2);
+                if (lastPoint != null && secondLastPoint != null)
+                {
+                    currentHeading = calculateHeading(secondLastPoint, lastPoint);
+                }
             }
         }
 
@@ -429,11 +445,7 @@ class CachedValues {
             rotateCos = Math.cos(rotationRad).toFloat();
             rotateSin = Math.sin(rotationRad).toFloat();
         }
-        var _currentSpeed = activityInfo.currentSpeed;
-        if (_currentSpeed != null) {
-            currentSpeed = _currentSpeed;
-        }
-
+        
         updateRotationMatrix();
 
         var _elapsedDistance = activityInfo.elapsedDistance;

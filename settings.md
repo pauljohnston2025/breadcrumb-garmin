@@ -66,6 +66,14 @@ The maximum number of coordinates to store for the current track the user is mov
 
 How far to move across the screen when panning the map using the on screen ui. Relative to screen size, eg. 0.3 moves a third of the screen, 0.5 moves half the screen.   
 
+### Use Track As Heading Speed 
+
+If the user travels above this speed (in m/s) we will use the last 2 track points to get a bearing (for screen rotations) instead of the devices magnetic compass. This is mostly helpful for when running or any activity where your wrist is likely to be moving around alot, since it is hard to hold your wrist still enough to see the direction of travel. It also stops any delay when first looking at the watch, since it may have rendered when your wrist was not angled straight ahead. 
+
+0 - Always use track
+large number (eg. 1000) - Never use track
+0.5 - Use track when traveling faster than 0.5m/s and magnetic compass when traveling slower (stopped)
+
 ---
 
 ### UI Mode
