@@ -3,6 +3,9 @@
     <string id="settingsTitle">Breadcrumb Data Field</string>
 
     <string id="layerTileSize">Tile Size (pixels)</string>
+    <string id="useTrackAsHeadingSpeedMPSTitle">Use Track As Heading Speed (m/s)</string>
+    <string id="topDataTypeTitle">Top Data Field</string>
+    <string id="bottomDataTypeTitle">Bottom Data Field</string>
     <string id="tileLayerMaxTitle">Tile Layer Max</string>
     <string id="tileLayerMaxPrompt">15</string>
     <string id="tileLayerMinTitle">Tile Layer Min</string>
@@ -157,6 +160,20 @@
     <string id="clearRoutes1">Clearing all routes, are you sure?</string>
     <string id="clearRoutes2">Confirm route clear</string>
     <string id="clearRoutes3">Clearing all routes, LAST CHANCE!!!</string>
+
+    <string id="dataTypeNone">None</string>
+    <string id="dataTypeScale">Map Scale</string>
+    <string id="dataTypeAltitude">Altitude</string>
+    <string id="dataTypeAvgHR">Avg Heart Rate</string>
+    <string id="dataTypeAvgSpeed">Avg Speed</string>
+    <string id="dataTypeCurHR">Heart Rate</string>
+    <string id="dataTypeCurSpeed">Speed</string>
+    <string id="dataTypeDistance">Distance</string>
+    <string id="dataTypeTime">Time</string>
+    <string id="dataTypeAscent">Total Ascent</string>
+    <string id="dataTypeDescent">Total Descent</string>
+    <string id="dataTypeAvgPace">Avg Pace</string>
+    <string id="dataTypeCurPace">Pace</string>
 
     <string id="mustUpdate">Update mobile app or watch app</string>
     

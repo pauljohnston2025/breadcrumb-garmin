@@ -72,6 +72,9 @@
 	<property id="drawHitBoxes" type="boolean">false</property>
 	<property id="showDirectionPoints" type="boolean">false</property>
 	<property id="showDirectionPointTextUnderIndex" type="number">0</property>
+	<property id="useTrackAsHeadingSpeedMPS" type="float">1000.0</property>
+	<property id="topDataType" type="number">0</property>
+	<property id="bottomDataType" type="number">1</property>
 
 
     <!-- https://forums.garmin.com/developer/connect-iq/i/bug-reports/bug-boolean-properties-with-default-value-true-can-t-be-changed-in-simulator -->

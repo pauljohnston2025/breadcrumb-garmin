@@ -7,6 +7,30 @@ import Toybox.Communications;
 import Toybox.WatchUi;
 import Toybox.PersistedContent;
 
+enum /*DataType*/ {
+    DATA_TYPE_NONE,
+    DATA_TYPE_SCALE,
+    DATA_TYPE_ALTITUDE,
+    DATA_TYPE_AVERAGE_HEART_RATE,
+    DATA_TYPE_AVERAGE_SPEED,
+    DATA_TYPE_CURRENT_HEART_RATE,
+    DATA_TYPE_CURRENT_SPEED,
+    DATA_TYPE_ELAPSED_DISTANCE,
+    DATA_TYPE_ELAPSED_TIME,
+    DATA_TYPE_TOTAL_ASCENT,
+    DATA_TYPE_TOTAL_DESCENT,
+    DATA_TYPE_AVERAGE_PACE,
+    DATA_TYPE_CURRENT_PACE,
+
+    // other metrics that might be good
+    // most of these are inbuilt garmin ones (so could easily be added to a second data screen)
+    // Ill add them if users ask, but currently only have requests for pace https://github.com/pauljohnston2025/breadcrumb-garmin/issues/8
+    // anything to do with laps I will need to store timestamps when onTimerLap() is called, and probably store all the activity info? or maybe just store distance/and timestamp?
+    // time of day - wall clock
+    // last lap time
+    // current lap time
+}
+
 enum /*Mode*/ {
     MODE_NORMAL,
     MODE_ELEVATION,
@@ -419,6 +443,8 @@ class Settings {
     var zoomAtPaceMode as Number = ZOOM_AT_PACE_MODE_PACE;
     var zoomAtPaceSpeedMPS as Float = 1.0; // meters per second
     var useTrackAsHeadingSpeedMPS as Float = 1000f; // meters per second
+    var topDataType as Number = DATA_TYPE_NONE;
+    var bottomDataType as Number = DATA_TYPE_SCALE;
     var uiMode as Number = UI_MODE_SHOW_ALL;
     var fixedLatitude as Float? = null;
     var fixedLongitude as Float? = null;
@@ -931,11 +957,29 @@ class Settings {
         zoomAtPaceSpeedMPS = mps;
         setValue("zoomAtPaceSpeedMPS", zoomAtPaceSpeedMPS);
     }
+    
+    (:settingsView)
+    function setUseTrackAsHeadingSpeedMPS(mps as Float) as Void {
+        useTrackAsHeadingSpeedMPS = mps;
+        setValue("useTrackAsHeadingSpeedMPS", useTrackAsHeadingSpeedMPS);
+    }
 
     (:settingsView)
     function setMetersAroundUser(value as Number) as Void {
         metersAroundUser = value;
         setValue("metersAroundUser", metersAroundUser);
+    }
+    
+    (:settingsView)
+    function setTopDataType(value as Number) as Void {
+        topDataType = value;
+        setValue("topDataType", topDataType);
+    }
+    
+    (:settingsView)
+    function setBottomDataType(value as Number) as Void {
+        bottomDataType = value;
+        setValue("bottomDataType", bottomDataType);
     }
 
     (:settingsView)
@@ -2127,6 +2171,9 @@ class Settings {
         metersAroundUser = defaultSettings.metersAroundUser;
         zoomAtPaceMode = defaultSettings.zoomAtPaceMode;
         zoomAtPaceSpeedMPS = defaultSettings.zoomAtPaceSpeedMPS;
+        useTrackAsHeadingSpeedMPS = defaultSettings.useTrackAsHeadingSpeedMPS;
+        topDataType = defaultSettings.topDataType;
+        bottomDataType = defaultSettings.bottomDataType;
         uiMode = defaultSettings.uiMode;
         elevationMode = defaultSettings.elevationMode;
         alertType = defaultSettings.alertType;
@@ -2218,6 +2265,9 @@ class Settings {
                 "metersAroundUser" => metersAroundUser,
                 "zoomAtPaceMode" => zoomAtPaceMode,
                 "zoomAtPaceSpeedMPS" => zoomAtPaceSpeedMPS,
+                "useTrackAsHeadingSpeedMPS" => useTrackAsHeadingSpeedMPS,
+                "topDataType" => topDataType,
+                "bottomDataType" => bottomDataType,
                 "uiMode" => uiMode,
                 "elevationMode" => elevationMode,
                 "alertType" => alertType,
@@ -2375,6 +2425,9 @@ class Settings {
         metersAroundUser = parseNumber("metersAroundUser", metersAroundUser);
         zoomAtPaceMode = parseNumber("zoomAtPaceMode", zoomAtPaceMode);
         zoomAtPaceSpeedMPS = parseFloat("zoomAtPaceSpeedMPS", zoomAtPaceSpeedMPS);
+        useTrackAsHeadingSpeedMPS = parseFloat("useTrackAsHeadingSpeedMPS", useTrackAsHeadingSpeedMPS);
+        topDataType = parseNumber("topDataType", topDataType);
+        bottomDataType = parseNumber("bottomDataType", bottomDataType);
         uiMode = parseNumber("uiMode", uiMode);
         elevationMode = parseNumber("elevationMode", elevationMode);
         alertType = parseNumber("alertType", alertType);

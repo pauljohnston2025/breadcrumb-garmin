@@ -225,11 +225,55 @@ class SettingsMain extends Rez.Menus.SettingsMain {
         );
         safeSetToggle(me, :settingsMainDisplayLatLong, settings.displayLatLong);
         safeSetSubLabel(me, :settingsMainMaxTrackPoints, settings.maxTrackPoints.toString());
+        safeSetSubLabel(me, :settingsMainTopDataType, getDataTypeString(settings.topDataType));
+        safeSetSubLabel(
+            me,
+            :settingsMainBottomDataType,
+            getDataTypeString(settings.bottomDataType)
+        );
+        safeSetSubLabel(
+            me,
+            :settingsMainUseTrackAsHeadingSpeedMPS,
+            settings.useTrackAsHeadingSpeedMPS.format("%.2f") + "m/s"
+        );
         safeSetSubLabel(
             me,
             :settingsMainMapMoveScreenSize,
             settings.mapMoveScreenSize.format("%.2f")
         );
+    }
+}
+
+function getDataTypeString(type as Number) as ResourceId {
+    switch (type) {
+        case DATA_TYPE_NONE:
+            return Rez.Strings.dataTypeNone;
+        case DATA_TYPE_SCALE:
+            return Rez.Strings.dataTypeScale;
+        case DATA_TYPE_ALTITUDE:
+            return Rez.Strings.dataTypeAltitude;
+        case DATA_TYPE_AVERAGE_HEART_RATE:
+            return Rez.Strings.dataTypeAvgHR;
+        case DATA_TYPE_AVERAGE_SPEED:
+            return Rez.Strings.dataTypeAvgSpeed;
+        case DATA_TYPE_CURRENT_HEART_RATE:
+            return Rez.Strings.dataTypeCurHR;
+        case DATA_TYPE_CURRENT_SPEED:
+            return Rez.Strings.dataTypeCurSpeed;
+        case DATA_TYPE_ELAPSED_DISTANCE:
+            return Rez.Strings.dataTypeDistance;
+        case DATA_TYPE_ELAPSED_TIME:
+            return Rez.Strings.dataTypeTime;
+        case DATA_TYPE_TOTAL_ASCENT:
+            return Rez.Strings.dataTypeAscent;
+        case DATA_TYPE_TOTAL_DESCENT:
+            return Rez.Strings.dataTypeDescent;
+        case DATA_TYPE_AVERAGE_PACE:
+            return Rez.Strings.dataTypeAvgPace;
+        case DATA_TYPE_CURRENT_PACE:
+            return Rez.Strings.dataTypeCurPace;
+        default:
+            return Rez.Strings.dataTypeNone;
     }
 }
 
@@ -876,6 +920,26 @@ class SettingsMainDelegate extends WatchUi.Menu2InputDelegate {
         } else if (itemId == :settingsMainDebug) {
             var view = new SettingsDebug();
             WatchUi.pushView(view, new $.SettingsDebugDelegate(view), WatchUi.SLIDE_IMMEDIATE);
+        } else if (itemId == :settingsMainTopDataType) {
+            WatchUi.pushView(
+                new $.Rez.Menus.SettingsDataFieldType(),
+                new $.SettingsDataFieldTypeDelegate(view, settings.method(:setTopDataType)),
+                WatchUi.SLIDE_IMMEDIATE
+            );
+        } else if (itemId == :settingsMainBottomDataType) {
+            WatchUi.pushView(
+                new $.Rez.Menus.SettingsDataFieldType(),
+                new $.SettingsDataFieldTypeDelegate(view, settings.method(:setBottomDataType)),
+                WatchUi.SLIDE_IMMEDIATE
+            );
+        } else if (itemId == :settingsMainUseTrackAsHeadingSpeedMPS) {
+            startPicker(
+                new SettingsFloatPicker(
+                    settings.method(:setUseTrackAsHeadingSpeedMPS),
+                    settings.useTrackAsHeadingSpeedMPS,
+                    view
+                )
+            );
         } else if (itemId == :settingsMainMapMoveScreenSize) {
             startPicker(
                 new SettingsFloatPicker(
@@ -2017,5 +2081,42 @@ class SettingsDebugDelegate extends WatchUi.Menu2InputDelegate {
                 )
             );
         }
+    }
+}
+
+(:settingsView)
+class SettingsDataFieldTypeDelegate extends WatchUi.Menu2InputDelegate {
+    private var callback as (Method(value as Number) as Void);
+    var parent as SettingsMain;
+    function initialize(parent as SettingsMain, _callback as (Method(value as Number) as Void)) {
+        WatchUi.Menu2InputDelegate.initialize();
+        me.parent = parent;
+        me.callback = _callback;
+    }
+
+    public function onSelect(item as WatchUi.MenuItem) as Void {
+        var id = item.getId();
+        if (id == null) {
+            return;
+        }
+
+        var idStr = id.toString();
+
+        // Check if this is a data type selection
+        if (idStr.find("type_") == 0) {
+            // Extract the number (e.g., "type_5" -> 5)
+            var numberStr = idStr.substring(5, idStr.length());
+            if (numberStr == null) {
+                return;
+            }
+            var typeValue = numberStr.toNumber();
+            if (typeValue == null) {
+                return;
+            }
+            callback.invoke(typeValue);
+            parent.rerender();
+        }
+
+        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     }
 }

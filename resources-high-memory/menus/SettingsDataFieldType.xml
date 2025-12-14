@@ -1,0 +1,15 @@
+<menu2 id="SettingsDataFieldType">
+    <menu-item id="type_0" label="@Strings.dataTypeNone" />
+    <menu-item id="type_1" label="@Strings.dataTypeScale" />
+    <menu-item id="type_2" label="@Strings.dataTypeAltitude" />
+    <menu-item id="type_3" label="@Strings.dataTypeAvgHR" />
+    <menu-item id="type_4" label="@Strings.dataTypeAvgSpeed" />
+    <menu-item id="type_5" label="@Strings.dataTypeCurHR" />
+    <menu-item id="type_6" label="@Strings.dataTypeCurSpeed" />
+    <menu-item id="type_7" label="@Strings.dataTypeDistance" />
+    <menu-item id="type_8" label="@Strings.dataTypeTime" />
+    <menu-item id="type_9" label="@Strings.dataTypeAscent" />
+    <menu-item id="type_10" label="@Strings.dataTypeDescent" />
+    <menu-item id="type_11" label="@Strings.dataTypeAvgPace" />
+    <menu-item id="type_12" label="@Strings.dataTypeCurPace" />
+</menu2>

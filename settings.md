@@ -62,9 +62,30 @@ Determines if the current latitude and longitude are displayed on the watch scre
 
 The maximum number of coordinates to store for the current track the user is moving along. Each coordinate point contains a latitude, longitude and altitude. A smaller number should be used to conserve memory and cpu. Larger numbers results in a smoother track line drawn on screen.   
 
-### Map Move Screen Size
+### Top Data Field Type
 
-How far to move across the screen when panning the map using the on screen ui. Relative to screen size, eg. 0.3 moves a third of the screen, 0.5 moves half the screen.   
+Breadcrumb supports adding datafield values to the top and bottom of the screen. 
+
+The currently supported fields are:
+
+* None - Nothing displayed
+* Map Scale - Scale bar for map distance
+* Altitude - Current elevation
+* Avg Heart Rate - Average heart rate
+* Avg Speed - Average speed
+* Heart Rate - Current heart rate
+* Speed - Current speed
+* Distance - Distance traveled
+* Time - Elapsed time
+* Total Ascent - Total elevation gain
+* Total Descent - Total elevation loss
+* Avg Pace - Average pace
+* Pace - Current pace
+
+
+### Bottom Data Field Type
+
+Same as [Top Data Field Type](#top-data-field-type) but at the bottom of the screen.
 
 ### Use Track As Heading Speed 
 
@@ -73,6 +94,10 @@ If the user travels above this speed (in m/s) we will use the last 2 track point
 0 - Always use track
 large number (eg. 1000) - Never use track
 0.5 - Use track when traveling faster than 0.5m/s and magnetic compass when traveling slower (stopped)
+
+### Map Move Screen Size
+
+How far to move across the screen when panning the map using the on screen ui. Relative to screen size, eg. 0.3 moves a third of the screen, 0.5 moves half the screen.   
 
 ---
 
@@ -236,7 +261,7 @@ See [Storage Tile Cache Size (tiles)](#storage-tile-cache-size-tiles) for a way 
 The max number of tile fetch requests we can have queued ready to be sent. (this can be 0, and we will only allow outstanding requests)
 
 ### Disable Maps After X Failures
-N
+
 Maps will be automatically disabled if this many tile fetch requests fail. 0 - unlimited
 
 ### Fixed Latitude

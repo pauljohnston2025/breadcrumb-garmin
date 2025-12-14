@@ -50,6 +50,46 @@
         <settingConfig type="numeric" min="1"/>
     </setting>
 
+    <setting propertyKey="@Properties.topDataType" title="@Strings.topDataTypeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.dataTypeNone</listEntry>
+            <listEntry value="1">@Strings.dataTypeScale</listEntry>
+            <listEntry value="2">@Strings.dataTypeAltitude</listEntry>
+            <listEntry value="3">@Strings.dataTypeAvgHR</listEntry>
+            <listEntry value="4">@Strings.dataTypeAvgSpeed</listEntry>
+            <listEntry value="5">@Strings.dataTypeCurHR</listEntry>
+            <listEntry value="6">@Strings.dataTypeCurSpeed</listEntry>
+            <listEntry value="7">@Strings.dataTypeDistance</listEntry>
+            <listEntry value="8">@Strings.dataTypeTime</listEntry>
+            <listEntry value="9">@Strings.dataTypeAscent</listEntry>
+            <listEntry value="10">@Strings.dataTypeDescent</listEntry>
+            <listEntry value="11">@Strings.dataTypeAvgPace</listEntry>
+            <listEntry value="12">@Strings.dataTypeCurPace</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.bottomDataType" title="@Strings.bottomDataTypeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.dataTypeNone</listEntry>
+            <listEntry value="1">@Strings.dataTypeScale</listEntry>
+            <listEntry value="2">@Strings.dataTypeAltitude</listEntry>
+            <listEntry value="3">@Strings.dataTypeAvgHR</listEntry>
+            <listEntry value="4">@Strings.dataTypeAvgSpeed</listEntry>
+            <listEntry value="5">@Strings.dataTypeCurHR</listEntry>
+            <listEntry value="6">@Strings.dataTypeCurSpeed</listEntry>
+            <listEntry value="7">@Strings.dataTypeDistance</listEntry>
+            <listEntry value="8">@Strings.dataTypeTime</listEntry>
+            <listEntry value="9">@Strings.dataTypeAscent</listEntry>
+            <listEntry value="10">@Strings.dataTypeDescent</listEntry>
+            <listEntry value="11">@Strings.dataTypeAvgPace</listEntry>
+            <listEntry value="12">@Strings.dataTypeCurPace</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.useTrackAsHeadingSpeedMPS" title="@Strings.useTrackAsHeadingSpeedMPSTitle">
+        <settingConfig type="numeric" min="0"/>
+    </setting>
+
     <setting propertyKey="@Properties.mapMoveScreenSize" title="@Strings.mapMoveScreenSizeTitle">
         <settingConfig type="numeric" min="0" max="1"/>
     </setting>

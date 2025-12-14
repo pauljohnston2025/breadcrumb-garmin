@@ -7,6 +7,9 @@
     <menu-item id="settingsMainCenterUserOffsetY" label="@Strings.centerUserOffsetYTitle"/>
     <toggle-menu-item id="settingsMainDisplayLatLong" label="@Strings.displayLatLongTitle"/>
     <menu-item id="settingsMainMaxTrackPoints" label="@Strings.maxTrackPointsTitle"/>
+    <menu-item id="settingsMainTopDataType" label="@Strings.topDataTypeTitle"/>
+    <menu-item id="settingsMainBottomDataType" label="@Strings.bottomDataTypeTitle"/>
+    <menu-item id="settingsMainUseTrackAsHeadingSpeedMPS" label="@Strings.useTrackAsHeadingSpeedMPSTitle"/>
     <menu-item id="settingsMainMapMoveScreenSize" label="@Strings.mapMoveScreenSizeTitle"/>
     <menu-item id="settingsMainZoomAtPace" label="@Strings.zoomAtPaceTitle"/>
     <menu-item id="settingsMainRoutes" label="@Strings.routesTitle"/>
