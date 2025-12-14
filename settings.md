@@ -686,7 +686,8 @@ It is much easier to configure the settings from the ConnectIQ store, or through
 ![](images/settings/ondevice.png)
 ![](images/settings/numberpicker.png)
 
-To use the number/colour pickers entering the value by touching characters/numbers on the screen then confirmed/removed by pressing the device buttons. Confirm to confirm on screen selection, back to delete a character or exit without making a change.
+To use the number/colour pickers entering the value by touching characters/numbers on the screen then confirmed/removed by pressing the device buttons. Confirm to confirm on screen selection, back to delete a character or exit without making a change.  
+Devices that have multiple buttons can also use the up/down buttons to move the cursor around the screen.
 
 ### Before Activity Start
 

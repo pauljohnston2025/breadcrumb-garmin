@@ -317,7 +317,26 @@ class CachedValues {
                 : optionalTrackBoundingBox()
         );
         calcCenterPointForBoundingBox(boundingBox);
-        return getNewScaleFromBoundingBox(boundingBox);
+        var newScale = getNewScaleFromBoundingBox(boundingBox);
+        if (
+            _settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_PACE ||
+            _settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_STOPPED
+        ) {
+            // this is a special case that makes us zoom more when we are in the 'overview'
+            // ie. with ZOOM_AT_PACE_MODE_PACE
+            // - move a little bit (only 6m)
+            // - stop moving so we are not currentlyZoomingAroundUser
+            // - normally this should zoom out to show the entire map area, but if we have no routes it actually zooms in to a blurry map (since its a bounding box of 6m)
+
+            // if we are not in a dynamic mode, we will do exactly what the user asks
+            // if we are in a dynamic mode, cap the 'zoomed out' zoom level so it always shows more area, never less
+            var scaleFromRenderDistance = calculateScale(_settings.metersAroundUser);
+            if (scaleFromRenderDistance < newScale) {
+                newScale = scaleFromRenderDistance;
+            }
+        }
+
+        return newScale;
     }
 
     function optionalTrackBoundingBox() as [Float, Float, Float, Float]? {
@@ -405,7 +424,7 @@ class CachedValues {
     // Calculates the heading from p1 to p2 in Radians
     // 0 = North, PI/2 = East, +/- PI = South, -PI/2 = West
     function calculateHeading(p1 as RectangularPoint, p2 as RectangularPoint) as Float {
-        // We use (dx, dy) instead of standard (dy, dx) to rotate 
+        // We use (dx, dy) instead of standard (dy, dx) to rotate
         // the frame of reference so 0 is North/Up
         return Math.atan2(p2.x - p1.x, p2.y - p1.y).toFloat();
     }
@@ -428,13 +447,11 @@ class CachedValues {
         var _currentSpeed = activityInfo.currentSpeed;
         if (_currentSpeed != null) {
             currentSpeed = _currentSpeed;
-            if (currentSpeed >= _settings.useTrackAsHeadingSpeedMPS)
-            {
+            if (currentSpeed >= _settings.useTrackAsHeadingSpeedMPS) {
                 var track = getApp()._breadcrumbContext.track;
                 var lastPoint = track.coordinates.lastPoint();
                 var secondLastPoint = track.coordinates.getPoint(track.coordinates.pointSize() - 2);
-                if (lastPoint != null && secondLastPoint != null)
-                {
+                if (lastPoint != null && secondLastPoint != null) {
                     currentHeading = calculateHeading(secondLastPoint, lastPoint);
                 }
             }
@@ -445,7 +462,7 @@ class CachedValues {
             rotateCos = Math.cos(rotationRad).toFloat();
             rotateSin = Math.sin(rotationRad).toFloat();
         }
-        
+
         updateRotationMatrix();
 
         var _elapsedDistance = activityInfo.elapsedDistance;

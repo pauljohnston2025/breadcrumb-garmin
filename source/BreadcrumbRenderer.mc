@@ -193,7 +193,7 @@ class BreadcrumbRenderer {
 
     function renderDataField(dc as Dc, type as Number, y as Float, direction as Number) as Void {
         dc.setColor(settings.normalModeColour, Graphics.COLOR_TRANSPARENT);
-        
+
         if (type == DATA_TYPE_NONE) {
             return;
         }
@@ -284,16 +284,16 @@ class BreadcrumbRenderer {
         }
 
         var speedConverted = speedMps;
-        var suffix = "kph";
+        var suffix = "k/h";
 
         if (settings.distanceImperialUnits) {
             speedConverted = speedMps * 2.23694f; 
-            suffix = "mph";
+            suffix = "m/h";
         } else {
             speedConverted = speedMps * 3.6f; 
         }
         
-        // e.g. "12.5kph"
+        // e.g. "12.5k/h"
         renderTextMetric(dc, y, speedConverted.format("%.1f") + suffix);
     }
 

@@ -909,7 +909,7 @@ class Settings {
 
         var tileServerInfo = getTileServerInfo(value);
         if (tileServerInfo == null) {
-            return; // invalid selection
+            return; // invalid selection (we need to error here somehow)
         }
         updateTileServerMapChoiceChange(tileServerInfo);
     }

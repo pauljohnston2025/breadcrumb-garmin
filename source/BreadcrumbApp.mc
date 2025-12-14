@@ -180,7 +180,7 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
                 _breadcrumbContext.settings.setFixedPosition(lat, long, true);
 
                 if (rawData.size() >= 3) {
-                    // also sets the scale, since user has providedd how many meters they want to see
+                    // also sets the scale, since user has provided how many meters they want to see
                     // note this ignores the 'restrict to tile layers' functionality
                     var scale = _breadcrumbContext.cachedValues.calcScaleForScreenMeters(
                         rawData[2] as Float
