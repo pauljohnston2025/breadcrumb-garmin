@@ -107,6 +107,7 @@ class CachedValues {
 
     // updated whenever we get new activity data with a new heading
     var rotationRad as Float = 0.0f; // heading in radians
+    private var _lastStableHeading as Float = 0.0f;
     var rotateCos as Float = Math.cos(rotationRad).toFloat() as Float;
     var rotateSin as Float = Math.sin(rotationRad).toFloat() as Float;
     var currentSpeed as Float = -1f;
@@ -418,11 +419,8 @@ class CachedValues {
         mapDataCanBeUsed = true;
     }
 
-    // Calculates the heading from p1 to p2 in Radians
-    // 0 = North, PI/2 = East, +/- PI = South, -PI/2 = West
     function calculateHeading(p1 as RectangularPoint, p2 as RectangularPoint) as Float {
-        // We use (dx, dy) instead of standard (dy, dx) to rotate
-        // the frame of reference so 0 is North/Up
+        // atan2(dx, dy) for North-up orientation
         return Math.atan2(p2.x - p1.x, p2.y - p1.y).toFloat();
     }
 
@@ -446,10 +444,54 @@ class CachedValues {
             currentSpeed = _currentSpeed;
             if (currentSpeed >= _settings.useTrackAsHeadingSpeedMPS) {
                 var track = getApp()._breadcrumbContext.track;
+                var size = track.coordinates.pointSize();
+
                 var lastPoint = track.coordinates.lastPoint();
-                var secondLastPoint = track.coordinates.getPoint(track.coordinates.pointSize() - 2);
-                if (lastPoint != null && secondLastPoint != null) {
-                    currentHeading = calculateHeading(secondLastPoint, lastPoint);
+                if (lastPoint != null) {
+                    var lookbackPoint = null;
+                    // We find a point at least 7 meters away to get a stable vector
+                    // Search back at most 10 points to find one 7m+ away
+                    var stopIndex = size - 10 < 0 ? 0 : size - 10;
+                    for (var i = size - 2; i >= stopIndex; --i) {
+                        // keep it updated as we go back through the for loop, we may break out when we hit the last point, but still not be the required distance away
+                        lookbackPoint = track.coordinates.getPoint(i);
+                        if (lookbackPoint != null && lastPoint.distanceTo(lookbackPoint) > 7 /*m*/) {
+                             break;
+                        }
+                    }
+
+                    if (lookbackPoint != null) {
+                        var rawHeading = calculateHeading(lookbackPoint, lastPoint);
+
+                        // 2. DYNAMIC ALPHA SMOOTHING
+                        // Calculate how much we are turning
+                        var diff = (rawHeading - _lastStableHeading).abs();
+                        if (diff > Math.PI) {
+                            diff = 2 * Math.PI - diff;
+                        } // Handle wrap-around
+
+                        var alpha;
+                        if (diff > 0.52) {
+                            // > 30 degrees: We are turning!
+                            alpha = 0.9f; // Respond almost instantly
+                        } else if (diff > 0.17) {
+                            // > 10 degrees: Slight curve
+                            alpha = 0.5f; // Balanced
+                        } else {
+                            alpha = 0.15f; // Moving straight: Heavy smoothing to kill jitter
+                        }
+
+                        // 3. VECTOR BLENDING (Prevents 360/0 degree glitches)
+                        var newX =
+                            (1.0 - alpha) * Math.cos(_lastStableHeading) +
+                            alpha * Math.cos(rawHeading);
+                        var newY =
+                            (1.0 - alpha) * Math.sin(_lastStableHeading) +
+                            alpha * Math.sin(rawHeading);
+
+                        _lastStableHeading = Math.atan2(newY, newX).toFloat();
+                        currentHeading = _lastStableHeading;
+                    }
                 }
             }
         }

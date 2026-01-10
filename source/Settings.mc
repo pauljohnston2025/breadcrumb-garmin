@@ -445,7 +445,7 @@ class Settings {
     var useTrackAsHeadingSpeedMPS as Float = 1000f; // meters per second
     var topDataType as Number = DATA_TYPE_NONE;
     var bottomDataType as Number = DATA_TYPE_SCALE;
-    var dataFieldTextSize as Number = Graphics.FONT_NUMBER_THAI_HOT;
+    var dataFieldTextSize as Number = Graphics.FONT_XTINY;
     var uiMode as Number = UI_MODE_SHOW_ALL;
     var fixedLatitude as Float? = null;
     var fixedLongitude as Float? = null;

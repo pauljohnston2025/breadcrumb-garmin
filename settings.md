@@ -87,6 +87,10 @@ The currently supported fields are:
 
 Same as [Top Data Field Type](#top-data-field-type) but at the bottom of the screen.
 
+### Data Field Text Size
+
+The text size for the top and bottom data fields.  
+
 ### Use Track As Heading Speed 
 
 If the user travels above this speed (in m/s) we will use the last 2 track points to get a bearing (for screen rotations) instead of the devices magnetic compass. This is mostly helpful for when running or any activity where your wrist is likely to be moving around alot, since it is hard to hold your wrist still enough to see the direction of travel. It also stops any delay when first looking at the watch, since it may have rendered when your wrist was not angled straight ahead. 
@@ -94,6 +98,8 @@ If the user travels above this speed (in m/s) we will use the last 2 track point
 0 - Always use track
 large number (eg. 1000) - Never use track
 0.5 - Use track when traveling faster than 0.5m/s and magnetic compass when traveling slower (stopped)
+
+Note: For best results [Compute Interval](#compute-interval) should be set to 1 (or a smaller number) in order to log as many track points as possible. Higher values of compute interval will result in delayed angle changes to the heading when turning corners.  
 
 ### Map Move Screen Size
 
