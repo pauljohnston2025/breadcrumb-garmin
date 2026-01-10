@@ -231,18 +231,18 @@ class PointArray {
     const minCosTheta = 0.819f; // Corresponds to ~35 degrees (Math.cos(35 * PI / 180))
     function restrictPointsReumannWitkam(maxPoints as Number, currentScale as Float) as Boolean {
         var currentPoints = pointSize();
-        if (currentPoints < maxPoints) {
-            return false;
-        }
-
-        if (currentPoints <= 1) {
-            return false; // we don't have any points, user must have set maxPoints really low (0 or negative)
-        }
-        // if (currentPoints % 2) {
-        //     // hack run the algo every second time, strip points constantly - for testing
-        //     // need to also comment out the above 2 if checks
+        // if (currentPoints < maxPoints) {
         //     return false;
         // }
+
+        // if (currentPoints <= 1) {
+        //     return false; // we don't have any points, user must have set maxPoints really low (0 or negative)
+        // }
+        if (currentPoints % 2) {
+            // hack run the algo every second time, strip points constantly - for testing
+            // need to also comment out the above 2 if checks
+            return false;
+        }
 
         System.println(
             "" + Time.now().value() + " restrictPointsReumannWitkam starting: " + currentPoints
@@ -253,18 +253,23 @@ class PointArray {
         // before we consider it a 'corner'. 1.0 - 2.0 is usually safe for GPS.
         var toleranceMeters = 1.5f;
         var tolerancePixels = toleranceMeters;
+        var tooCloseDistanceMeters = 5f;
+        var tooCloseDistancePixels = tooCloseDistanceMeters;
         if (currentScale != 0.0f) {
             tolerancePixels = toleranceMeters * currentScale;
+            tooCloseDistancePixels = tooCloseDistanceMeters * currentScale;
         }
         var toleranceSq = tolerancePixels * tolerancePixels;
+        var tooCloseDistancePixelsSq = tooCloseDistancePixels * tooCloseDistancePixels;
 
         var writeIdx = 1; // Always keep first point
         var anchorIdx = 0; // The 'start' of our current straight line segment
+        var nextIdx = 1;   // Point B (defines the direction)
 
         // We use the 2nd point to define our initial direction
         for (var i = 2; i < currentPoints; i++) {
             var a = anchorIdx * ARRAY_POINT_SIZE;
-            var b = (i - 1) * ARRAY_POINT_SIZE; // The candidate for the 'end' of the line
+            var b = nextIdx * ARRAY_POINT_SIZE; // The candidate for the 'end' of the line
             var p = i * ARRAY_POINT_SIZE; // The current point we are testing
 
             // Get coordinates
@@ -285,7 +290,7 @@ class PointArray {
 
             var distSqAB = dx1 * dx1 + dy1 * dy1;
             var devSq = 0.0f;
-            if (distSqAB > 0) {
+            if (distSqAB > 0.0001f) {
                 var num = dy1 * px - dx1 * py + bx * ay - by * ax;
                 devSq = (num * num) / distSqAB;
             }
@@ -303,14 +308,15 @@ class PointArray {
                 }
             }
 
-            // 3. Directional Check (Dot Product)
-            // If dot product of (AB · BP) is negative, the user turned > 90 degrees
-            // relative to the current strip direction.
-            var isReversed = dx1 * dx2 + dy1 * dy2 < 0;
+            // If points are too close, just skip them  and wait for a point further away to define the line.
+            if (distSqAB < tooCloseDistancePixelsSq && !isSharpTurn) { 
+                nextIdx = i;
+                continue; 
+            }
 
             // Trigger a key point if we strayed too far OR if we changed direction
             // devSq > toleranceSq -- If the point deviates too much, the PREVIOUS point (i-1) was a corner
-            if (devSq > toleranceSq || isSharpTurn || isReversed) {
+            if (devSq > toleranceSq || isSharpTurn) {
                 var w = writeIdx * ARRAY_POINT_SIZE;
                 var target = (i - 1) * ARRAY_POINT_SIZE;
 
@@ -319,6 +325,7 @@ class PointArray {
                 _internalArrayBuffer[w + 2] = _internalArrayBuffer[target + 2];
 
                 anchorIdx = i - 1;
+                nextIdx = i;
                 writeIdx++;
             }
         }

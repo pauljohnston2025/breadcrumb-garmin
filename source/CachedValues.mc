@@ -449,14 +449,22 @@ class CachedValues {
                 var lastPoint = track.coordinates.lastPoint();
                 if (lastPoint != null) {
                     var lookbackPoint = null;
-                    // We find a point at least 7 meters away to get a stable vector
+                    // We find a point at least X meters away to get a stable vector
+                    var tolerancePixels = 5;
+                    if (currentScale != 0.0f) {
+                        tolerancePixels = tolerancePixels * currentScale;
+                    }
+
                     // Search back at most 10 points to find one 7m+ away
                     var stopIndex = size - 10 < 0 ? 0 : size - 10;
                     for (var i = size - 2; i >= stopIndex; --i) {
                         // keep it updated as we go back through the for loop, we may break out when we hit the last point, but still not be the required distance away
                         lookbackPoint = track.coordinates.getPoint(i);
-                        if (lookbackPoint != null && lastPoint.distanceTo(lookbackPoint) > 7 /*m*/) {
-                             break;
+                        if (
+                            lookbackPoint != null &&
+                            lastPoint.distanceTo(lookbackPoint) > tolerancePixels
+                        ) {
+                            break;
                         }
                     }
 
