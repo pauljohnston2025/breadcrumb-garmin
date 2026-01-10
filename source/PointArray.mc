@@ -229,6 +229,7 @@ class PointArray {
     // Simplified Line Simplification (Reumann-Witkam variant)
     // This is O(n) and won't crash the stack.
     const minCosTheta = 0.819f; // Corresponds to ~35 degrees (Math.cos(35 * PI / 180))
+    // https://psimpl.sourceforge.net/reumann-witkam.html
     function restrictPointsReumannWitkam(maxPoints as Number, currentScale as Float) as Boolean {
         var currentPoints = pointSize();
         // if (currentPoints < maxPoints) {
@@ -253,14 +254,9 @@ class PointArray {
         // before we consider it a 'corner'. 1.0 - 2.0 is usually safe for GPS.
         var toleranceMeters = 1.5f;
         var tolerancePixels = toleranceMeters;
-        var tooCloseDistanceMeters = 5f;
-        var tooCloseDistancePixels = tooCloseDistanceMeters;
         if (currentScale != 0.0f) {
             tolerancePixels = toleranceMeters * currentScale;
-            tooCloseDistancePixels = tooCloseDistanceMeters * currentScale;
         }
-        var toleranceSq = tolerancePixels * tolerancePixels;
-        var tooCloseDistancePixelsSq = tooCloseDistancePixels * tooCloseDistancePixels;
 
         var writeIdx = 1; // Always keep first point
         var anchorIdx = 0; // The 'start' of our current straight line segment
@@ -280,43 +276,9 @@ class PointArray {
             var px = _internalArrayBuffer[p];
             var py = _internalArrayBuffer[p + 1];
 
-            // Calculate perpendicular distance from Point P to line segment AB
-            // Formula: dist = |(y2-y1)x0 - (x2-x1)y0 + x2y1 - y2x1| / sqrt(dist_sq_AB)
-            // 1. Perpendicular Check (Standard Reumann-Witkam)
-            var dx1 = bx - ax;
-            var dy1 = by - ay;
-            var dx2 = px - bx;
-            var dy2 = py - by;
+            var distanceToSegmentPixels = calculateDistancePointToSegment(px, py, ax, ay, bx, by)[0];
 
-            var distSqAB = dx1 * dx1 + dy1 * dy1;
-            var devSq = 0.0f;
-            if (distSqAB > 0.0001f) {
-                var num = dy1 * px - dx1 * py + bx * ay - by * ax;
-                devSq = (num * num) / distSqAB;
-            }
-
-            // 2. Angle Guard: Don't kill sharp corners
-            var isSharpTurn = false;
-            var distAB = Math.sqrt(distSqAB);
-            var distBP = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-
-            if (distAB > 0.1 && distBP > 0.1) {
-                // Dot product / (magA * magB) = cos(theta)
-                var cosTheta = (dx1 * dx2 + dy1 * dy2) / (distAB * distBP);
-                if (cosTheta < minCosTheta) {
-                    isSharpTurn = true;
-                }
-            }
-
-            // If points are too close, just skip them  and wait for a point further away to define the line.
-            if (distSqAB < tooCloseDistancePixelsSq && !isSharpTurn) { 
-                nextIdx = i;
-                continue; 
-            }
-
-            // Trigger a key point if we strayed too far OR if we changed direction
-            // devSq > toleranceSq -- If the point deviates too much, the PREVIOUS point (i-1) was a corner
-            if (devSq > toleranceSq || isSharpTurn) {
+            if (distanceToSegmentPixels > tolerancePixels) {
                 var w = writeIdx * ARRAY_POINT_SIZE;
                 var target = (i - 1) * ARRAY_POINT_SIZE;
 

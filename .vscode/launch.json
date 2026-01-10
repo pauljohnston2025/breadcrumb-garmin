@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "omonkeyc",
+            "type": "monkeyc",
             "request": "launch",
             "name": "Run App",
             "stopAtLaunch": false,
             "device": "${command:GetTargetDevice}",
-            "releaseBuild": true
+            // "releaseBuild": true
         }
         // {
         //     "type": "omonkeyc",
