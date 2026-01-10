@@ -60,7 +60,7 @@ function restrictPointsToMaxMemoryLessThanHalf(logger as Logger) as Boolean {
     Test.assertEqual(points.pointSize(), 6);
     Test.assertEqual(points.size(), 18);
 
-    var wasRestricted = points.restrictPoints(2);
+    var wasRestricted = points.restrictPointsDecimation(2);
     Test.assert(wasRestricted);
 
     var lastPoint = points.lastPoint(); // this use to throw because we only cut the points in half but then set the array size smaller than the internal tracking  _size
@@ -108,7 +108,7 @@ function restrictPointsOddNumberKeepsLastPointTest(logger as Logger) as Boolean 
     Test.assertEqual(points.pointSize(), 6);
     Test.assertEqual(points.size(), 18);
 
-    var wasRestricted = points.restrictPoints(3);
+    var wasRestricted = points.restrictPointsDecimation(3);
     Test.assert(wasRestricted);
 
     var newSize = points.pointSize();
@@ -146,7 +146,7 @@ function restrictPointsOddNumberKeepsLastPointEvenIfOddTest(logger as Logger) as
     Test.assertEqual(points.pointSize(), 5);
     Test.assertEqual(points.size(), 15);
 
-    var wasRestricted = points.restrictPoints(3);
+    var wasRestricted = points.restrictPointsDecimation(3);
     Test.assert(wasRestricted);
 
     var newSize = points.pointSize();
@@ -183,7 +183,7 @@ function restrictPointsEvenNumberKeepsLastPointTest(logger as Logger) as Boolean
     Test.assertEqual(points.pointSize(), 6);
     Test.assertEqual(points.size(), 18);
 
-    var wasRestricted = points.restrictPoints(4);
+    var wasRestricted = points.restrictPointsDecimation(4);
     Test.assert(wasRestricted);
 
     var newSize = points.pointSize();
@@ -222,7 +222,7 @@ function restrictPointsEvenNumberKeepsLastPointEvenIfOddTest(logger as Logger) a
     Test.assertEqual(points.pointSize(), 5);
     Test.assertEqual(points.size(), 15);
 
-    var wasRestricted = points.restrictPoints(2);
+    var wasRestricted = points.restrictPointsDecimation(2);
     Test.assert(wasRestricted);
 
     var newSize = points.pointSize();

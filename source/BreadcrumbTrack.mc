@@ -323,7 +323,12 @@ class BreadcrumbTrack {
         coordinates.add(newPoint);
         updateBoundingBox(newPoint);
         // todo have a local ref to settings
-        if (coordinates.restrictPoints(getApp()._breadcrumbContext.settings.maxTrackPoints)) {
+        if (
+            coordinates.restrictPoints(
+                getApp()._breadcrumbContext.settings.maxTrackPoints,
+                getApp()._breadcrumbContext.cachedValues.currentScale
+            )
+        ) {
             // a resize occurred, calculate important data again
             updatePointDataFromAllPoints();
             // opt to remove more points then less, to ensure we get the bad point, or 1 of the good points instead
@@ -427,7 +432,7 @@ class BreadcrumbTrack {
         }
 
         var stabilityCheckDistance = lastStartupPoint.distanceTo(newPoint);
-        
+
         // allow large distances when we have just started, we need to get the first point to work from after a resume
         if (stabilityCheckDistance > maxDistanceMScaled && possibleBadPointsAdded != 0) {
             // we are unstable, remove all our stability check points
@@ -939,7 +944,7 @@ class BreadcrumbTrack {
                             // As the user travels up the page on segment (1) they get closer to the 'x' point, which could jump forward to the next segment (2). If we check again instantly, it could jump forwards to the next segment (3), and then again jump to segment (4)
                             // But the user is still traveling up the page, so when they actually reach segment (2) we then think they are going backwards in the wrong direction because we incorrectly jumped forwards to segments (2,3,4).
                             // To prevent this we should choose larger values for check interval, and have a really small SKIP_FORWARD_TOLERANCE_M.
-                            // setting SKIP_FORWARD_TOLERANCE_M = 0 results in essentially the same old code 'distToNextSegmentAndPoint[0] <= distToCurrentSegmentAndPoint[0]' note: its '<=' and not just '<'. 
+                            // setting SKIP_FORWARD_TOLERANCE_M = 0 results in essentially the same old code 'distToNextSegmentAndPoint[0] <= distToCurrentSegmentAndPoint[0]' note: its '<=' and not just '<'.
                             // Checking just '<' can result in wrong direction alerts too because it will never switch to the second segment if they are colinear, and then look like we are going backwards.
                             var compareDistance =
                                 distToNextSegmentAndPoint[0] - distToCurrentSegmentAndPoint[0];

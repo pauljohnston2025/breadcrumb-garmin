@@ -5,7 +5,7 @@ srcBase=source
 base.sourcePath=$(srcBase)
 
 # turn off a heap of debug code that we do not need compiled in takeing up space
-base.excludeAnnotations = $(base.excludeAnnotations);tileBorders;showPoints;drawHitBoxes;showTurnAlertPoints
+base.excludeAnnotations = $(base.excludeAnnotations);tileBorders;noShowPoints;drawHitBoxes;showTurnAlertPoints
 
 
 # to get devices and their memory limits

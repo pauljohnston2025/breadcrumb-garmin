@@ -204,8 +204,8 @@ class PointArray {
     }
 
     // similar to restrictPoints, but also makes sure the underlying array buffer is fixed to that size too
-    function restrictPointsToMaxMemory(maxPoints as Number) as Void {
-        restrictPoints(maxPoints);
+    function restrictPointsToMaxMemory(maxPoints as Number, currentScale as Float) as Void {
+        restrictPoints(maxPoints, currentScale);
         // memory may double when doing this, but its only on setting change
         _internalArrayBuffer = _internalArrayBuffer.slice(0, maxPoints * ARRAY_POINT_SIZE);
         if (_size > maxPoints) {
@@ -215,7 +215,99 @@ class PointArray {
         }
     }
 
-    function restrictPoints(maxPoints as Number) as Boolean {
+    function restrictPoints(maxPoints as Number, currentScale as Float) as Boolean {
+        if (restrictPointsReumannWitkam(maxPoints, currentScale)) {
+            // be sure we have removed enough to meet our memory limit requirements
+            restrictPointsDecimation(maxPoints);
+            return true;
+        }
+
+        // we might not have found any points we can eliminate through our first method, but we might still have too many
+        return restrictPointsDecimation(maxPoints);
+    }
+
+    // Simplified Line Simplification (Reumann-Witkam variant)
+    // This is O(n) and won't crash the stack.
+    function restrictPointsReumannWitkam(maxPoints as Number, currentScale as Float) as Boolean {
+        var currentPoints = pointSize();
+        if (currentPoints < maxPoints) {
+            return false;
+        }
+
+        if (currentPoints <= 1) {
+            return false; // we don't have any points, user must have set maxPoints really low (0 or negative)
+        }
+
+        System.println("" + Time.now().value() + " restrictPointsReumannWitkam starting: " + currentPoints);
+
+        // --- STAGE 1: Single-Pass Linear Simplification ---
+        // Tolerance: how many meters can a point deviate from a straight line
+        // before we consider it a 'corner'. 1.0 - 2.0 is usually safe for GPS.
+        var toleranceMeters = 1.5f;
+        var tolerancePixels = toleranceMeters; 
+        if (currentScale != 0.0f) {
+            tolerancePixels = toleranceMeters * currentScale;
+        }
+        var toleranceSq = tolerancePixels * tolerancePixels;
+
+        var writeIdx = 1; // Always keep first point
+        var anchorIdx = 0; // The 'start' of our current straight line segment
+
+        // We use the 2nd point to define our initial direction
+        for (var i = 2; i < currentPoints; i++) {
+            var a = anchorIdx * ARRAY_POINT_SIZE;
+            var b = (i - 1) * ARRAY_POINT_SIZE; // The candidate for the 'end' of the line
+            var p = i * ARRAY_POINT_SIZE; // The current point we are testing
+
+            // Get coordinates
+            var ax = _internalArrayBuffer[a];
+            var ay = _internalArrayBuffer[a + 1];
+            var bx = _internalArrayBuffer[b];
+            var by = _internalArrayBuffer[b + 1];
+            var px = _internalArrayBuffer[p];
+            var py = _internalArrayBuffer[p + 1];
+
+            // Calculate perpendicular distance from Point P to line segment AB
+            // Formula: dist = |(y2-y1)x0 - (x2-x1)y0 + x2y1 - y2x1| / sqrt(dist_sq_AB)
+            var dx = bx - ax;
+            var dy = by - ay;
+            var distSqAB = dx * dx + dy * dy;
+
+            var devSq = 0.0f;
+            if (distSqAB > 0) {
+                var num = dy * px - dx * py + bx * ay - by * ax;
+                devSq = (num * num) / distSqAB;
+            }
+
+            // If the point deviates too much, the PREVIOUS point (i-1) was a corner
+            if (devSq > toleranceSq) {
+                var w = writeIdx * ARRAY_POINT_SIZE;
+                var target = (i - 1) * ARRAY_POINT_SIZE;
+
+                _internalArrayBuffer[w] = _internalArrayBuffer[target];
+                _internalArrayBuffer[w + 1] = _internalArrayBuffer[target + 1];
+                _internalArrayBuffer[w + 2] = _internalArrayBuffer[target + 2];
+
+                anchorIdx = i - 1;
+                writeIdx++;
+            }
+        }
+
+        // Always add the absolute last point
+        var last = (currentPoints - 1) * ARRAY_POINT_SIZE;
+        var wf = writeIdx * ARRAY_POINT_SIZE;
+        _internalArrayBuffer[wf] = _internalArrayBuffer[last];
+        _internalArrayBuffer[wf + 1] = _internalArrayBuffer[last + 1];
+        _internalArrayBuffer[wf + 2] = _internalArrayBuffer[last + 2];
+        writeIdx++;
+
+        resize(writeIdx * ARRAY_POINT_SIZE);
+        System.println("" + Time.now().value() + " restrictPointsReumannWitkam ended: " + pointSize());
+        logD("restrictPointsReumannWitkam occurred");
+        return true;
+    }
+
+    function restrictPointsDecimation(maxPoints as Number) as Boolean {
         // make sure we only have an acceptable amount of points
         // current process is to cull every second point
         // this means near the end of the track, we will have lots of close points
@@ -230,6 +322,8 @@ class PointArray {
         if (currentPoints <= 1) {
             return false; // we don't have any points, user must have set maxPoints really low (0 or negative)
         }
+
+        System.println("" + Time.now().value() + " restrictPointsDecimation starting");
 
         // Always preserve the last point
         var lastPoint = lastPoint();
@@ -262,7 +356,8 @@ class PointArray {
             add(lastPoint);
         }
 
-        logD("restrictPoints occurred");
+        System.println("" + Time.now().value() + " restrictPointsDecimation ended");
+        logD("restrictPointsDecimation occurred");
         return true;
     }
 

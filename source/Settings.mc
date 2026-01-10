@@ -1000,7 +1000,7 @@ class Settings {
         bottomDataType = value;
         setValue("bottomDataType", bottomDataType);
     }
-    
+
     (:settingsView)
     function setDataFieldTextSize(value as Number) as Void {
         dataFieldTextSize = value;
@@ -1072,7 +1072,10 @@ class Settings {
     }
 
     function maxTrackPointsChanged() as Void {
-        getApp()._breadcrumbContext.track.coordinates.restrictPointsToMaxMemory(maxTrackPoints);
+        getApp()._breadcrumbContext.track.coordinates.restrictPointsToMaxMemory(
+            maxTrackPoints,
+            getApp()._breadcrumbContext.cachedValues.currentScale
+        );
     }
 
     (:settingsView)
