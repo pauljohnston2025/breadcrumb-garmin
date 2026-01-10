@@ -11,7 +11,6 @@ const WRONG_DIRECTION_TOLERANCE_M = 2; // meters
 const SKIP_FORWARD_TOLERANCE_M = 0.1; // meters (needs to be kept small, see details at usage below)
 
 const TRACK_ID = -1;
-const MIN_DISTANCE_M = 5; // meters
 const RESTART_STABILITY_POINT_COUNT = 10; // number of points in a row that need to be within RESTART_STABILITY_DISTANCE_M to be considered a valid course
 //note: RESTART_STABILITY_POINT_COUNT should be set based on DELAY_COMPUTE_COUNT
 // if DELAY_COMPUTE_COUNT = 5 seconds, 10 points give us startup checking for 50 seconds, enough time to get a lock
@@ -86,7 +85,6 @@ class BreadcrumbTrack {
     var seenStartupPoints as Number = 0;
     var possibleBadPointsAdded as Number = 0;
     var inRestartMode as Boolean = true;
-    var minDistanceMScaled as Float = MIN_DISTANCE_M.toFloat(); // SCALED
     var maxDistanceMScaled as Float = STABILITY_MAX_DISTANCE_M.toFloat(); // SCALED
 
     var boundingBox as [Float, Float, Float, Float] = BOUNDING_BOX_DEFAULT(); // SCALED -- since the points are used to generate it on failure
@@ -140,7 +138,6 @@ class BreadcrumbTrack {
         if (lastClosePoint != null) {
             lastClosePoint.rescaleInPlace(scaleFactor);
         }
-        minDistanceMScaled = minDistanceMScaled * scaleFactor;
         maxDistanceMScaled = maxDistanceMScaled * scaleFactor;
         if (_lastDistanceToNextPoint != null) {
             _lastDistanceToNextPoint = _lastDistanceToNextPoint * scaleFactor;
@@ -317,11 +314,6 @@ class BreadcrumbTrack {
 
         var distance = lastPoint.distanceTo(newPoint);
 
-        if (distance < minDistanceMScaled) {
-            // no need to add points closer than this
-            return;
-        }
-
         addPointRaw(newPoint, distance);
     }
 
@@ -435,12 +427,7 @@ class BreadcrumbTrack {
         }
 
         var stabilityCheckDistance = lastStartupPoint.distanceTo(newPoint);
-        if (stabilityCheckDistance < minDistanceMScaled) {
-            // point too close, no need to add, but its still a good point
-            seenStartupPoints++;
-            return [false, false];
-        }
-
+        
         // allow large distances when we have just started, we need to get the first point to work from after a resume
         if (stabilityCheckDistance > maxDistanceMScaled && possibleBadPointsAdded != 0) {
             // we are unstable, remove all our stability check points
@@ -1048,11 +1035,6 @@ class BreadcrumbTrack {
         }
 
         var distance = lastPoint.distanceTo(newScaledPoint);
-        if (distance < minDistanceMScaled) {
-            // point too close, so we can skip it
-            return [false, false];
-        }
-
         if (distance > maxDistanceMScaled) {
             // it's too far away, and likely a glitch
             return [false, false];
