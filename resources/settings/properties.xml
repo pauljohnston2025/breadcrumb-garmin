@@ -75,6 +75,7 @@
 	<property id="useTrackAsHeadingSpeedMPS" type="float">1000.0</property>
 	<property id="topDataType" type="number">0</property>
 	<property id="bottomDataType" type="number">1</property>
+	<property id="dataFieldTextSize" type="number">0</property>
 
 
     <!-- https://forums.garmin.com/developer/connect-iq/i/bug-reports/bug-boolean-properties-with-default-value-true-can-t-be-changed-in-simulator -->

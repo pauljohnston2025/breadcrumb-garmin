@@ -87,6 +87,27 @@
         </settingConfig>
     </setting>
 
+    <setting propertyKey="@Properties.dataFieldTextSize" title="@Strings.dataFieldTextSizeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.fontXTiny</listEntry>
+            <listEntry value="1">@Strings.fontTiny</listEntry>
+            <listEntry value="2">@Strings.fontSmall</listEntry>
+            <listEntry value="3">@Strings.fontMedium</listEntry>
+            <listEntry value="4">@Strings.fontLarge</listEntry>
+            <!-- numbers cannot be used because we add letters too, and the numbers fonts only renders numbers -->
+            <!-- <listEntry value="5">@Strings.fontNumMild</listEntry>
+            <listEntry value="6">@Strings.fontNumMedium</listEntry>
+            <listEntry value="7">@Strings.fontNumHot</listEntry>
+            <listEntry value="8">@Strings.fontNumThaiHot</listEntry> -->
+            <!-- System Fonts seem to be almost the same, so save the space for the strings and code-->
+            <!-- <listEntry value="9">@Strings.fontSysXTiny</listEntry>
+            <listEntry value="10">@Strings.fontSysTiny</listEntry>
+            <listEntry value="11">@Strings.fontSysSmall</listEntry>
+            <listEntry value="12">@Strings.fontSysMedium</listEntry>
+            <listEntry value="13">@Strings.fontSysLarge</listEntry> -->
+        </settingConfig>
+    </setting>
+
     <setting propertyKey="@Properties.useTrackAsHeadingSpeedMPS" title="@Strings.useTrackAsHeadingSpeedMPSTitle">
         <settingConfig type="numeric" min="0"/>
     </setting>

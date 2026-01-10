@@ -1,0 +1,20 @@
+ <menu2 id="SettingsFontSize">
+    <menu-item id="fontXTiny" label="@Strings.fontXTiny" />
+    <menu-item id="fontTiny" label="@Strings.fontTiny" />
+    <menu-item id="fontSmall" label="@Strings.fontSmall" />
+    <menu-item id="fontMedium" label="@Strings.fontMedium" />
+    <menu-item id="fontLarge" label="@Strings.fontLarge" />
+    
+    <!-- numbers cannot be used because we add letters too, and the numbers fonts only renders numbers -->
+    <!-- <menu-item id="fontNumMild" label="@Strings.fontNumMild" />
+    <menu-item id="fontNumMedium" label="@Strings.fontNumMedium" />
+    <menu-item id="fontNumHot" label="@Strings.fontNumHot" />
+    <menu-item id="fontNumThaiHot" label="@Strings.fontNumThaiHot" /> -->
+
+<!-- System Fonts seem to be almost the same, so save the space for the strings and code-->
+    <!-- <menu-item id="fontSysXTiny" label="@Strings.fontSysXTiny" />
+    <menu-item id="fontSysTiny" label="@Strings.fontSysTiny" />
+    <menu-item id="fontSysSmall" label="@Strings.fontSysSmall" />
+    <menu-item id="fontSysMedium" label="@Strings.fontSysMedium" />
+    <menu-item id="fontSysLarge" label="@Strings.fontSysLarge" /> -->
+</menu2>

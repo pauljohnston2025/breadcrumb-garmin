@@ -175,6 +175,24 @@
     <string id="dataTypeAvgPace">Avg Pace</string>
     <string id="dataTypeCurPace">Pace</string>
 
+    <string id="dataFieldTextSizeTitle">Data Field Text Size</string>
+    <string id="fontXTiny">Extra Tiny</string>
+    <string id="fontTiny">Tiny</string>
+    <string id="fontSmall">Small</string>
+    <string id="fontMedium">Medium</string>
+    <string id="fontLarge">Large</string>
+     <!-- numbers cannot be used because we add letters too, and the numbers fonts only renders numbers -->
+    <!-- <string id="fontNumMild">Number Mild</string>
+    <string id="fontNumMedium">Number Medium</string>
+    <string id="fontNumHot">Number Hot</string>
+    <string id="fontNumThaiHot">Number Thai Hot</string> -->
+    <!-- System Fonts seem to be almost the same, so save the space for the strings and code-->
+    <!-- <string id="fontSysXTiny">System Extra Tiny</string>
+    <string id="fontSysTiny">System Tiny</string>
+    <string id="fontSysSmall">System Small</string>
+    <string id="fontSysMedium">System Medium</string>
+    <string id="fontSysLarge">System Large</string> -->
+
     <string id="mustUpdate">Update mobile app or watch app</string>
     
 </strings>

@@ -210,7 +210,9 @@ class BreadcrumbRenderer {
         }
 
         var centeredTextOffset =
-            (direction * dc.getTextDimensions("A", Graphics.FONT_XTINY)[1]) / 2;
+            (direction *
+                dc.getTextDimensions("A", settings.dataFieldTextSize as Graphics.FontType)[1]) /
+            2;
         y = y + centeredTextOffset;
 
         if (type == DATA_TYPE_ALTITUDE) {
@@ -220,7 +222,7 @@ class BreadcrumbRenderer {
         } else if (type == DATA_TYPE_CURRENT_HEART_RATE) {
             renderHeartRateMetric(dc, y, info.currentHeartRate);
         } else if (type == DATA_TYPE_AVERAGE_SPEED) {
-            renderSpeedMetric(dc, y, info.averageSpeed); 
+            renderSpeedMetric(dc, y, info.averageSpeed);
         } else if (type == DATA_TYPE_CURRENT_SPEED) {
             renderSpeedMetric(dc, y, info.currentSpeed);
         } else if (type == DATA_TYPE_ELAPSED_DISTANCE) {
@@ -238,11 +240,11 @@ class BreadcrumbRenderer {
         }
     }
 
-     function renderTextMetric(dc as Dc, y as Float, val as String) as Void {
+    function renderTextMetric(dc as Dc, y as Float, val as String) as Void {
         dc.drawText(
             _cachedValues.xHalfPhysical,
             y,
-            Graphics.FONT_XTINY,
+            settings.dataFieldTextSize as Graphics.FontType,
             val,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
         );
@@ -270,7 +272,11 @@ class BreadcrumbRenderer {
 
         var timeStr;
         if (hours > 0) {
-            timeStr = Lang.format("$1$:$2$:$3$", [hours, minutes.format("%02d"), seconds.format("%02d")]);
+            timeStr = Lang.format("$1$:$2$:$3$", [
+                hours,
+                minutes.format("%02d"),
+                seconds.format("%02d"),
+            ]);
         } else {
             timeStr = Lang.format("$1$:$2$", [minutes, seconds.format("%02d")]);
         }
@@ -287,17 +293,17 @@ class BreadcrumbRenderer {
         var suffix = "k/h";
 
         if (settings.distanceImperialUnits) {
-            speedConverted = speedMps * 2.23694f; 
+            speedConverted = speedMps * 2.23694f;
             suffix = "m/h";
         } else {
-            speedConverted = speedMps * 3.6f; 
+            speedConverted = speedMps * 3.6f;
         }
-        
+
         // e.g. "12.5k/h"
         renderTextMetric(dc, y, speedConverted.format("%.1f") + suffix);
     }
 
-     function renderPaceMetric(dc as Dc, y as Float, speedMps as Float?) as Void {
+    function renderPaceMetric(dc as Dc, y as Float, speedMps as Float?) as Void {
         if (speedMps == null || speedMps < 0.2f) {
             renderTextMetric(dc, y, "--:--");
             return;
@@ -320,7 +326,11 @@ class BreadcrumbRenderer {
             renderTextMetric(dc, y, "--:--");
         } else {
             // e.g. "5:30/km"
-            renderTextMetric(dc, y, Lang.format("$1$:$2$", [minutes, seconds.format("%02d")]) + suffix);
+            renderTextMetric(
+                dc,
+                y,
+                Lang.format("$1$:$2$", [minutes, seconds.format("%02d")]) + suffix
+            );
         }
     }
 
@@ -339,12 +349,16 @@ class BreadcrumbRenderer {
         } else {
             distConverted = distMeters / 1000.0f;
         }
-        
+
         // e.g. "5.23km"
         renderTextMetric(dc, y, distConverted.format("%.2f") + suffix);
     }
 
-    function renderElevationMetric(dc as Dc, y as Float, elevationMeters as Float or Number or Null) as Void {
+    function renderElevationMetric(
+        dc as Dc,
+        y as Float,
+        elevationMeters as Float or Number or Null
+    ) as Void {
         if (elevationMeters == null) {
             renderTextMetric(dc, y, "-");
             return;
@@ -389,8 +403,13 @@ class BreadcrumbRenderer {
             _cachedValues.xHalfPhysical,
             y +
                 direction * 2 +
-                (direction * dc.getTextDimensions(foundName, Graphics.FONT_XTINY)[1]) / 2,
-            Graphics.FONT_XTINY,
+                (direction *
+                    dc.getTextDimensions(
+                        foundName,
+                        settings.dataFieldTextSize as Graphics.FontType
+                    )[1]) /
+                    2,
+            settings.dataFieldTextSize as Graphics.FontType,
             foundName,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
         );
@@ -1642,7 +1661,6 @@ class BreadcrumbRenderer {
         // make this a const
         var halfLineLength = 10;
         var lineFromEdge = 10;
-        var scaleFromEdge = 75; // guestimate
 
         if (_cachedValues.fixedPosition != null || _cachedValues.scale != null) {
             // crosshair
@@ -1669,6 +1687,16 @@ class BreadcrumbRenderer {
         }
 
         if (settings.displayLatLong) {
+            var bottomDataFieldFromEdge =
+                    dc.getTextDimensions(
+                        "A",
+                        settings.dataFieldTextSize as Graphics.FontType
+                    )[1] /* the scale/bottom datafield */ +
+                    dc.getTextDimensions(
+                        "A",
+                        Graphics.FONT_XTINY
+                    )[1] /* the text we are about to write for lat/long */ +
+                    25 /* padding and bottom symbol */;
             var fixedLatitude = settings.fixedLatitude;
             var fixedLongitude = settings.fixedLongitude;
             if (
@@ -1679,7 +1707,7 @@ class BreadcrumbRenderer {
                 var txt = fixedLatitude.format("%.3f") + ", " + fixedLongitude.format("%.3f");
                 dc.drawText(
                     xHalfPhysical,
-                    physicalScreenHeight - scaleFromEdge,
+                    physicalScreenHeight - bottomDataFieldFromEdge,
                     Graphics.FONT_XTINY,
                     txt,
                     Graphics.TEXT_JUSTIFY_CENTER
@@ -1693,7 +1721,7 @@ class BreadcrumbRenderer {
                     var txt = latLong[0].format("%.3f") + ", " + latLong[1].format("%.3f");
                     dc.drawText(
                         xHalfPhysical,
-                        physicalScreenHeight - scaleFromEdge,
+                        physicalScreenHeight - bottomDataFieldFromEdge,
                         Graphics.FONT_XTINY,
                         txt,
                         Graphics.TEXT_JUSTIFY_CENTER

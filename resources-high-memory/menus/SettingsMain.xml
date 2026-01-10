@@ -9,6 +9,7 @@
     <menu-item id="settingsMainMaxTrackPoints" label="@Strings.maxTrackPointsTitle"/>
     <menu-item id="settingsMainTopDataType" label="@Strings.topDataTypeTitle"/>
     <menu-item id="settingsMainBottomDataType" label="@Strings.bottomDataTypeTitle"/>
+    <menu-item id="settingsMainDataFieldTextSize" label="@Strings.dataFieldTextSizeTitle"/>
     <menu-item id="settingsMainUseTrackAsHeadingSpeedMPS" label="@Strings.useTrackAsHeadingSpeedMPSTitle"/>
     <menu-item id="settingsMainMapMoveScreenSize" label="@Strings.mapMoveScreenSizeTitle"/>
     <menu-item id="settingsMainZoomAtPace" label="@Strings.zoomAtPaceTitle"/>

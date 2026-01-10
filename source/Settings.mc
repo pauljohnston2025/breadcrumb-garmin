@@ -445,6 +445,7 @@ class Settings {
     var useTrackAsHeadingSpeedMPS as Float = 1000f; // meters per second
     var topDataType as Number = DATA_TYPE_NONE;
     var bottomDataType as Number = DATA_TYPE_SCALE;
+    var dataFieldTextSize as Number = Graphics.FONT_NUMBER_THAI_HOT;
     var uiMode as Number = UI_MODE_SHOW_ALL;
     var fixedLatitude as Float? = null;
     var fixedLongitude as Float? = null;
@@ -998,6 +999,12 @@ class Settings {
     function setBottomDataType(value as Number) as Void {
         bottomDataType = value;
         setValue("bottomDataType", bottomDataType);
+    }
+    
+    (:settingsView)
+    function setDataFieldTextSize(value as Number) as Void {
+        dataFieldTextSize = value;
+        setValue("dataFieldTextSize", dataFieldTextSize);
     }
 
     (:settingsView)
@@ -2189,6 +2196,7 @@ class Settings {
         useTrackAsHeadingSpeedMPS = defaultSettings.useTrackAsHeadingSpeedMPS;
         topDataType = defaultSettings.topDataType;
         bottomDataType = defaultSettings.bottomDataType;
+        dataFieldTextSize = defaultSettings.dataFieldTextSize;
         uiMode = defaultSettings.uiMode;
         elevationMode = defaultSettings.elevationMode;
         alertType = defaultSettings.alertType;
@@ -2283,6 +2291,7 @@ class Settings {
                 "useTrackAsHeadingSpeedMPS" => useTrackAsHeadingSpeedMPS,
                 "topDataType" => topDataType,
                 "bottomDataType" => bottomDataType,
+                "dataFieldTextSize" => dataFieldTextSize,
                 "uiMode" => uiMode,
                 "elevationMode" => elevationMode,
                 "alertType" => alertType,
@@ -2446,6 +2455,7 @@ class Settings {
         );
         topDataType = parseNumber("topDataType", topDataType);
         bottomDataType = parseNumber("bottomDataType", bottomDataType);
+        dataFieldTextSize = parseNumber("dataFieldTextSize", dataFieldTextSize);
         uiMode = parseNumber("uiMode", uiMode);
         elevationMode = parseNumber("elevationMode", elevationMode);
         alertType = parseNumber("alertType", alertType);
