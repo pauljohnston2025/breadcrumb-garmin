@@ -262,7 +262,7 @@ class PointArray {
         }
         var toleranceSq = tolerancePixels * tolerancePixels;
         var tooCloseDistancePixelsSq = tooCloseDistancePixels * tooCloseDistancePixels;
-        logT("currentScale: " + currentScale + " tooCloseDistancePixelsSq: " + tooCloseDistancePixelsSq);
+        // logT("currentScale: " + currentScale + " tooCloseDistancePixelsSq: " + tooCloseDistancePixelsSq);
 
         var writeIdx = 1; // Always keep first point
         var anchorIdx = 0; // The 'start' of our current straight line segment
@@ -287,8 +287,6 @@ class PointArray {
             // 1. Perpendicular Check (Standard Reumann-Witkam) (Vector-based)
             var dx1 = bx - ax;
             var dy1 = by - ay;
-            var dx2 = px - bx;
-            var dy2 = py - by;
 
             // Vector from Anchor (A) to Point (P)
             var dpx = px - ax;
@@ -304,29 +302,16 @@ class PointArray {
                 devSq = (area * area) / distSqAB;
             }
 
-            // 2. Angle Guard: Don't kill sharp corners
-            var isSharpTurn = false;
-            var distAB = Math.sqrt(distSqAB);
-            var distBP = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-
-            if (distAB > 0.1 && distBP > 0.1) {
-                // Dot product / (magA * magB) = cos(theta)
-                var cosTheta = (dx1 * dx2 + dy1 * dy2) / (distAB * distBP);
-                if (cosTheta < minCosTheta) {
-                    isSharpTurn = true;
-                }
-            }
-
             // If points are too close, just skip them and wait for a point further away to define the line.
-            if (distSqAB < tooCloseDistancePixelsSq && !isSharpTurn) { 
+            if (distSqAB < tooCloseDistancePixelsSq) { 
                 nextIdx = i;
                 continue; 
             }
 
             // Trigger a key point if we strayed too far OR if we changed direction
             // devSq > toleranceSq -- If the point deviates too much, the PREVIOUS point (i-1) was a corner
-            logT("devSq: " + devSq + " toleranceSq: " + toleranceSq);
-            if (devSq > toleranceSq || isSharpTurn) {
+            // logT("devSq (" + i + "): " + devSq + " toleranceSq: " + toleranceSq);
+            if (devSq > toleranceSq) {
                 var w = writeIdx * ARRAY_POINT_SIZE;
                 var target = (i - 1) * ARRAY_POINT_SIZE;
 
