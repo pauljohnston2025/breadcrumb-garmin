@@ -692,6 +692,24 @@ class Settings {
         return requiresAuth && authToken.equals("");
     }
 
+    (:noCompanionTiles)
+    function mapChoiceValid() as Boolean {
+        if (tileUrl.equals(COMPANION_APP_TILE_URL)) {
+            return false;
+        }
+
+        return mapChoice == 0 /*custom*/ || getTileServerInfo(mapChoice) != null;
+    }
+
+    (:companionTiles)
+    function mapChoiceValid() as Boolean {
+        return (
+            mapChoice == 0 /*custom*/ ||
+            mapChoice == 1 /*companion*/ ||
+            getTileServerInfo(mapChoice) != null
+        );
+    }
+
     (:noImageTiles)
     function getAttribution() as WatchUi.BitmapResource? {
         return null;
@@ -874,7 +892,7 @@ class Settings {
         // assert(tileUrl.equals(COMPANION_APP_TILE_URL));
 
         // if the users goes custom and has the companion app url, we still do not update the tiles layers
-        // this is because they may be artificially capping the tileLayerMax property eg. a tile server on the phone that has 20 layers, but the user only wants 
+        // this is because they may be artificially capping the tileLayerMax property eg. a tile server on the phone that has 20 layers, but the user only wants
         // 15 layers on the watch in order to be able to run offline tiles and store them all.
         if (mapChoice != 1) {
             // we are no longer on the companion app, abort
@@ -909,7 +927,7 @@ class Settings {
 
         var tileServerInfo = getTileServerInfo(value);
         if (tileServerInfo == null) {
-            return; // invalid selection (we need to error here somehow)
+            return; // invalid selection
         }
         updateTileServerMapChoiceChange(tileServerInfo);
     }
@@ -957,7 +975,7 @@ class Settings {
         zoomAtPaceSpeedMPS = mps;
         setValue("zoomAtPaceSpeedMPS", zoomAtPaceSpeedMPS);
     }
-    
+
     (:settingsView)
     function setUseTrackAsHeadingSpeedMPS(mps as Float) as Void {
         useTrackAsHeadingSpeedMPS = mps;
@@ -969,13 +987,13 @@ class Settings {
         metersAroundUser = value;
         setValue("metersAroundUser", metersAroundUser);
     }
-    
+
     (:settingsView)
     function setTopDataType(value as Number) as Void {
         topDataType = value;
         setValue("topDataType", topDataType);
     }
-    
+
     (:settingsView)
     function setBottomDataType(value as Number) as Void {
         bottomDataType = value;
@@ -1536,7 +1554,7 @@ class Settings {
         routes = [];
         saveRoutes();
     }
-    
+
     function storageCleared() as Void {
         // routes are already cleared seperately through context
         safeSetStorage("lastMapChoice", mapChoice); // make sure we do not reload our map choice
@@ -1577,10 +1595,7 @@ class Settings {
         var toSave = routesToSave();
         // note toSave is Array<Dictionary<String, PropertyValueType>>
         // but the compiler only allows "Array<PropertyValueType>" even though the array of dicts seems to work on sim and real watch
-        safeSetStorage(
-            "routes",
-            toSave as Array<PropertyValueType>
-        );
+        safeSetStorage("routes", toSave as Array<PropertyValueType>);
     }
 
     (:settingsView)
@@ -2425,7 +2440,10 @@ class Settings {
         metersAroundUser = parseNumber("metersAroundUser", metersAroundUser);
         zoomAtPaceMode = parseNumber("zoomAtPaceMode", zoomAtPaceMode);
         zoomAtPaceSpeedMPS = parseFloat("zoomAtPaceSpeedMPS", zoomAtPaceSpeedMPS);
-        useTrackAsHeadingSpeedMPS = parseFloat("useTrackAsHeadingSpeedMPS", useTrackAsHeadingSpeedMPS);
+        useTrackAsHeadingSpeedMPS = parseFloat(
+            "useTrackAsHeadingSpeedMPS",
+            useTrackAsHeadingSpeedMPS
+        );
         topDataType = parseNumber("topDataType", topDataType);
         bottomDataType = parseNumber("bottomDataType", bottomDataType);
         uiMode = parseNumber("uiMode", uiMode);

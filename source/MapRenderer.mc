@@ -168,6 +168,11 @@ class MapRenderer {
             );
             return;
         }
+        
+        if (!_settings.mapChoiceValid()) {
+            unsupported(dc, "Map Choice");
+            return;
+        }
 
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
@@ -249,6 +254,11 @@ class MapRenderer {
                 "AUTH TOKEN\nMISSING",
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
             );
+            return;
+        }
+
+        if (!_settings.mapChoiceValid()) {
+            unsupported(dc, "Map Choice");
             return;
         }
 

@@ -206,7 +206,7 @@ Routes Without Tack - Same as `Never Zoom` but does not include the track in the
 
 ### Zoom At Pace Meters Around User
 
-How far, in meters, to render around the user when zoomed in.
+How far, in meters, to render around the user when zoomed in. This is also a 'minimum' render distance for when the bounding box of the current track/route is too small. If we allow rendering of really small bounding boxes, it zooms in too far and results in blury maps.
 
 ### Zoom At Pace Speed
 

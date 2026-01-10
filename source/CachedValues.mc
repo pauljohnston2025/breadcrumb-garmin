@@ -302,7 +302,7 @@ class CachedValues {
                     null
                 );
                 calcCenterPointForBoundingBox(boundingBox);
-                return getNewScaleFromBoundingBox(boundingBox);
+                return calculateScale(renderDistanceM.toFloat());
             }
 
             return calculateScale(renderDistanceM.toFloat());
@@ -318,22 +318,19 @@ class CachedValues {
         );
         calcCenterPointForBoundingBox(boundingBox);
         var newScale = getNewScaleFromBoundingBox(boundingBox);
-        if (
-            _settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_PACE ||
-            _settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_STOPPED
-        ) {
-            // this is a special case that makes us zoom more when we are in the 'overview'
-            // ie. with ZOOM_AT_PACE_MODE_PACE
-            // - move a little bit (only 6m)
-            // - stop moving so we are not currentlyZoomingAroundUser
-            // - normally this should zoom out to show the entire map area, but if we have no routes it actually zooms in to a blurry map (since its a bounding box of 6m)
+        // this is a special case that makes us zoom more when we are in the 'overview'
+        // its also pretty bad when 'never' or 'routes' zoom at pace mode zooms in really small
+        // so treating renderDistanceM as a min render distance (can still manually zoom in)
+        // ie. with ZOOM_AT_PACE_MODE_PACE
+        // - move a little bit (only 6m)
+        // - stop moving so we are not currentlyZoomingAroundUser
+        // - normally this should zoom out to show the entire map area, but if we have no routes it actually zooms in to a blurry map (since its a bounding box of 6m)
 
-            // if we are not in a dynamic mode, we will do exactly what the user asks
-            // if we are in a dynamic mode, cap the 'zoomed out' zoom level so it always shows more area, never less
-            var scaleFromRenderDistance = calculateScale(_settings.metersAroundUser);
-            if (scaleFromRenderDistance < newScale) {
-                newScale = scaleFromRenderDistance;
-            }
+        // if we are not in a dynamic mode, we will do exactly what the user asks
+        // if we are in a dynamic mode, cap the 'zoomed out' zoom level so it always shows more area, never less
+        var scaleFromRenderDistance = calculateScale(_settings.metersAroundUser.toFloat());
+        if (scaleFromRenderDistance < newScale) {
+            newScale = scaleFromRenderDistance;
         }
 
         return newScale;
