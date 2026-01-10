@@ -480,6 +480,53 @@ class BreadcrumbTrack {
         }
     }
 
+    function calculateDistancePointToSegment(
+        pointP as RectangularPoint,
+        segmentAX as Float,
+        segmentAY as Float,
+        segmentBX as Float,
+        segmentBY as Float
+    ) as [Decimal, Float, Float] {
+        // Vector V = B - A
+        var vx = segmentBX - segmentAX;
+        var vy = segmentBY - segmentAY;
+        var segmentLengthSq = vx * vx + vy * vy;
+
+        if (segmentLengthSq == 0.0) {
+            // Points A and B are the same
+            // Calculate the final distance
+            var xDist = pointP.x - segmentAX;
+            var yDist = pointP.y - segmentAY;
+            var closestDistance = Math.sqrt(xDist * xDist + yDist * yDist);
+            return [closestDistance, segmentAX, segmentAY];
+        }
+
+        // --- Simplified Vector Math ---
+
+        // Vector W = P - A
+        var wx = pointP.x - segmentAX;
+        var wy = pointP.y - segmentAY;
+
+        // Dot product W . V
+        var dotWV = wx * vx + wy * vy;
+
+        // Calculate t = (W . V) / |V|^2
+        var t = dotWV / segmentLengthSq;
+
+        // Clamp t to the range [0, 1]
+        var clampedT = maxF(0.0, minF(1.0, t));
+
+        // Calculate closest point on segment: Closest = A + clampedT * V
+        var closestX = segmentAX + clampedT * vx;
+        var closestY = segmentAY + clampedT * vy;
+
+        // Calculate the final distance
+        var xDist = pointP.x - closestX;
+        var yDist = pointP.y - closestY;
+        var closestSegmentDistance = Math.sqrt(xDist * xDist + yDist * yDist);
+        return [closestSegmentDistance, closestX, closestY];
+    }
+
     function weAreStillCloseToTheLastDirectionPoint() as Boolean {
         // note: this logic is the same as in checkDirections but is only needed for when we go backwards on the path
         // so we can skip a heap of logic, checkDirections is more optimised for when it needs to check a heap more things
@@ -831,8 +878,7 @@ class BreadcrumbTrack {
                     var nextY = coordinatesRaw[i + 1];
 
                     var distToCurrentSegmentAndPoint = calculateDistancePointToSegment(
-                        checkPoint.x,
-                        checkPoint.y,
+                        checkPoint,
                         lastPointX,
                         lastPointY,
                         nextX,
@@ -868,8 +914,7 @@ class BreadcrumbTrack {
                             var nextSegmentNextY = coordinatesRaw[nextSegmentIndex + 1];
 
                             var distToNextSegmentAndPoint = calculateDistancePointToSegment(
-                                checkPoint.x,
-                                checkPoint.y,
+                                checkPoint,
                                 nextX, // Start of next segment
                                 nextY, // Start of next segment
                                 nextSegmentNextX,
@@ -948,8 +993,7 @@ class BreadcrumbTrack {
             var nextY = coordinatesRaw[i + 1];
 
             var distToSegmentAndSegPoint = calculateDistancePointToSegment(
-                checkPoint.x,
-                checkPoint.y,
+                checkPoint,
                 lastPointX,
                 lastPointY,
                 nextX,

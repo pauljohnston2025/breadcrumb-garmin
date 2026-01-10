@@ -777,6 +777,7 @@ class CachedValues {
         }
 
         var scaleFactor = newScale;
+        logT("moving to scale: " + newScale);
         if (currentScale != null && currentScale != 0f) {
             // adjust by old scale
             scaleFactor = newScale / currentScale;
