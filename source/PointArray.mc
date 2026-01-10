@@ -228,6 +228,7 @@ class PointArray {
 
     // Simplified Line Simplification (Reumann-Witkam variant)
     // This is O(n) and won't crash the stack.
+    const minCosTheta = 0.819f; // Corresponds to ~35 degrees (Math.cos(35 * PI / 180))
     function restrictPointsReumannWitkam(maxPoints as Number, currentScale as Float) as Boolean {
         var currentPoints = pointSize();
         if (currentPoints < maxPoints) {
@@ -237,14 +238,21 @@ class PointArray {
         if (currentPoints <= 1) {
             return false; // we don't have any points, user must have set maxPoints really low (0 or negative)
         }
+        // if (currentPoints % 2) {
+        //     // hack run the algo every second time, strip points constantly - for testing
+        //     // need to also comment out the above 2 if checks
+        //     return false;
+        // }
 
-        System.println("" + Time.now().value() + " restrictPointsReumannWitkam starting: " + currentPoints);
+        System.println(
+            "" + Time.now().value() + " restrictPointsReumannWitkam starting: " + currentPoints
+        );
 
         // --- STAGE 1: Single-Pass Linear Simplification ---
         // Tolerance: how many meters can a point deviate from a straight line
         // before we consider it a 'corner'. 1.0 - 2.0 is usually safe for GPS.
         var toleranceMeters = 1.5f;
-        var tolerancePixels = toleranceMeters; 
+        var tolerancePixels = toleranceMeters;
         if (currentScale != 0.0f) {
             tolerancePixels = toleranceMeters * currentScale;
         }
@@ -269,18 +277,40 @@ class PointArray {
 
             // Calculate perpendicular distance from Point P to line segment AB
             // Formula: dist = |(y2-y1)x0 - (x2-x1)y0 + x2y1 - y2x1| / sqrt(dist_sq_AB)
-            var dx = bx - ax;
-            var dy = by - ay;
-            var distSqAB = dx * dx + dy * dy;
+            // 1. Perpendicular Check (Standard Reumann-Witkam)
+            var dx1 = bx - ax;
+            var dy1 = by - ay;
+            var dx2 = px - bx;
+            var dy2 = py - by;
 
+            var distSqAB = dx1 * dx1 + dy1 * dy1;
             var devSq = 0.0f;
             if (distSqAB > 0) {
-                var num = dy * px - dx * py + bx * ay - by * ax;
+                var num = dy1 * px - dx1 * py + bx * ay - by * ax;
                 devSq = (num * num) / distSqAB;
             }
 
-            // If the point deviates too much, the PREVIOUS point (i-1) was a corner
-            if (devSq > toleranceSq) {
+            // 2. Angle Guard: Don't kill sharp corners
+            var isSharpTurn = false;
+            var distAB = Math.sqrt(distSqAB);
+            var distBP = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+            if (distAB > 0.1 && distBP > 0.1) {
+                // Dot product / (magA * magB) = cos(theta)
+                var cosTheta = (dx1 * dx2 + dy1 * dy2) / (distAB * distBP);
+                if (cosTheta < minCosTheta) {
+                    isSharpTurn = true;
+                }
+            }
+
+            // 3. Directional Check (Dot Product)
+            // If dot product of (AB · BP) is negative, the user turned > 90 degrees
+            // relative to the current strip direction.
+            var isReversed = dx1 * dx2 + dy1 * dy2 < 0;
+
+            // Trigger a key point if we strayed too far OR if we changed direction
+            // devSq > toleranceSq -- If the point deviates too much, the PREVIOUS point (i-1) was a corner
+            if (devSq > toleranceSq || isSharpTurn || isReversed) {
                 var w = writeIdx * ARRAY_POINT_SIZE;
                 var target = (i - 1) * ARRAY_POINT_SIZE;
 
@@ -302,7 +332,9 @@ class PointArray {
         writeIdx++;
 
         resize(writeIdx * ARRAY_POINT_SIZE);
-        System.println("" + Time.now().value() + " restrictPointsReumannWitkam ended: " + pointSize());
+        System.println(
+            "" + Time.now().value() + " restrictPointsReumannWitkam ended: " + pointSize()
+        );
         logD("restrictPointsReumannWitkam occurred");
         return true;
     }
