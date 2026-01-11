@@ -232,18 +232,18 @@ class PointArray {
     const minCosTheta = 0.819f; // Corresponds to ~35 degrees (Math.cos(35 * PI / 180))
     function restrictPointsReumannWitkam(maxPoints as Number, currentScale as Float) as Boolean {
         var currentPoints = pointSize();
-        // if (currentPoints < maxPoints) {
-        //     return false;
-        // }
-
-        // if (currentPoints <= 1) {
-        //     return false; // we don't have any points, user must have set maxPoints really low (0 or negative)
-        // }
-        if (currentPoints % 2) {
-            // hack run the algo every second time, strip points constantly - for testing
-            // need to also comment out the above 2 if checks
+        if (currentPoints < maxPoints) {
             return false;
         }
+
+        if (currentPoints <= 1) {
+            return false; // we don't have any points, user must have set maxPoints really low (0 or negative)
+        }
+        // if (currentPoints % 2) {
+        //     // hack run the algo every second time, strip points constantly - for testing
+        //     // need to also comment out the above 2 if checks
+        //     return false;
+        // }
 
         System.println(
             "" + Time.now().value() + " restrictPointsReumannWitkam starting: " + currentPoints
