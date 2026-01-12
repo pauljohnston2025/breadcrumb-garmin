@@ -252,9 +252,9 @@ class PointArray {
         // --- STAGE 1: Single-Pass Linear Simplification ---
         // Tolerance: how many meters can a point deviate from a straight line
         // before we consider it a 'corner'. 1.0 - 2.0 is usually safe for GPS.
-        var toleranceMeters = 3f;
+        var toleranceMeters = 5f;
         var tolerancePixels = toleranceMeters;
-        var tooCloseDistanceMeters = 5f;
+        var tooCloseDistanceMeters = 7f;
         var tooCloseDistancePixels = tooCloseDistanceMeters;
         if (currentScale != 0.0f) {
             tolerancePixels = toleranceMeters * currentScale;
