@@ -103,6 +103,8 @@ This method of calculating the heading may result in slow updates to the heading
 
 For best results [Compute Interval](#compute-interval) should be set to 1 (or a smaller number) in order to log as many track points as possible. Higher values of compute interval will result in delayed angle changes to the heading when turning corners.  
 
+If setting `Use Track As Heading Speed ` to 0 the heading will not update when stationary. This is because the gps will ping around on your current location, and would result in constant changes to the heading if we kept updating it based on the last track points. 
+
 
 ### Map Move Screen Size
 
