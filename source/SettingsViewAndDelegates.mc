@@ -264,6 +264,7 @@ class SettingsMain extends Rez.Menus.SettingsMain {
     }
 }
 
+(:settingsView)
 function getDataTypeString(type as Number) as ResourceId {
     switch (type) {
         case DATA_TYPE_NONE:
@@ -2168,6 +2169,7 @@ class SettingsDataFieldTypeDelegate extends WatchUi.Menu2InputDelegate {
     }
 }
 
+(:settingsView)
 function getFontSizeString(font as Number) as ResourceId {
     switch (font) {
         case Graphics.FONT_XTINY: return Rez.Strings.fontXTiny;
