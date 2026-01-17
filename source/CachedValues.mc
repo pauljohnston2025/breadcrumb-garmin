@@ -448,40 +448,59 @@ class CachedValues {
                     var size = track.coordinates.pointSize();
 
                     var lastPoint = track.coordinates.lastPoint();
-                    var lookbackPoint = track.coordinates.getPoint(
-                        track.coordinates.pointSize() - 2
-                    );
-                    if (lastPoint != null && lookbackPoint != null) {
-                        var rawHeading = calculateHeading(lookbackPoint, lastPoint);
-
-                        // 2. DYNAMIC ALPHA SMOOTHING
-                        // Calculate how much we are turning
-                        var diff = (rawHeading - _lastStableHeading).abs();
-                        if (diff > Math.PI) {
-                            diff = 2 * Math.PI - diff;
-                        } // Handle wrap-around
-
-                        var alpha;
-                        if (diff > 0.52) {
-                            // > 30 degrees: We are turning!
-                            alpha = 0.9f; // Respond almost instantly
-                        } else if (diff > 0.17) {
-                            // > 10 degrees: Slight curve
-                            alpha = 0.5f; // Balanced
-                        } else {
-                            alpha = 0.15f; // Moving straight: Heavy smoothing to kill jitter
+                    if (lastPoint != null) {
+                        var lookbackPoint = null;
+                        // We find a point at least X meters away to get a stable vector
+                        var tolerancePixels = 5;
+                        if (currentScale != 0.0f) {
+                            tolerancePixels = tolerancePixels * currentScale;
                         }
 
-                        // 3. VECTOR BLENDING (Prevents 360/0 degree glitches)
-                        var newX =
-                            (1.0 - alpha) * Math.cos(_lastStableHeading) +
-                            alpha * Math.cos(rawHeading);
-                        var newY =
-                            (1.0 - alpha) * Math.sin(_lastStableHeading) +
-                            alpha * Math.sin(rawHeading);
+                        // Search back at most 10 points to find one 7m+ away
+                        var stopIndex = size - 10 < 0 ? 0 : size - 10;
+                        for (var i = size - 2; i >= stopIndex; --i) {
+                            // keep it updated as we go back through the for loop, we may break out when we hit the last point, but still not be the required distance away
+                            lookbackPoint = track.coordinates.getPoint(i);
+                            if (
+                                lookbackPoint != null &&
+                                lastPoint.distanceTo(lookbackPoint) > tolerancePixels
+                            ) {
+                                break;
+                            }
+                        }
 
-                        _lastStableHeading = Math.atan2(newY, newX).toFloat();
-                        currentHeading = _lastStableHeading;
+                        if (lookbackPoint != null) {
+                            var rawHeading = calculateHeading(lookbackPoint, lastPoint);
+
+                            // 2. DYNAMIC ALPHA SMOOTHING
+                            // Calculate how much we are turning
+                            var diff = (rawHeading - _lastStableHeading).abs();
+                            if (diff > Math.PI) {
+                                diff = 2 * Math.PI - diff;
+                            } // Handle wrap-around
+
+                            var alpha;
+                            if (diff > 0.52) {
+                                // > 30 degrees: We are turning!
+                                alpha = 0.9f; // Respond almost instantly
+                            } else if (diff > 0.17) {
+                                // > 10 degrees: Slight curve
+                                alpha = 0.5f; // Balanced
+                            } else {
+                                alpha = 0.15f; // Moving straight: Heavy smoothing to kill jitter
+                            }
+
+                            // 3. VECTOR BLENDING (Prevents 360/0 degree glitches)
+                            var newX =
+                                (1.0 - alpha) * Math.cos(_lastStableHeading) +
+                                alpha * Math.cos(rawHeading);
+                            var newY =
+                                (1.0 - alpha) * Math.sin(_lastStableHeading) +
+                                alpha * Math.sin(rawHeading);
+
+                            _lastStableHeading = Math.atan2(newY, newX).toFloat();
+                            currentHeading = _lastStableHeading;
+                        }
                     }
                 } else {
                     currentHeading = _lastStableHeading;
