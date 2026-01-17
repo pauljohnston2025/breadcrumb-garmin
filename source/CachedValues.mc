@@ -752,7 +752,7 @@ class CachedValues {
 
     /** returns true if the scale changed */
     function handleNewScale(newScale as Float) as Boolean {
-        if (abs(currentScale - newScale) < 0.000001) {
+        if ((currentScale - newScale).abs() < 0.000001) {
             // ignore any minor scale changes, esp if the scale is the same but float == does not work
             return false;
         }

@@ -31,11 +31,6 @@ function minN(lhs as Number, rhs as Number) as Number {
 }
 
 (:inline)
-function abs(val as Float) as Float {
-    return val < 0 ? -val : val;
-}
-
-(:inline)
 function absN(val as Number) as Number {
     return val < 0 ? -val : val;
 }

@@ -2431,7 +2431,7 @@ class BreadcrumbRenderer {
         }
 
         // abs really only needed until we get the first point (then max should always be more than min)
-        var elevationChange = abs(maxElevation - minElevation);
+        var elevationChange = (maxElevation - minElevation).abs();
         var startAt = minElevation + elevationChange / 2;
         return getElevationScaleRaw(maxDistanceScaled, elevationChange, startAt);
     }
@@ -2466,7 +2466,7 @@ class BreadcrumbRenderer {
         var maxDistanceScaled = maxF(allRouteDistanceScaled, maxTrackDistanceScaled);
 
         // abs really only needed until we get the first point (then max should always be more than min)
-        var elevationChange = abs(maxElevation - minElevation);
+        var elevationChange = (maxElevation - minElevation).abs();
         var startAt = minElevation + elevationChange / 2;
         return getElevationScaleRaw(maxDistanceScaled, elevationChange, startAt);
     }
