@@ -1,0 +1,4 @@
+ <menu2 id="SettingsTrackPointReductionMethod">
+    <menu-item id="trackPointReductionMethodDownsample" label="@Strings.trackPointReductionMethodDownsample" />
+    <menu-item id="trackPointReductionMethodReumannWitkam" label="@Strings.trackPointReductionMethodReumannWitkam" />
+</menu2>

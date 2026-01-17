@@ -205,8 +205,12 @@ class PointArray {
     }
 
     // similar to restrictPoints, but also makes sure the underlying array buffer is fixed to that size too
-    function restrictPointsToMaxMemory(maxPoints as Number, currentScale as Float) as Void {
-        restrictPoints(maxPoints, currentScale);
+    function restrictPointsToMaxMemory(
+        maxPoints as Number,
+        trackPointReductionMethod as Number,
+        currentScale as Float
+    ) as Void {
+        restrictPoints(maxPoints, trackPointReductionMethod, currentScale);
         // memory may double when doing this, but its only on setting change
         _internalArrayBuffer = _internalArrayBuffer.slice(0, maxPoints * ARRAY_POINT_SIZE);
         if (_size > maxPoints) {
@@ -216,7 +220,15 @@ class PointArray {
         }
     }
 
-    function restrictPoints(maxPoints as Number, currentScale as Float) as Boolean {
+    function restrictPoints(
+        maxPoints as Number,
+        trackPointReductionMethod as Number,
+        currentScale as Float
+    ) as Boolean {
+        if (trackPointReductionMethod == TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE) {
+            return restrictPointsDecimation(maxPoints);
+        }
+
         if (restrictPointsReumannWitkam(maxPoints, currentScale)) {
             // be sure we have removed enough to meet our memory limit requirements
             restrictPointsDecimation(maxPoints);
@@ -266,7 +278,7 @@ class PointArray {
 
         var writeIdx = 1; // Always keep first point
         var anchorIdx = 0; // The 'start' of our current straight line segment
-        var nextIdx = 1;   // Point B (defines the direction)
+        var nextIdx = 1; // Point B (defines the direction)
 
         // We use the 2nd point to define our initial direction
         for (var i = 2; i < currentPoints; i++) {
@@ -300,7 +312,7 @@ class PointArray {
             if (distSqAB != 0.0f) {
                 // Standard 2D Cross Product of vectors AP and AB
                 // This represents the area of the parallelogram formed by the vectors
-                var area = (dpx * dy1) - (dpy * dx1);
+                var area = dpx * dy1 - dpy * dx1;
                 devSq = (area * area) / distSqAB;
             }
 
@@ -318,9 +330,9 @@ class PointArray {
             }
 
             // If points are too close, just skip them and wait for a point further away to define the line.
-            if (distSqAB < tooCloseDistancePixelsSq && !isSharpTurn) { 
+            if (distSqAB < tooCloseDistancePixelsSq && !isSharpTurn) {
                 nextIdx = i;
-                continue; 
+                continue;
             }
 
             // Trigger a key point if we strayed too far OR if we changed direction

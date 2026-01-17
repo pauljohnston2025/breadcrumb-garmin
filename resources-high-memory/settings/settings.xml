@@ -108,6 +108,17 @@
         </settingConfig>
     </setting>
 
+    <setting propertyKey="@Properties.minTrackPointDistanceM" title="@Strings.minTrackPointDistanceMTitle">
+        <settingConfig type="numeric" min="0"/>
+    </setting>
+    
+    <setting propertyKey="@Properties.trackPointReductionMethod" title="@Strings.trackPointReductionMethodTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.trackPointReductionMethodDownsample</listEntry>
+            <listEntry value="1">@Strings.trackPointReductionMethodReumannWitkam</listEntry>
+        </settingConfig>
+    </setting>
+
     <setting propertyKey="@Properties.useTrackAsHeadingSpeedMPS" title="@Strings.useTrackAsHeadingSpeedMPSTitle">
         <settingConfig type="numeric" min="0"/>
     </setting>

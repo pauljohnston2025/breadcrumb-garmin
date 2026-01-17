@@ -242,6 +242,25 @@ class SettingsMain extends Rez.Menus.SettingsMain {
             :settingsMainMapMoveScreenSize,
             settings.mapMoveScreenSize.format("%.2f")
         );
+        safeSetSubLabel(
+            me,
+            :settingsMainMinTrackPointDistanceM,
+            settings.minTrackPointDistanceM.toString()
+        );
+        var trackPointReductionMethodString = "";
+        switch (settings.trackPointReductionMethod) {
+            case TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE:
+                trackPointReductionMethodString = Rez.Strings.trackPointReductionMethodDownsample;
+                break;
+            case TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM:
+                trackPointReductionMethodString = Rez.Strings.trackPointReductionMethodReumannWitkam;
+                break;
+        }
+        safeSetSubLabel(
+            me,
+            :settingsMainTrackPointReductionMethod,
+            trackPointReductionMethodString
+        );
     }
 }
 
@@ -937,6 +956,20 @@ class SettingsMainDelegate extends WatchUi.Menu2InputDelegate {
             WatchUi.pushView(
                 new $.Rez.Menus.SettingsFontSize(),
                 new $.SettingsFontSizeDelegate(view, settings.method(:setDataFieldTextSize)),
+                WatchUi.SLIDE_IMMEDIATE
+            );
+        } else if (itemId == :settingsMainMinTrackPointDistanceM) {
+            startPicker(
+                new SettingsNumberPicker(
+                    settings.method(:setMinTrackPointDistanceM),
+                    settings.minTrackPointDistanceM,
+                    view
+                )
+            );
+        }else if (itemId == :settingsMainTrackPointReductionMethod) {
+            WatchUi.pushView(
+                new $.Rez.Menus.SettingsTrackPointReductionMethod(),
+                new $.SettingsTrackPointReductionMethodDelegate(view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         }else if (itemId == :settingsMainUseTrackAsHeadingSpeedMPS) {
@@ -2207,6 +2240,33 @@ class SettingsFontSizeDelegate extends WatchUi.Menu2InputDelegate {
         }*/
 
         callback.invoke(fontValue);
+        parent.rerender();
+        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+    }
+}
+
+(:settingsView)
+class SettingsTrackPointReductionMethodDelegate extends WatchUi.Menu2InputDelegate {
+    private var parent as SettingsMain;
+
+    function initialize(parent as SettingsMain) {
+        WatchUi.Menu2InputDelegate.initialize();
+        me.parent = parent;
+    }
+
+    public function onSelect(item as WatchUi.MenuItem) as Void {
+        var itemId = item.getId();
+
+        var settings = getApp()._breadcrumbContext.settings;
+        var value = TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE;
+
+        if (itemId == :trackPointReductionMethodDownsample) {
+            value = TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE;
+        } else if (itemId == :trackPointReductionMethodReumannWitkam) {
+            value = TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM;
+        } 
+
+        settings.setTrackPointReductionMethod(value);
         parent.rerender();
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     }

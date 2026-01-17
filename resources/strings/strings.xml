@@ -193,6 +193,11 @@
     <string id="fontSysMedium">System Medium</string>
     <string id="fontSysLarge">System Large</string> -->
 
+    <string id="minTrackPointDistanceMTitle">Min Track Point Distance (m)</string>
+    <string id="trackPointReductionMethodTitle">Track Point Reduction Method</string>
+    <string id="trackPointReductionMethodDownsample">Downsample</string>
+    <string id="trackPointReductionMethodReumannWitkam">Reumann Witkam</string>
+
     <string id="mustUpdate">Update mobile app or watch app</string>
     
 </strings>

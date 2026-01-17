@@ -10,6 +10,8 @@
     <menu-item id="settingsMainTopDataType" label="@Strings.topDataTypeTitle"/>
     <menu-item id="settingsMainBottomDataType" label="@Strings.bottomDataTypeTitle"/>
     <menu-item id="settingsMainDataFieldTextSize" label="@Strings.dataFieldTextSizeTitle"/>
+    <menu-item id="settingsMainMinTrackPointDistanceM" label="@Strings.minTrackPointDistanceMTitle"/>
+    <menu-item id="settingsMainTrackPointReductionMethod" label="@Strings.trackPointReductionMethodTitle"/>
     <menu-item id="settingsMainUseTrackAsHeadingSpeedMPS" label="@Strings.useTrackAsHeadingSpeedMPSTitle"/>
     <menu-item id="settingsMainMapMoveScreenSize" label="@Strings.mapMoveScreenSizeTitle"/>
     <menu-item id="settingsMainZoomAtPace" label="@Strings.zoomAtPaceTitle"/>

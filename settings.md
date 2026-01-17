@@ -101,10 +101,25 @@ large number (eg. 1000) - Never use track
 
 This method of calculating the heading may result in slow updates to the heading angle, due to it needing a few points after a turn in order to know the turn has happened. This is most noticeable directly after exiting a corner, it may take a second or 2 for the heading to update.
 
-For best results [Compute Interval](#compute-interval) should be set to 1 (or a smaller number) in order to log as many track points as possible. Higher values of compute interval will result in delayed angle changes to the heading when turning corners.  
+For best results:  
+
+[Compute Interval](#compute-interval) should be set to 1 (or a smaller number) in order to log as many track points as possible. Higher values of compute interval will result in delayed angle changes to the heading when turning corners.  
+[Min Track Point Distance (m)](#min-track-point-distance-m) should be set to 0 so all points are stored, which will result in smoother corner transitions.
 
 If setting `Use Track As Heading Speed ` to 0 the heading will not update when stationary. This is because the gps will ping around on your current location, and would result in constant changes to the heading if we kept updating it based on the last track points. 
 
+
+### Min Track Point Distance (m)
+
+The minimum distance (in meters) between 2 track points in order to store them in teh current track. Larger values will result in a more granular track an require less operations of [Track Point Reduction Method](#track-point-reduction-method) which should increase battery performance. The number of track points will never exceed [Max Track Points](#max-track-points).
+
+### Track Point Reduction Method
+
+How to reduce the number of track points when we reach [Max Track Points](#max-track-points). When the limit is reached restrictPoints is called with the selected method.
+
+Downsample - A dumb but battery and cpu efficient method to remove half of the points from the track. It keeps every second point, so may remove corner points from the track.
+
+Reumann Witkam - A smart but computationally heavy method of removing only points that are needed. It tries to only keep only the corner points, as straight lines down a road can be just 2 points. It may use more battery and will result in more calls to restrictPoints since it does not remove all points. Based on https://psimpl.sourceforge.net/reumann-witkam.html . Falls back to the `Downsample` strategy if not enough points are removed.
 
 ### Map Move Screen Size
 

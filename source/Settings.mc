@@ -7,6 +7,11 @@ import Toybox.Communications;
 import Toybox.WatchUi;
 import Toybox.PersistedContent;
 
+enum /*TrackPointReductionMethod*/ {
+    TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE = 0,
+    TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM = 1,
+}
+    
 enum /*DataType*/ {
     DATA_TYPE_NONE,
     DATA_TYPE_SCALE,
@@ -446,6 +451,8 @@ class Settings {
     var topDataType as Number = DATA_TYPE_NONE;
     var bottomDataType as Number = DATA_TYPE_SCALE;
     var dataFieldTextSize as Number = Graphics.FONT_XTINY;
+    var minTrackPointDistanceM as Number = 5; // minimum distance between 2 track points
+    var trackPointReductionMethod as Number = TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE; 
     var uiMode as Number = UI_MODE_SHOW_ALL;
     var fixedLatitude as Float? = null;
     var fixedLongitude as Float? = null;
@@ -1002,6 +1009,28 @@ class Settings {
     }
 
     (:settingsView)
+    function setMinTrackPointDistanceM(value as Number) as Void {
+        minTrackPointDistanceM = value;
+        setValue("minTrackPointDistanceM", minTrackPointDistanceM);
+        setMinTrackPointDistanceMSideEffect();
+    }
+
+    function setMinTrackPointDistanceMSideEffect() as Void {
+        var currentScale = getApp()._breadcrumbContext.cachedValues.currentScale;
+        var minDistanceMScaled = minTrackPointDistanceM.toFloat();
+        if(currentScale != 0f){
+            minDistanceMScaled = minDistanceMScaled * currentScale;
+        }
+        getApp()._breadcrumbContext.track.minDistanceMScaled = minDistanceMScaled;
+    }
+    
+    (:settingsView)
+    function setTrackPointReductionMethod(value as Number) as Void {
+        trackPointReductionMethod = value;
+        setValue("trackPointReductionMethod", trackPointReductionMethod);
+    }
+    
+    (:settingsView)
     function setDataFieldTextSize(value as Number) as Void {
         dataFieldTextSize = value;
         setValue("dataFieldTextSize", dataFieldTextSize);
@@ -1074,6 +1103,7 @@ class Settings {
     function maxTrackPointsChanged() as Void {
         getApp()._breadcrumbContext.track.coordinates.restrictPointsToMaxMemory(
             maxTrackPoints,
+            getApp()._breadcrumbContext.settings.trackPointReductionMethod,
             getApp()._breadcrumbContext.cachedValues.currentScale
         );
     }
@@ -2199,6 +2229,8 @@ class Settings {
         useTrackAsHeadingSpeedMPS = defaultSettings.useTrackAsHeadingSpeedMPS;
         topDataType = defaultSettings.topDataType;
         bottomDataType = defaultSettings.bottomDataType;
+        minTrackPointDistanceM = defaultSettings.minTrackPointDistanceM;
+        trackPointReductionMethod = defaultSettings.trackPointReductionMethod;
         dataFieldTextSize = defaultSettings.dataFieldTextSize;
         uiMode = defaultSettings.uiMode;
         elevationMode = defaultSettings.elevationMode;
@@ -2294,6 +2326,8 @@ class Settings {
                 "useTrackAsHeadingSpeedMPS" => useTrackAsHeadingSpeedMPS,
                 "topDataType" => topDataType,
                 "bottomDataType" => bottomDataType,
+                "minTrackPointDistanceM" => minTrackPointDistanceM,
+                "trackPointReductionMethod" => trackPointReductionMethod,
                 "dataFieldTextSize" => dataFieldTextSize,
                 "uiMode" => uiMode,
                 "elevationMode" => elevationMode,
@@ -2351,6 +2385,7 @@ class Settings {
         // assert the map choice when we load the settings, as it may have been changed when the app was not running and onSettingsChanged might not be called
         loadSettings();
         updateMapChoiceChange(mapChoice);
+        setMinTrackPointDistanceMSideEffect();
     }
 
     function loadSettingsPart1() as Void {
@@ -2458,6 +2493,8 @@ class Settings {
         );
         topDataType = parseNumber("topDataType", topDataType);
         bottomDataType = parseNumber("bottomDataType", bottomDataType);
+        minTrackPointDistanceM = parseNumber("minTrackPointDistanceM", minTrackPointDistanceM);
+        trackPointReductionMethod = parseNumber("trackPointReductionMethod", trackPointReductionMethod);
         dataFieldTextSize = parseNumber("dataFieldTextSize", dataFieldTextSize);
         uiMode = parseNumber("uiMode", uiMode);
         elevationMode = parseNumber("elevationMode", elevationMode);
@@ -2566,6 +2603,7 @@ class Settings {
         var oldAuthToken = authToken;
         var oldTileErrorColour = tileErrorColour;
         var oldShowErrorTileMessages = showErrorTileMessages;
+        var oldMinTrackPointDistanceM = minTrackPointDistanceM;
         loadSettings();
         // route settins do not work because garmins setting spage cannot edit them
         // when any property is modified, so we have to explain to users not to touch the settings, but we cannot because it looks
@@ -2639,6 +2677,11 @@ class Settings {
 
         if (oldMapChoice != mapChoice) {
             updateMapChoiceChange(mapChoice);
+        }
+
+        if (oldMinTrackPointDistanceM != minTrackPointDistanceM)
+        {
+            setMinTrackPointDistanceMSideEffect();
         }
 
         setValueSideEffect();
