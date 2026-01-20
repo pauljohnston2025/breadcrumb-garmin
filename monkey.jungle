@@ -55,8 +55,8 @@ edgeexplore2.resourcePath = $(edgeexplore2.resourcePath);resources-low-memory
 edgemtb.excludeAnnotations = $(edgemtb.excludeAnnotations);round;scaledbitmap;$(lowMemExcludes)
 edgemtb.resourcePath = $(edgemtb.resourcePath);resources-low-memory
 
-enduro3.excludeAnnotations = $(enduro3.excludeAnnotations);rectangle;noscaledbitmap;$(highMemExcludes)
-enduro3.resourcePath = $(enduro3.resourcePath);resources-high-memory
+enduro3.excludeAnnotations = $(enduro3.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+enduro3.resourcePath = $(enduro3.resourcePath);resources-low-memory
 epix2.excludeAnnotations = $(epix2.excludeAnnotations);rectangle;noscaledbitmap;$(highMemExcludes)
 epix2.resourcePath = $(epix2.resourcePath);resources-high-memory
 epix2pro42mm.excludeAnnotations = $(epix2pro42mm.excludeAnnotations);rectangle;noscaledbitmap;$(highMemExcludes)

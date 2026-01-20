@@ -283,21 +283,49 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
 
     function showMyAlert(alert as Alert) as Void {
         try {
-            if (Attention has :backlight) {
-                // turn the screen on so we can see the alert, it does not respond to us gesturing to see the alert (think gesture controls are suppressed during vibration)
-                Attention.backlight(true);
-            }
+            System.println("" + Time.now().value() + " " + "showing my alert");
 
-            if (Attention has :vibrate) {
-                var vibeData = [
-                    new Attention.VibeProfile(100, 500),
-                    new Attention.VibeProfile(0, 150),
-                    new Attention.VibeProfile(100, 500),
-                    new Attention.VibeProfile(0, 150),
-                    new Attention.VibeProfile(100, 500),
-                ];
-                Attention.vibrate(vibeData);
+            try {
+                if (Attention has :backlight) {
+                    System.println("" + Time.now().value() + " " + "showing backlight");
+                    // turn the screen on so we can see the alert, it does not always respond to us gesturing to see the alert (think gesture controls are suppressed during vibration)
+                    // apparently this can throw an exception BacklightOnTooLongException 
+                    // even if the backlight is already on this exception seems to be thrown on my venu2s 
+                    // and if its off, well it can still throw, not catching this exception meant alerts would not show.
+                    // Possibly a new firmware update has changed this behaviour, though i should have been try/catching anyway.
+                    // Prefer to turn backlight on first so its ready for our alert.
+                    Attention.backlight(true);
+                }
+            } catch (e) {
+                logE("failed to turn on backlight: " + e.getErrorMessage());
+                System.println(
+                    "" +
+                        Time.now().value() +
+                        " " +
+                        "failed to turn on backlight: " +
+                        e.getErrorMessage()
+                );
             }
+            try {
+                if (Attention has :vibrate) {
+                    System.println("" + Time.now().value() + " " + "showing vibrate");
+                    var vibeData = [
+                        new Attention.VibeProfile(100, 500),
+                        new Attention.VibeProfile(0, 150),
+                        new Attention.VibeProfile(100, 500),
+                        new Attention.VibeProfile(0, 150),
+                        new Attention.VibeProfile(100, 500),
+                    ];
+                    // this is not documented that it throws, but got bit by the backlight, so protecting it too in order to always show our alerts
+                    Attention.vibrate(vibeData);
+                }
+            } catch (e) {
+                logE("failed to vibrate: " + e.getErrorMessage());
+                System.println(
+                    "" + Time.now().value() + " " + "failed to vibrate: " + e.getErrorMessage()
+                );
+            }
+            System.println("" + Time.now().value() + " " + "about to show alert");
 
             // alert comes after we start the vibrate in case it throws
             // logD("trying to trigger alert");
@@ -314,6 +342,9 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             }
         } catch (e) {
             logE("failed to show alert: " + e.getErrorMessage());
+            System.println(
+                "" + Time.now().value() + " " + "failed to show alert: " + e.getErrorMessage()
+            );
         }
     }
 
