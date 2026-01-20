@@ -11,7 +11,7 @@ enum /*TrackPointReductionMethod*/ {
     TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE = 0,
     TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM = 1,
 }
-    
+
 enum /*DataType*/ {
     DATA_TYPE_NONE,
     DATA_TYPE_SCALE,
@@ -452,7 +452,7 @@ class Settings {
     var bottomDataType as Number = DATA_TYPE_SCALE;
     var dataFieldTextSize as Number = Graphics.FONT_XTINY;
     var minTrackPointDistanceM as Number = 5; // minimum distance between 2 track points
-    var trackPointReductionMethod as Number = TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE; 
+    var trackPointReductionMethod as Number = TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE;
     var uiMode as Number = UI_MODE_SHOW_ALL;
     var fixedLatitude as Float? = null;
     var fixedLongitude as Float? = null;
@@ -1016,20 +1016,19 @@ class Settings {
     }
 
     function setMinTrackPointDistanceMSideEffect() as Void {
-        var currentScale = getApp()._breadcrumbContext.cachedValues.currentScale;
-        var minDistanceMScaled = minTrackPointDistanceM.toFloat();
-        if(currentScale != 0f){
-            minDistanceMScaled = minDistanceMScaled * currentScale;
-        }
-        getApp()._breadcrumbContext.track.minDistanceMScaled = minDistanceMScaled;
+        // only the track needs the setting, routes do not matter, they can stay at the default (5m) because they are limited by the companion app anyway
+        getApp()._breadcrumbContext.track.setMinDistanceM(
+            minTrackPointDistanceM.toFloat(),
+            getApp()._breadcrumbContext.cachedValues.currentScale
+        );
     }
-    
+
     (:settingsView)
     function setTrackPointReductionMethod(value as Number) as Void {
         trackPointReductionMethod = value;
         setValue("trackPointReductionMethod", trackPointReductionMethod);
     }
-    
+
     (:settingsView)
     function setDataFieldTextSize(value as Number) as Void {
         dataFieldTextSize = value;
@@ -2494,7 +2493,10 @@ class Settings {
         topDataType = parseNumber("topDataType", topDataType);
         bottomDataType = parseNumber("bottomDataType", bottomDataType);
         minTrackPointDistanceM = parseNumber("minTrackPointDistanceM", minTrackPointDistanceM);
-        trackPointReductionMethod = parseNumber("trackPointReductionMethod", trackPointReductionMethod);
+        trackPointReductionMethod = parseNumber(
+            "trackPointReductionMethod",
+            trackPointReductionMethod
+        );
         dataFieldTextSize = parseNumber("dataFieldTextSize", dataFieldTextSize);
         uiMode = parseNumber("uiMode", uiMode);
         elevationMode = parseNumber("elevationMode", elevationMode);
@@ -2679,8 +2681,7 @@ class Settings {
             updateMapChoiceChange(mapChoice);
         }
 
-        if (oldMinTrackPointDistanceM != minTrackPointDistanceM)
-        {
+        if (oldMinTrackPointDistanceM != minTrackPointDistanceM) {
             setMinTrackPointDistanceMSideEffect();
         }
 
