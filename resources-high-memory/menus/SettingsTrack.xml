@@ -1,0 +1,6 @@
+<menu2 id="SettingsTrack" title="@Strings.trackSettingsTitle">
+    <menu-item id="settingsTrackMaxTrackPoints" label="@Strings.maxTrackPointsTitle"/>
+    <menu-item id="settingsTrackMinTrackPointDistanceM" label="@Strings.minTrackPointDistanceMTitle"/>
+    <menu-item id="settingTrackTrackPointReductionMethod" label="@Strings.trackPointReductionMethodTitle"/>
+    <menu-item id="settingsTrackUseTrackAsHeadingSpeedMPS" label="@Strings.useTrackAsHeadingSpeedMPSTitle"/>
+</menu2>

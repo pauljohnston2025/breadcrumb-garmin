@@ -1,0 +1,10 @@
+<menu2 id="SettingsGeneral" title="@Strings.generalSettingsTitle">
+    <menu-item id="settingsGeneralMode" label="@Strings.modeTitle"/>
+    <menu-item id="settingsGeneralModeUiMode" label="@Strings.uiModeTitle"/>
+    <menu-item id="settingsGeneralModeElevationMode" label="@Strings.elevationModeTitle"/>
+    <menu-item id="settingsGeneralRecalculateIntervalS" label="@Strings.recalculateIntervalSTitle"/>
+    <menu-item id="settingsGeneralRenderMode" label="@Strings.renderModeTitle"/>
+    <menu-item id="settingsGeneralCenterUserOffsetY" label="@Strings.centerUserOffsetYTitle"/>
+    <toggle-menu-item id="settingsGeneralDisplayLatLong" label="@Strings.displayLatLongTitle"/>
+    <menu-item id="settingsGeneralMapMoveScreenSize" label="@Strings.mapMoveScreenSizeTitle"/>
+</menu2>

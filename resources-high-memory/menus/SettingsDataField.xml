@@ -1,0 +1,5 @@
+<menu2 id="SettingsDataField" title="@Strings.dataFieldSettingsTitle">
+    <menu-item id="settingsDataFieldTopDataType" label="@Strings.topDataTypeTitle"/>
+    <menu-item id="settingsDataFieldBottomDataType" label="@Strings.bottomDataTypeTitle"/>
+    <menu-item id="settingsDataFieldTextSize" label="@Strings.dataFieldTextSizeTitle"/>
+</menu2>
