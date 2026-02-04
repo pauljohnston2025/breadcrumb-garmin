@@ -534,8 +534,8 @@ class BreadcrumbRenderer {
                 (rotateSin * userPosUnrotatedX + rotateCos * userPosUnrotatedY);
         }
 
-        var triangleSizeY = 10;
-        var triangleSizeX = 4;
+        var triangleSizeY = 16;
+        var triangleSizeX = 10;
         var triangleTopX = userPosRotatedX;
         var triangleTopY = userPosRotatedY - triangleSizeY;
 
@@ -1192,13 +1192,6 @@ class BreadcrumbRenderer {
     ) as Void {
         var dx = xEnd - xStart;
         var dy = yEnd - yStart;
-
-        // Optimization: Skip interpolation if points are within 1 pixel
-        if (dx.abs() < 1.0f && dy.abs() < 1.0f) {
-            _distanceAccumulator += 1.0f; // Minimal move
-            return;
-        }
-
         var distance = Math.sqrt(dx * dx + dy * dy).toFloat();
 
         if (distance < 0.1f) {
@@ -1210,23 +1203,46 @@ class BreadcrumbRenderer {
         var stepSize = width * 4.0f;
         var dashLength = width * 2.0f;
 
-        // --- Vertex Drawing ---
-        // Only draw the corner if the accumulator is starting fresh (prevents double-drawing)
+        // --- 1. FALLBACK FOR SMALL SEGMENTS (Zoomed Out) ---
+        // If the segment is shorter than one dash/dot cycle, we don't loop.
+        if (distance < stepSize - _distanceAccumulator) {
+            // If we are in the "visible" part of the accumulator cycle, draw the segment.
+            if (_distanceAccumulator < dashLength || style != TRACK_STYLE_DASHED) {
+                renderLineSafe(
+                    dc,
+                    style == TRACK_STYLE_DASHED ? TRACK_STYLE_LINE : style - 1,
+                    width,
+                    halfWidth,
+                    xStart,
+                    yStart,
+                    xEnd,
+                    yEnd
+                );
+            }
+            _distanceAccumulator += distance;
+
+            // Reset accumulator if it exceeds a full cycle
+            if (_distanceAccumulator >= stepSize) {
+                _distanceAccumulator -= stepSize;
+            }
+            return;
+        }
+
+        // --- 2. VERTEX PROTECTION ---
+        // Only draw the actual vertex if the pattern rhythm calls for it.
         if (style != TRACK_STYLE_DASHED && _distanceAccumulator <= 0.1f) {
             renderLineSafe(dc, style - 1, width, halfWidth, xStart, yStart, xStart, yStart);
         }
 
-        // Determine how much of the step was "left over" from the previous segment
+        // --- 3. MAIN INTERPOLATION LOOP ---
         var currentDist = stepSize - _distanceAccumulator;
 
-        // Main Loop
-        while (currentDist < distance) {
+        while (currentDist <= distance) {
             var posX = xStart + unitX * currentDist;
             var posY = yStart + unitY * currentDist;
 
             if (style == TRACK_STYLE_DASHED) {
                 var endStep = currentDist + dashLength;
-                // Bug Fix: Clamp the dash to the end of the segment
                 var actualEndX = endStep > distance ? xEnd : xStart + unitX * endStep;
                 var actualEndY = endStep > distance ? yEnd : yStart + unitY * endStep;
                 dc.drawLine(posX, posY, actualEndX, actualEndY);
@@ -1236,12 +1252,11 @@ class BreadcrumbRenderer {
             currentDist += stepSize;
         }
 
-        // --- Bug Fix: Accumulator Update ---
-        // We must subtract the full distance from the final currentDist.
-        // This ensures the dash rhythm continues perfectly across the apex of the corner.
+        // --- 4. ACCUMULATOR SYNC ---
+        // The leftover distance becomes the starting accumulator for the next segment.
         _distanceAccumulator = distance - (currentDist - stepSize);
 
-        // Safety check: Clamp accumulator to prevent negative drift
+        // Clamp to prevent negative drift from floating point precision
         if (_distanceAccumulator < 0) {
             _distanceAccumulator = 0.0f;
         }
