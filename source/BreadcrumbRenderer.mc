@@ -1161,7 +1161,7 @@ class BreadcrumbRenderer {
 
         return false;
     }
-    
+
     function renderLine(
         dc as Dc,
         style as Number,
@@ -1172,8 +1172,7 @@ class BreadcrumbRenderer {
         xEnd as Float,
         yEnd as Float
     ) as Void {
-        if (renderLineSafe(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd))
-        {
+        if (renderLineSafe(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd)) {
             return;
         }
 
@@ -1192,7 +1191,7 @@ class BreadcrumbRenderer {
     ) as Void {
         var dx = xEnd - xStart;
         var dy = yEnd - yStart;
-        var distance = Math.sqrt(dx * dx + dy * dy);
+        var distance = Math.sqrt(dx * dx + dy * dy).toFloat();
 
         if (distance < 0.1f) {
             return;
@@ -1203,6 +1202,13 @@ class BreadcrumbRenderer {
 
         var stepSize = width * 4.0f;
         var dashLength = width * 2.0f;
+
+        // --- CORNER PROTECTION ---
+        // Always draw the actual track point at the start of the segment.
+        // This ensures that even if currentDist skips the corner, the vertex is drawn.
+        if (style != TRACK_STYLE_DASHED) {
+            renderLineSafe(dc, style - 1, width, halfWidth, xStart, yStart, xStart, yStart);
+        }
 
         // 1. Fallback for very small segments (Zoomed out)
         if (distance < stepSize) {
@@ -1215,7 +1221,9 @@ class BreadcrumbRenderer {
         }
 
         // 2. Main Interpolation Loop
-        var currentDist = _distanceAccumulator > 0 ? stepSize - _distanceAccumulator : 0.0f;
+        // We start one full stepSize in if we have an accumulator,
+        // or at stepSize if we want to avoid double-drawing the corner we just rendered.
+        var currentDist = _distanceAccumulator > 0 ? stepSize - _distanceAccumulator : stepSize;
 
         while (currentDist < distance) {
             var posX = xStart + unitX * currentDist;
