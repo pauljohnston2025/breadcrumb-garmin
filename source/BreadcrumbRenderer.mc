@@ -589,10 +589,11 @@ class BreadcrumbRenderer {
         }
 
         dc.setColor(settings.userColour, Graphics.COLOR_BLACK);
-        dc.setPenWidth(6);
-        dc.drawLine(triangleTopX, triangleTopY, triangleRightX, triangleRightY);
-        dc.drawLine(triangleRightX, triangleRightY, triangleLeftX, triangleLeftY);
-        dc.drawLine(triangleLeftX, triangleLeftY, triangleTopX, triangleTopY);
+        dc.fillPolygon([
+            [triangleTopX, triangleTopY],
+            [triangleRightX, triangleRightY],
+            [triangleLeftX, triangleLeftY],
+        ]);
     }
 
     function renderTrackUnrotated(
@@ -1191,6 +1192,13 @@ class BreadcrumbRenderer {
     ) as Void {
         var dx = xEnd - xStart;
         var dy = yEnd - yStart;
+
+        // Optimization: Skip interpolation if points are within 1 pixel
+        if (dx.abs() < 1.0f && dy.abs() < 1.0f) {
+            _distanceAccumulator += 1.0f; // Minimal move
+            return;
+        }
+
         var distance = Math.sqrt(dx * dx + dy * dy).toFloat();
 
         if (distance < 0.1f) {
@@ -1199,61 +1207,44 @@ class BreadcrumbRenderer {
 
         var unitX = dx / distance;
         var unitY = dy / distance;
-
         var stepSize = width * 4.0f;
         var dashLength = width * 2.0f;
 
-        // --- CORNER PROTECTION ---
-        // Always draw the actual track point at the start of the segment.
-        // This ensures that even if currentDist skips the corner, the vertex is drawn.
-        if (style != TRACK_STYLE_DASHED) {
+        // --- Vertex Drawing ---
+        // Only draw the corner if the accumulator is starting fresh (prevents double-drawing)
+        if (style != TRACK_STYLE_DASHED && _distanceAccumulator <= 0.1f) {
             renderLineSafe(dc, style - 1, width, halfWidth, xStart, yStart, xStart, yStart);
         }
 
-        // 1. Fallback for very small segments (Zoomed out)
-        if (distance < stepSize) {
-            renderLineSafe(dc, style - 1, width, halfWidth, xStart, yStart, xEnd, yEnd);
-            _distanceAccumulator += distance;
-            while (_distanceAccumulator >= stepSize) {
-                _distanceAccumulator -= stepSize;
-            }
-            return;
-        }
+        // Determine how much of the step was "left over" from the previous segment
+        var currentDist = stepSize - _distanceAccumulator;
 
-        // 2. Main Interpolation Loop
-        // We start one full stepSize in if we have an accumulator,
-        // or at stepSize if we want to avoid double-drawing the corner we just rendered.
-        var currentDist = _distanceAccumulator > 0 ? stepSize - _distanceAccumulator : stepSize;
-
+        // Main Loop
         while (currentDist < distance) {
             var posX = xStart + unitX * currentDist;
             var posY = yStart + unitY * currentDist;
 
             if (style == TRACK_STYLE_DASHED) {
                 var endStep = currentDist + dashLength;
-                if (endStep > distance) {
-                    endStep = distance;
-                }
-                dc.drawLine(posX, posY, xStart + unitX * endStep, yStart + unitY * endStep);
+                // Bug Fix: Clamp the dash to the end of the segment
+                var actualEndX = endStep > distance ? xEnd : xStart + unitX * endStep;
+                var actualEndY = endStep > distance ? yEnd : yStart + unitY * endStep;
+                dc.drawLine(posX, posY, actualEndX, actualEndY);
             } else {
                 renderLineSafe(dc, style - 1, width, halfWidth, posX, posY, posX, posY);
             }
             currentDist += stepSize;
         }
 
-        // 3. THE GAP FIX: Handle the "Trailing Edge"
-        // If we are in DASHED mode and the last gap was supposed to be a dash,
-        // but the loop ended before currentDist reached the end, draw to the apex.
-        if (style == TRACK_STYLE_DASHED) {
-            var lastDashEnd = currentDist - stepSize + dashLength;
-            if (lastDashEnd < distance) {
-                // There was a gap between the end of the last dash and the end of segment
-                // but we are still within the "visible" phase of the next potential dash.
-                dc.drawLine(xStart + unitX * lastDashEnd, yStart + unitY * lastDashEnd, xEnd, yEnd);
-            }
-        }
+        // --- Bug Fix: Accumulator Update ---
+        // We must subtract the full distance from the final currentDist.
+        // This ensures the dash rhythm continues perfectly across the apex of the corner.
+        _distanceAccumulator = distance - (currentDist - stepSize);
 
-        _distanceAccumulator = currentDist - distance;
+        // Safety check: Clamp accumulator to prevent negative drift
+        if (_distanceAccumulator < 0) {
+            _distanceAccumulator = 0.0f;
+        }
     }
 
     (:noUnbufferedRotations)
