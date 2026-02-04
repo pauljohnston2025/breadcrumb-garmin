@@ -69,6 +69,8 @@
 	<property id="turnAlertTimeS" type="number">-1</property>
 	<property id="minTurnAlertDistanceM" type="number">-1</property>
 	<property id="maxTrackPoints" type="number">400</property>
+	<property id="trackStyle" type="number">0</property>
+	<property id="trackWidth" type="number">4</property>
 	<property id="drawHitBoxes" type="boolean">false</property>
 	<property id="showDirectionPoints" type="boolean">false</property>
 	<property id="showDirectionPointTextUnderIndex" type="number">0</property>

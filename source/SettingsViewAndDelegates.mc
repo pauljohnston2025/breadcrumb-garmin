@@ -329,6 +329,8 @@ class SettingsTrack extends Rez.Menus.SettingsTrack {
     function rerender() as Void {
         var settings = getApp()._breadcrumbContext.settings;
         safeSetSubLabel(me, :settingsTrackMaxTrackPoints, settings.maxTrackPoints.toString());
+        safeSetSubLabel(me, :settingsTrackTrackStyle, getTrackStyleString(settings.trackStyle));
+        safeSetSubLabel(me, :settingsTrackTrackWidth, settings.trackWidth.toString() + "px");
         safeSetSubLabel(
             me,
             :settingsTrackMinTrackPointDistanceM,
@@ -754,6 +756,8 @@ class SettingsRoute extends Rez.Menus.SettingsRoute {
         safeSetSubLabel(me, :settingsRouteName, name);
         safeSetToggle(me, :settingsRouteEnabled, settings.routeEnabled(routeId));
         safeSetIcon(me, :settingsRouteColour, new ColourIcon(settings.routeColour(routeId)));
+        safeSetSubLabel(me, :settingsRouteStyle, getTrackStyleString(settings.routeStyle(routeId)));
+        safeSetSubLabel(me, :settingsRouteWidth, settings.routeWidth(routeId).toString() + "px");
         safeSetToggle(me, :settingsRouteReversed, settings.routeReversed(routeId));
         parent.rerender();
     }
@@ -784,6 +788,14 @@ class SettingsRoute extends Rez.Menus.SettingsRoute {
 
     function setColour(value as Number) as Void {
         settings.setRouteColour(routeId, value);
+    }
+
+    function setStyle(value as Number) as Void {
+        settings.setRouteStyle(routeId, value);
+    }
+
+    function setWidth(value as Number) as Void {
+        settings.setRouteWidth(routeId, value);
     }
 }
 
@@ -1495,6 +1507,15 @@ class SettingsTrackDelegate extends WatchUi.Menu2InputDelegate {
                     view
                 )
             );
+        } else if (itemId == :settingsTrackTrackStyle) {
+            // Push the style picker
+            var menu = new $.SettingsTrackStyleMenu(settings.trackStyle);
+            var delegate = new $.SettingsTrackStyleDelegate(settings.method(:setTrackStyle), view);
+            WatchUi.pushView(menu, delegate, WatchUi.SLIDE_IMMEDIATE);
+        } else if (itemId == :settingsTrackTrackWidth) {
+            startPicker(
+                new SettingsNumberPicker(settings.method(:setTrackWidth), settings.trackWidth, view)
+            );
         } else if (itemId == :settingsTrackMinTrackPointDistanceM) {
             startPicker(
                 new SettingsNumberPicker(
@@ -1658,6 +1679,18 @@ class SettingsRouteDelegate extends WatchUi.Menu2InputDelegate {
                 dialog,
                 new DeleteRouteDelegate(view.routeId, settings),
                 WatchUi.SLIDE_IMMEDIATE
+            );
+        } else if (itemId == :settingsRouteStyle) {
+            var menu = new $.SettingsTrackStyleMenu(view.settings.routeStyle(view.routeId));
+            var delegate = new $.SettingsTrackStyleDelegate(view.method(:setStyle), view);
+            WatchUi.pushView(menu, delegate, WatchUi.SLIDE_IMMEDIATE);
+        } else if (itemId == :settingsRouteWidth) {
+            startPicker(
+                new SettingsNumberPicker(
+                    view.method(:setWidth),
+                    view.settings.routeWidth(view.routeId),
+                    view
+                )
             );
         }
     }
@@ -2376,6 +2409,66 @@ class SettingsTrackPointReductionMethodDelegate extends WatchUi.Menu2InputDelega
         }
 
         settings.setTrackPointReductionMethod(value);
+        parent.rerender();
+        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+    }
+}
+
+(:settingsView)
+function getTrackStyleString(style as Number) as ResourceId {
+    switch (style) {
+        case TRACK_STYLE_LINE:
+            return Rez.Strings.trackStyleLine;
+        case TRACK_STYLE_DASHED:
+            return Rez.Strings.trackStyleDashed;
+        case TRACK_STYLE_POINTS:
+            return Rez.Strings.trackStylePoints;
+        case TRACK_STYLE_POINTS_INTERPOLATED:
+            return Rez.Strings.trackStylePointsInterp;
+        case TRACK_STYLE_BOXES:
+            return Rez.Strings.trackStyleBoxes;
+        case TRACK_STYLE_BOXES_INTERPOLATED:
+            return Rez.Strings.trackStyleBoxesInterp;
+        case TRACK_STYLE_FILLED_SQUARE:
+            return Rez.Strings.trackStyleFilledSquare;
+        case TRACK_STYLE_FILLED_SQUARE_INTERPOLATED:
+            return Rez.Strings.trackStyleFilledSquareInterp;
+        case TRACK_STYLE_POINTS_OUTLINE:
+            return Rez.Strings.trackStylePointsOutline;
+        case TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED:
+            return Rez.Strings.trackStylePointsOutlineInterp;
+        default:
+            return Rez.Strings.trackStyleLine;
+    }
+}
+
+(:settingsView)
+class SettingsTrackStyleMenu extends WatchUi.Menu2 {
+    function initialize(currentStyle as Number) {
+        Menu2.initialize({ :title => Rez.Strings.trackStyleTitle });
+
+        // Populate all 10 styles from your Enum
+        for (var i = 0; i <= 9; i++) {
+            var label = getTrackStyleString(i);
+            var isSelected = i == currentStyle;
+            addItem(new MenuItem(label, isSelected ? "Selected" : "", i, {}));
+        }
+    }
+}
+
+(:settingsView)
+class SettingsTrackStyleDelegate extends WatchUi.Menu2InputDelegate {
+    private var callback as (Method(value as Number) as Void);
+    private var parent as Renderable;
+
+    function initialize(callback as (Method(value as Number) as Void), parent as Renderable) {
+        Menu2InputDelegate.initialize();
+        self.callback = callback;
+        self.parent = parent;
+    }
+
+    function onSelect(item as MenuItem) as Void {
+        callback.invoke(item.getId() as Number);
         parent.rerender();
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     }

@@ -51,6 +51,25 @@
         <settingConfig type="numeric" min="1"/>
     </setting>
 
+    <setting propertyKey="@Properties.trackWidth" title="@Strings.trackWidthTitle">
+        <settingConfig type="numeric" min="1"/>
+    </setting>
+
+    <setting propertyKey="@Properties.trackStyle" title="@Strings.trackStyleTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.trackStyleLine</listEntry>
+            <listEntry value="1">@Strings.trackStyleDashed</listEntry>
+            <listEntry value="2">@Strings.trackStylePoints</listEntry>
+            <listEntry value="3">@Strings.trackStylePointsInterp</listEntry>
+            <listEntry value="4">@Strings.trackStyleBoxes</listEntry>
+            <listEntry value="5">@Strings.trackStyleBoxesInterp</listEntry>
+            <listEntry value="6">@Strings.trackStyleFilledSquare</listEntry>
+            <listEntry value="7">@Strings.trackStyleFilledSquareInterp</listEntry>
+            <listEntry value="8">@Strings.trackStylePointsOutline</listEntry>
+            <listEntry value="9">@Strings.trackStylePointsOutlineInterp</listEntry>
+        </settingConfig>
+    </setting>
+
     <setting propertyKey="@Properties.topDataType" title="@Strings.topDataTypeTitle">
         <settingConfig type="list">
             <listEntry value="0">@Strings.dataTypeNone</listEntry>

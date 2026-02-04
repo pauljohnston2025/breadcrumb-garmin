@@ -7,6 +7,19 @@ import Toybox.Communications;
 import Toybox.WatchUi;
 import Toybox.PersistedContent;
 
+enum /* TrackStyle */ {
+    TRACK_STYLE_LINE = 0,                // Standard continuous line
+    TRACK_STYLE_DASHED = 1,              // Interpolated dashes
+    TRACK_STYLE_POINTS = 2,              // Dots only at actual data points
+    TRACK_STYLE_POINTS_INTERPOLATED = 3, // Dots spaced evenly along the path
+    TRACK_STYLE_BOXES = 4,               // Squares outline only at actual data points
+    TRACK_STYLE_BOXES_INTERPOLATED = 5,   // Squares outline spaced evenly along the path
+    TRACK_STYLE_FILLED_SQUARE = 6,               // Squares only at actual data points
+    TRACK_STYLE_FILLED_SQUARE_INTERPOLATED = 7,   // Squares spaced evenly along the path
+    TRACK_STYLE_POINTS_OUTLINE = 8,              // Dots only at actual data points, just the circle outline
+    TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED = 9, // Dots spaced evenly along the path, just the circle outline
+}
+
 enum /*TrackPointReductionMethod*/ {
     TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE = 0,
     TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM = 1,
@@ -515,6 +528,8 @@ class Settings {
     var turnAlertTimeS as Number = -1; // -1 disables the check
     var minTurnAlertDistanceM as Number = -1; // -1 disables the check
     var maxTrackPoints as Number = 400;
+    var trackStyle as Number = TRACK_STYLE_LINE;
+    var trackWidth as Number = 4;
 
     // bunch of debug settings
     var showPoints as Boolean = false;
@@ -1098,6 +1113,18 @@ class Settings {
         }
         setValue("maxTrackPoints", maxTrackPoints);
     }
+    
+    (:settingsView)
+    function setTrackStyle(value as Number) as Void {
+        trackStyle = value;
+        setValue("trackStyle", trackStyle);
+    }
+    
+    (:settingsView)
+    function setTrackWidth(value as Number) as Void {
+        trackWidth = value;
+        setValue("trackWidth", trackWidth);
+    }
 
     function maxTrackPointsChanged() as Void {
         getApp()._breadcrumbContext.track.coordinates.restrictPointsToMaxMemory(
@@ -1506,6 +1533,22 @@ class Settings {
         }
         return routes[routeIndex]["reversed"] as Boolean;
     }
+    
+    function routeStyle(routeId as Number) as Number {
+        var routeIndex = getRouteIndexById(routeId);
+        if (routeIndex == null) {
+            return TRACK_STYLE_LINE;
+        }
+        return routes[routeIndex]["style"] as Number;
+    }
+    
+    function routeWidth(routeId as Number) as Number {
+        var routeIndex = getRouteIndexById(routeId);
+        if (routeIndex == null) {
+            return 4;
+        }
+        return routes[routeIndex]["width"] as Number;
+    }
 
     function setRouteColour(routeId as Number, value as Number) as Void {
         ensureRouteId(routeId);
@@ -1527,6 +1570,28 @@ class Settings {
         }
 
         routes[routeIndex]["name"] = value;
+        saveRoutes();
+    }
+    
+    function setRouteStyle(routeId as Number, value as Number) as Void {
+        ensureRouteId(routeId);
+        var routeIndex = getRouteIndexById(routeId);
+        if (routeIndex == null) {
+            return;
+        }
+
+        routes[routeIndex]["style"] = value;
+        saveRoutes();
+    }
+    
+    function setRouteWidth(routeId as Number, value as Number) as Void {
+        ensureRouteId(routeId);
+        var routeIndex = getRouteIndexById(routeId);
+        if (routeIndex == null) {
+            return;
+        }
+
+        routes[routeIndex]["width"] = value;
         saveRoutes();
     }
 
@@ -1574,6 +1639,8 @@ class Settings {
             "enabled" => true,
             "colour" => routeColour(routeId),
             "reversed" => routeReversed(routeId),
+            "style" => routeStyle(routeId),
+            "width" => routeWidth(routeId),
         });
         saveRoutes();
     }
@@ -1619,6 +1686,8 @@ class Settings {
                     "enabled" => entry["enabled"] as Boolean,
                     "colour" => (entry["colour"] as Number).format("%X"), // this is why we have to copy it :(
                     "reversed" => entry["reversed"] as Boolean,
+                    "style" => entry["style"] as Number,
+                    "width" => entry["width"] as Number,
                 }) as Dictionary<String, PropertyValueType>;
             toSave.add(toAdd);
         }
@@ -2185,6 +2254,8 @@ class Settings {
         turnAlertTimeS = defaultSettings.turnAlertTimeS;
         minTurnAlertDistanceM = defaultSettings.minTurnAlertDistanceM;
         maxTrackPoints = defaultSettings.maxTrackPoints;
+        trackStyle = defaultSettings.trackStyle;
+        trackWidth = defaultSettings.trackWidth;
         showDirectionPointTextUnderIndex = defaultSettings.showDirectionPointTextUnderIndex;
         errorTileTTLS = defaultSettings.errorTileTTLS;
         fullTileSize = defaultSettings.fullTileSize;
@@ -2282,6 +2353,8 @@ class Settings {
                 "turnAlertTimeS" => turnAlertTimeS,
                 "minTurnAlertDistanceM" => minTurnAlertDistanceM,
                 "maxTrackPoints" => maxTrackPoints,
+                "trackStyle" => trackStyle,
+                "trackWidth" => trackWidth,
                 "showDirectionPointTextUnderIndex" => showDirectionPointTextUnderIndex,
                 "errorTileTTLS" => errorTileTTLS,
                 "fullTileSize" => fullTileSize,
@@ -2392,6 +2465,8 @@ class Settings {
         turnAlertTimeS = parseNumber("turnAlertTimeS", turnAlertTimeS);
         minTurnAlertDistanceM = parseNumber("minTurnAlertDistanceM", minTurnAlertDistanceM);
         maxTrackPoints = parseNumber("maxTrackPoints", maxTrackPoints);
+        trackStyle = parseNumber("trackStyle", trackStyle);
+        trackWidth = parseNumber("trackWidth", trackWidth);
         showDirectionPointTextUnderIndex = parseNumber(
             "showDirectionPointTextUnderIndex",
             showDirectionPointTextUnderIndex
@@ -2511,13 +2586,15 @@ class Settings {
         mapChoice = parseNumber("mapChoice", mapChoice);
         routes = getArraySchema(
             "routes",
-            ["routeId", "name", "enabled", "colour", "reversed"],
+            ["routeId", "name", "enabled", "colour", "reversed", "style", "width"],
             [
                 method(:defaultNumberParser),
                 method(:emptyString),
                 method(:defaultFalse),
                 method(:defaultColourParser),
                 method(:defaultFalse),
+                method(:defaultNumberParser),
+                method(:defaultNumberParser4),
             ],
             routes
         );
@@ -2569,6 +2646,10 @@ class Settings {
 
     function defaultNumberParser(key as String, value as PropertyValueType) as Number {
         return parseNumberRaw(key, value, 0);
+    }
+    
+    function defaultNumberParser4(key as String, value as PropertyValueType) as Number {
+        return parseNumberRaw(key, value, 4);
     }
 
     function defaultFalse(key as String, value as PropertyValueType) as Boolean {

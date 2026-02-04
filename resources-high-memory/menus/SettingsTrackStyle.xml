@@ -1,0 +1,14 @@
+<menu2 id="SettingsTrackStyle">
+    <menu-item id="styleLine" label="@Strings.trackStyleLine" />
+    <menu-item id="styleDashed" label="@Strings.trackStyleDashed" />
+    
+    <menu-item id="stylePoints" label="@Strings.trackStylePoints" />
+    <menu-item id="styleBoxes" label="@Strings.trackStyleBoxes" />
+    <menu-item id="styleFilledSquare" label="@Strings.trackStyleFilledSquare" />
+    <menu-item id="stylePointsOutline" label="@Strings.trackStylePointsOutline" />
+
+    <menu-item id="stylePointsInterp" label="@Strings.trackStylePointsInterp" />
+    <menu-item id="styleBoxesInterp" label="@Strings.trackStyleBoxesInterp" />
+    <menu-item id="styleFilledSquareInterp" label="@Strings.trackStyleFilledSquareInterp" />
+    <menu-item id="stylePointsOutlineInterp" label="@Strings.trackStylePointsOutlineInterp" />
+</menu2>

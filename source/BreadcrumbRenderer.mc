@@ -24,6 +24,7 @@ class BreadcrumbRenderer {
     var _disableMapProgress as Number = 0;
     var settings as Settings;
     var _cachedValues as CachedValues;
+    private var _distanceAccumulator as Float = 0.0f;
 
     // units in mm (float/int)
     const SCALE_KEYS as Array<Number> = [
@@ -598,7 +599,9 @@ class BreadcrumbRenderer {
         dc as Dc,
         breadcrumb as BreadcrumbTrack,
         colour as Graphics.ColorType,
-        drawEndMarker as Boolean
+        drawEndMarker as Boolean,
+        style as Number,
+        width as Number
     ) as Void {
         var centerPosition = _cachedValues.centerPosition; // local lookup faster
         var rotateAroundScreenXOffsetFactoredIn = _cachedValues.rotateAroundScreenXOffsetFactoredIn; // local lookup faster
@@ -611,7 +614,13 @@ class BreadcrumbRenderer {
         }
 
         dc.setColor(colour, Graphics.COLOR_BLACK);
-        dc.setPenWidth(4);
+        dc.setPenWidth(width);
+        if (style == TRACK_STYLE_BOXES) {
+            dc.setPenWidth(1); // to only change once, not every renderLine call
+        }
+
+        var halfWidth = width / 2;
+        _distanceAccumulator = 0.0f;
 
         var size = breadcrumb.coordinates.size();
         var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
@@ -633,7 +642,7 @@ class BreadcrumbRenderer {
                     rotateAroundScreenYOffsetFactoredIn -
                     (coordinatesRaw[i + 1] - centerPosition.y);
 
-                dc.drawLine(lastX, lastY, nextX, nextY);
+                renderLine(dc, style, width, halfWidth, lastX, lastY, nextX, nextY);
 
                 lastX = nextX;
                 lastY = nextY;
@@ -1015,7 +1024,9 @@ class BreadcrumbRenderer {
         dc as Dc,
         breadcrumb as BreadcrumbTrack,
         colour as Graphics.ColorType,
-        drawEndMarker as Boolean
+        drawEndMarker as Boolean,
+        style as Number,
+        width as Number
     ) as Void {
         var xHalfPhysical = _cachedValues.xHalfPhysical; // local lookup faster
         var yHalfPhysical = _cachedValues.yHalfPhysical; // local lookup faster
@@ -1037,7 +1048,9 @@ class BreadcrumbRenderer {
         dc as Dc,
         breadcrumb as BreadcrumbTrack,
         colour as Graphics.ColorType,
-        drawEndMarker as Boolean
+        drawEndMarker as Boolean,
+        style as Number,
+        width as Number
     ) as Void {
         var centerPosition = _cachedValues.centerPosition; // local lookup faster
         var rotateCos = _cachedValues.rotateCos; // local lookup faster
@@ -1052,7 +1065,13 @@ class BreadcrumbRenderer {
         }
 
         dc.setColor(colour, Graphics.COLOR_BLACK);
-        dc.setPenWidth(4);
+        dc.setPenWidth(width);
+        if (style == TRACK_STYLE_BOXES) {
+            dc.setPenWidth(1); // to only change once, not every renderLine call
+        }
+
+        var halfWidth = width / 2;
+        _distanceAccumulator = 0.0f;
 
         var size = breadcrumb.coordinates.size();
         var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
@@ -1087,7 +1106,16 @@ class BreadcrumbRenderer {
                     rotateAroundScreenYOffsetFactoredIn -
                     (rotateSin * nextXScaledAtCenter + rotateCos * nextYScaledAtCenter);
 
-                dc.drawLine(lastXRotated, lastYRotated, nextXRotated, nextYRotated);
+                renderLine(
+                    dc,
+                    style,
+                    width,
+                    halfWidth,
+                    lastXRotated,
+                    lastYRotated,
+                    nextXRotated,
+                    nextYRotated
+                );
 
                 lastXRotated = nextXRotated;
                 lastYRotated = nextYRotated;
@@ -1102,6 +1130,122 @@ class BreadcrumbRenderer {
                 drawEndMarker
             );
         }
+    }
+
+    function renderLineSafe(
+        dc as Dc,
+        style as Number,
+        width as Number,
+        halfWidth as Number,
+        xStart as Float,
+        yStart as Float,
+        xEnd as Float,
+        yEnd as Float
+    ) as Boolean {
+        if (style == TRACK_STYLE_LINE) {
+            dc.drawLine(xStart, yStart, xEnd, yEnd);
+            return true;
+        } else if (style == TRACK_STYLE_POINTS) {
+            dc.fillCircle(xStart, yStart, width);
+            return true;
+        } else if (style == TRACK_STYLE_POINTS_OUTLINE) {
+            dc.drawCircle(xStart, yStart, width);
+            return true;
+        } else if (style == TRACK_STYLE_FILLED_SQUARE) {
+            dc.fillRectangle(xStart - halfWidth, yStart - halfWidth, width, width);
+            return true;
+        } else if (style == TRACK_STYLE_BOXES) {
+            dc.drawRectangle(xStart - halfWidth, yStart - halfWidth, width, width);
+            return true;
+        }
+
+        return false;
+    }
+    
+    function renderLine(
+        dc as Dc,
+        style as Number,
+        width as Number,
+        halfWidth as Number,
+        xStart as Float,
+        yStart as Float,
+        xEnd as Float,
+        yEnd as Float
+    ) as Void {
+        if (renderLineSafe(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd))
+        {
+            return;
+        }
+
+        renderInterpolatedLines(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd);
+    }
+
+    function renderInterpolatedLines(
+        dc as Dc,
+        style as Number,
+        width as Number,
+        halfWidth as Number,
+        xStart as Float,
+        yStart as Float,
+        xEnd as Float,
+        yEnd as Float
+    ) as Void {
+        var dx = xEnd - xStart;
+        var dy = yEnd - yStart;
+        var distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 0.1f) {
+            return;
+        }
+
+        var unitX = dx / distance;
+        var unitY = dy / distance;
+
+        var stepSize = width * 4.0f;
+        var dashLength = width * 2.0f;
+
+        // 1. Fallback for very small segments (Zoomed out)
+        if (distance < stepSize) {
+            renderLineSafe(dc, style - 1, width, halfWidth, xStart, yStart, xEnd, yEnd);
+            _distanceAccumulator += distance;
+            while (_distanceAccumulator >= stepSize) {
+                _distanceAccumulator -= stepSize;
+            }
+            return;
+        }
+
+        // 2. Main Interpolation Loop
+        var currentDist = _distanceAccumulator > 0 ? stepSize - _distanceAccumulator : 0.0f;
+
+        while (currentDist < distance) {
+            var posX = xStart + unitX * currentDist;
+            var posY = yStart + unitY * currentDist;
+
+            if (style == TRACK_STYLE_DASHED) {
+                var endStep = currentDist + dashLength;
+                if (endStep > distance) {
+                    endStep = distance;
+                }
+                dc.drawLine(posX, posY, xStart + unitX * endStep, yStart + unitY * endStep);
+            } else {
+                renderLineSafe(dc, style - 1, width, halfWidth, posX, posY, posX, posY);
+            }
+            currentDist += stepSize;
+        }
+
+        // 3. THE GAP FIX: Handle the "Trailing Edge"
+        // If we are in DASHED mode and the last gap was supposed to be a dash,
+        // but the loop ended before currentDist reached the end, draw to the apex.
+        if (style == TRACK_STYLE_DASHED) {
+            var lastDashEnd = currentDist - stepSize + dashLength;
+            if (lastDashEnd < distance) {
+                // There was a gap between the end of the last dash and the end of segment
+                // but we are still within the "visible" phase of the next potential dash.
+                dc.drawLine(xStart + unitX * lastDashEnd, yStart + unitY * lastDashEnd, xEnd, yEnd);
+            }
+        }
+
+        _distanceAccumulator = currentDist - distance;
     }
 
     (:noUnbufferedRotations)

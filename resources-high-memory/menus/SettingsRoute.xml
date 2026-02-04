@@ -3,5 +3,7 @@
     <toggle-menu-item id="settingsRouteEnabled" label="@Strings.routeEnabled"/>
     <icon-menu-item id="settingsRouteColour" label="@Strings.routeColourTitle" icon="@Drawables.LauncherIcon"/>
     <toggle-menu-item id="settingsRouteReversed" label="@Strings.routeReversed"/>
+    <menu-item id="settingsRouteStyle" label="@Strings.routeStyleTitle"/>
+    <menu-item id="settingsRouteWidth" label="@Strings.routeWidthTitle"/>
     <menu-item id="settingsRouteDelete" label="@Strings.routeDelete"/>
 </menu2>
