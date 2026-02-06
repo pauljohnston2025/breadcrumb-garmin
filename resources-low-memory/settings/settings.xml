@@ -66,6 +66,11 @@
             <listEntry value="7">@Strings.trackStyleFilledSquareInterp</listEntry>
             <listEntry value="8">@Strings.trackStylePointsOutline</listEntry>
             <listEntry value="9">@Strings.trackStylePointsOutlineInterp</listEntry>
+            <listEntry value="10">@Strings.trackStyleChecker</listEntry>
+            <listEntry value="11">@Strings.trackStyleHazard</listEntry>
+            <listEntry value="12">@Strings.trackStyleMatrix</listEntry>
+            <listEntry value="13">@Strings.trackStylePolka</listEntry>
+            <listEntry value="14">@Strings.trackStyleDiamond</listEntry>
         </settingConfig>
     </setting>
 

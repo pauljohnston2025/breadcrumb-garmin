@@ -11,4 +11,10 @@
     <menu-item id="styleBoxesInterp" label="@Strings.trackStyleBoxesInterp" />
     <menu-item id="styleFilledSquareInterp" label="@Strings.trackStyleFilledSquareInterp" />
     <menu-item id="stylePointsOutlineInterp" label="@Strings.trackStylePointsOutlineInterp" />
+
+    <menu-item id="styleChecker" label="@Strings.trackStyleChecker" />
+    <menu-item id="styleHazard" label="@Strings.trackStyleHazard" />
+    <menu-item id="styleMatrix" label="@Strings.trackStyleMatrix" />
+    <menu-item id="stylePolka" label="@Strings.trackStylePolka" />
+    <menu-item id="styleDiamond" label="@Strings.trackStyleDiamond" />
 </menu2>

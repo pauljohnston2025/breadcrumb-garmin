@@ -175,6 +175,14 @@ Determines the visual appearance of your breadcrumb trail.
 * Filled Squares: Solid squares spaced evenly along the path. (CPU Intensive)  
 * Raw Circle Outlines: Hollow circles only at actual GPS coordinates.  
 * Circle Outlines: Hollow circles spaced evenly along the path. (CPU Intensive)  
+* Checkerboard: Tiled dual-tone pattern. Excellent for distinguishing overlapping tracks (Texture).  
+* Hazard Stripes: High-contrast diagonal stripes (Texture).  
+* Dot Matrix: A mesh-like texture that makes the track look semi-transparent (Texture).  
+* Polka Dot: Stylized dots; provides a clear but non-distracting path (Texture).  
+* Diamond Scale: Overlapping geometric pattern resembling scales (Texture).  
+
+
+(Texture) denotes styles that are generated with a texture, this may only work on some supported devices.   
 
 Performance Note: Styles labeled as (CPU Intensive) use interpolation to create a smooth, high-density visual path. This requires significantly more calculations per frame than "Raw" or "Line" styles and may impact battery life, or result in watchdog errors that cause a crash, use them with care.
 

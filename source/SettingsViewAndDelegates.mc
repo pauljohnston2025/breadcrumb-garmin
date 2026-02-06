@@ -2437,6 +2437,17 @@ function getTrackStyleString(style as Number) as ResourceId {
             return Rez.Strings.trackStylePointsOutline;
         case TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED:
             return Rez.Strings.trackStylePointsOutlineInterp;
+        // --- Texture Styles ---
+        case TRACK_STYLE_CHECKERBOARD:
+            return Rez.Strings.trackStyleChecker;
+        case TRACK_STYLE_HAZARD:
+            return Rez.Strings.trackStyleHazard;
+        case TRACK_STYLE_DOT_MATRIX:
+            return Rez.Strings.trackStyleMatrix;
+        case TRACK_STYLE_POLKA_DOT:
+            return Rez.Strings.trackStylePolka;
+        case TRACK_STYLE_DIAMOND:
+            return Rez.Strings.trackStyleDiamond;
         default:
             return Rez.Strings.trackStyleLine;
     }
@@ -2447,8 +2458,7 @@ class SettingsTrackStyleMenu extends WatchUi.Menu2 {
     function initialize(currentStyle as Number) {
         Menu2.initialize({ :title => Rez.Strings.trackStyleTitle });
 
-        // Populate all 10 styles from your Enum
-        for (var i = 0; i <= 9; i++) {
+        for (var i = 0; i < TRACK_STYLE_MAX; i++) {
             var label = getTrackStyleString(i);
             var isSelected = i == currentStyle;
             addItem(new MenuItem(label, isSelected ? "Selected" : "", i, {}));

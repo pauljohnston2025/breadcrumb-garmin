@@ -18,6 +18,13 @@ enum /* TrackStyle */ {
     TRACK_STYLE_FILLED_SQUARE_INTERPOLATED = 7,   // Squares spaced evenly along the path
     TRACK_STYLE_POINTS_OUTLINE = 8,              // Dots only at actual data points, just the circle outline
     TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED = 9, // Dots spaced evenly along the path, just the circle outline
+    TRACK_STYLE_CHECKERBOARD = 10,
+    TRACK_STYLE_HAZARD = 11,
+    TRACK_STYLE_DOT_MATRIX = 12,
+    TRACK_STYLE_POLKA_DOT = 13,
+    TRACK_STYLE_DIAMOND = 14,
+    
+    TRACK_STYLE_MAX
 }
 
 enum /*TrackPointReductionMethod*/ {

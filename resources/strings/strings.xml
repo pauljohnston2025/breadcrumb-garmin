@@ -161,6 +161,11 @@
     <string id="trackStyleFilledSquareInterp">Filled Squares</string>
     <string id="trackStylePointsOutline">Raw Circle Outlines</string>
     <string id="trackStylePointsOutlineInterp">Circle Outlines</string>
+    <string id="trackStyleChecker">Checkerboard</string>
+    <string id="trackStyleHazard">Hazard Stripes</string>
+    <string id="trackStyleMatrix">Dot Matrix</string>
+    <string id="trackStylePolka">Polka Dot</string>
+    <string id="trackStyleDiamond">Diamond Scale</string>
 
 
     <string id="enableMaps1">Enable maps. This breaks on some devices. Are you sure?</string>
