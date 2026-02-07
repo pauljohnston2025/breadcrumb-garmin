@@ -186,6 +186,8 @@ Determines the visual appearance of your breadcrumb trail.
 
 Performance Note: Styles labeled as (CPU Intensive) use interpolation to create a smooth, high-density visual path. This requires significantly more calculations per frame than "Raw" or "Line" styles and may impact battery life, or result in watchdog errors that cause a crash, use them with care.
 
+Note: (CPU Intensive) Styles do more and more cpu work at higher zoom levels, if you zoom in really close the pixel coordinates are further apart, and so more interpolation needs to be done to fill in the gaps (since the whole route/track is still interpolated). Developers Note: Perhaps the distance between interpolated points should be based on meters rather than the pixel width of the track.
+
 ### Track Width
 
 The thickness (in pixels) of the track drawn on the screen. Default is usually 4 pixels. Larger widths make the track easier to see but may obscure map details.  

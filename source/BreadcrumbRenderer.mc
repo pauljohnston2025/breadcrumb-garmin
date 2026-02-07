@@ -1165,10 +1165,10 @@ class BreadcrumbRenderer {
             dc.drawLine(xStart, yStart, xEnd, yEnd);
             return true;
         } else if (style == TRACK_STYLE_POINTS) {
-            dc.fillCircle(xStart, yStart, width);
+            dc.fillCircle(xStart, yStart, halfWidth);
             return true;
         } else if (style == TRACK_STYLE_POINTS_OUTLINE) {
-            dc.drawCircle(xStart, yStart, width);
+            dc.drawCircle(xStart, yStart, halfWidth);
             return true;
         } else if (style == TRACK_STYLE_FILLED_SQUARE) {
             dc.fillRectangle(xStart - halfWidth, yStart - halfWidth, width, width);
@@ -1219,40 +1219,60 @@ class BreadcrumbRenderer {
         var distance = Math.sqrt(dx * dx + dy * dy).toFloat();
 
         if (distance < 0.1f) {
+            // Add this distance to the accumulator so it's not "lost"
+            _distanceAccumulator += distance;
             return;
         }
 
         var unitX = dx / distance;
         var unitY = dy / distance;
-        var stepSize = width * 4.0f;
-        var dashLength = width * 2.0f;
 
-        // --- 3. MAIN INTERPOLATION LOOP ---
-        var currentDist = stepSize - _distanceAccumulator;
+        // Adjust these based on preference.
+        // dashLength, gaps are the same size
 
-        while (currentDist <= distance) {
-            var posX = xStart + unitX * currentDist;
-            var posY = yStart + unitY * currentDist;
+        var isDashed = (style == TRACK_STYLE_DASHED);
+        var dashLength = isDashed ? width * 2.0f : width;
+        var stepSize = dashLength *2;
 
+        // Start relative to the remainder of the previous segment
+        // OFFSET LOGIC:
+        // For shapes, we want to draw at the MIDPOINT of the step for better alignment
+        var offset = isDashed ? 0.0f : dashLength / 2.0f;
+        var currentDist = offset - _distanceAccumulator;
+
+        while (currentDist < distance) {
             if (style == TRACK_STYLE_DASHED) {
-                var endStep = currentDist + dashLength;
-                var actualEndX = endStep > distance ? xEnd : xStart + unitX * endStep;
-                var actualEndY = endStep > distance ? yEnd : yStart + unitY * endStep;
-                dc.drawLine(posX, posY, actualEndX, actualEndY);
+                // --- LOGIC FOR CONTINUOUS DASHES ---
+                var dashEnd = currentDist + dashLength;
+                var drawStart = currentDist < 0 ? 0.0f : currentDist;
+                var drawEnd = dashEnd > distance ? distance : dashEnd;
+
+                if (drawEnd > drawStart) {
+                    dc.drawLine(
+                        xStart + unitX * drawStart,
+                        yStart + unitY * drawStart,
+                        xStart + unitX * drawEnd,
+                        yStart + unitY * drawEnd
+                    );
+                }
             } else {
-                renderLineSafe(dc, style - 1, width, halfWidth, posX, posY, posX, posY);
+                // --- INTERPOLATED SHAPE LOGIC ---
+                // If currentDist is negative, it means the point belongs to the PREVIOUS segment
+                if (currentDist >= 0) {
+                    var posX = xStart + unitX * currentDist;
+                    var posY = yStart + unitY * currentDist;
+                    // Note: Use style - 1 or a specific mapping to convert 
+                    // "INTERPOLATED_DOTS" to "DOT"
+                    renderLineSafe(dc, style - 1, width, halfWidth, posX, posY, posX, posY);
+                }
             }
+
             currentDist += stepSize;
         }
 
-        // --- 4. ACCUMULATOR SYNC ---
-        // The leftover distance becomes the starting accumulator for the next segment.
-        _distanceAccumulator = distance - (currentDist - stepSize);
-
-        // Clamp to prevent negative drift from floating point precision
-        if (_distanceAccumulator < 0) {
-            _distanceAccumulator = 0.0f;
-        }
+        // Sync the accumulator so the next segment starts its first dash/point
+        // at the mathematically correct distance.
+        _distanceAccumulator = currentDist - distance;
     }
 
     (:noUnbufferedRotations)
@@ -2674,8 +2694,7 @@ class BreadcrumbRenderer {
         }
 
         width = width / 2; // elevation chart shows whole route, use to be 4 times thinner (single pixel), but that would mess with the textures, we will halve it for now
-        if (width < 1)
-        {
+        if (width < 1) {
             width = 1;
         }
 
@@ -2711,7 +2730,17 @@ class BreadcrumbRenderer {
             var currChartX = prevChartX + xDistance * hScale;
             var currChartY = prevChartY + yDistance * vScale;
 
-            renderLine(dc, style, texture, width, halfWidth, prevChartX, prevChartY, currChartX, currChartY);
+            renderLine(
+                dc,
+                style,
+                texture,
+                width,
+                halfWidth,
+                prevChartX,
+                prevChartY,
+                currChartX,
+                currChartY
+            );
 
             prevPointX = currPointX;
             prevPointY = currPointY;
