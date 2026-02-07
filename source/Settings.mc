@@ -8,23 +8,23 @@ import Toybox.WatchUi;
 import Toybox.PersistedContent;
 
 enum /* TrackStyle */ {
-    TRACK_STYLE_LINE = 0,                // Standard continuous line
-    TRACK_STYLE_DASHED = 1,              // Interpolated dashes
-    TRACK_STYLE_POINTS = 2,              // Dots only at actual data points
+    TRACK_STYLE_LINE = 0, // Standard continuous line
+    TRACK_STYLE_DASHED = 1, // Interpolated dashes
+    TRACK_STYLE_POINTS = 2, // Dots only at actual data points
     TRACK_STYLE_POINTS_INTERPOLATED = 3, // Dots spaced evenly along the path
-    TRACK_STYLE_BOXES = 4,               // Squares outline only at actual data points
-    TRACK_STYLE_BOXES_INTERPOLATED = 5,   // Squares outline spaced evenly along the path
-    TRACK_STYLE_FILLED_SQUARE = 6,               // Squares only at actual data points
-    TRACK_STYLE_FILLED_SQUARE_INTERPOLATED = 7,   // Squares spaced evenly along the path
-    TRACK_STYLE_POINTS_OUTLINE = 8,              // Dots only at actual data points, just the circle outline
+    TRACK_STYLE_BOXES = 4, // Squares outline only at actual data points
+    TRACK_STYLE_BOXES_INTERPOLATED = 5, // Squares outline spaced evenly along the path
+    TRACK_STYLE_FILLED_SQUARE = 6, // Squares only at actual data points
+    TRACK_STYLE_FILLED_SQUARE_INTERPOLATED = 7, // Squares spaced evenly along the path
+    TRACK_STYLE_POINTS_OUTLINE = 8, // Dots only at actual data points, just the circle outline
     TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED = 9, // Dots spaced evenly along the path, just the circle outline
     TRACK_STYLE_CHECKERBOARD = 10,
     TRACK_STYLE_HAZARD = 11,
     TRACK_STYLE_DOT_MATRIX = 12,
     TRACK_STYLE_POLKA_DOT = 13,
     TRACK_STYLE_DIAMOND = 14,
-    
-    TRACK_STYLE_MAX
+
+    TRACK_STYLE_MAX,
 }
 
 enum /*TrackPointReductionMethod*/ {
@@ -549,12 +549,14 @@ class Settings {
     var showDirectionPoints as Boolean = false;
     var showDirectionPointTextUnderIndex as Number = 0;
 
-    // these settings can only be modified externally, but we cahe them for faster/easier lookup
+    // these settings can only be modified externally, but we cache them for faster/easier lookup
     // https://www.youtube.com/watch?v=LasrD6SZkZk&ab_channel=JaylaB
     var distanceImperialUnits as Boolean =
         System.getDeviceSettings().distanceUnits == System.UNIT_STATUTE;
     var elevationImperialUnits as Boolean =
         System.getDeviceSettings().elevationUnits == System.UNIT_STATUTE;
+    var trackTexture as Graphics.BitmapTexture or Number = -1; // -1 is to say use colour instead
+    var routeTextures as Array<Graphics.BitmapTexture or Number> = []; // -1 is to say use colour instead
 
     (:lowMemory)
     function routeMax() as Number {
@@ -1120,17 +1122,19 @@ class Settings {
         }
         setValue("maxTrackPoints", maxTrackPoints);
     }
-    
+
     (:settingsView)
     function setTrackStyle(value as Number) as Void {
         trackStyle = value;
         setValue("trackStyle", trackStyle);
+        recomputeTrackTexture();
     }
-    
+
     (:settingsView)
     function setTrackWidth(value as Number) as Void {
         trackWidth = value;
         setValue("trackWidth", trackWidth);
+        recomputeTrackTexture();
     }
 
     function maxTrackPointsChanged() as Void {
@@ -1540,7 +1544,7 @@ class Settings {
         }
         return routes[routeIndex]["reversed"] as Boolean;
     }
-    
+
     function routeStyle(routeId as Number) as Number {
         var routeIndex = getRouteIndexById(routeId);
         if (routeIndex == null) {
@@ -1548,7 +1552,16 @@ class Settings {
         }
         return routes[routeIndex]["style"] as Number;
     }
-    
+
+    function routeTexture(routeId as Number) as Graphics.BitmapTexture or Number {
+        var routeIndex = getRouteIndexById(routeId);
+        if (routeIndex == null) {
+            return -1;
+        }
+        padRouteTextures(routeIndex);
+        return routeTextures[routeIndex];
+    }
+
     function routeWidth(routeId as Number) as Number {
         var routeIndex = getRouteIndexById(routeId);
         if (routeIndex == null) {
@@ -1566,6 +1579,7 @@ class Settings {
 
         routes[routeIndex]["colour"] = value;
         saveRoutes();
+        recomputeRouteTexture(routeIndex, routeStyle(routeId), routeWidth(routeId), value);
     }
 
     // see oddity with route name and route loading new in context.newRoute
@@ -1579,7 +1593,7 @@ class Settings {
         routes[routeIndex]["name"] = value;
         saveRoutes();
     }
-    
+
     function setRouteStyle(routeId as Number, value as Number) as Void {
         ensureRouteId(routeId);
         var routeIndex = getRouteIndexById(routeId);
@@ -1589,8 +1603,9 @@ class Settings {
 
         routes[routeIndex]["style"] = value;
         saveRoutes();
+        recomputeRouteTexture(routeIndex, value, routeWidth(routeId), routeColour(routeId));
     }
-    
+
     function setRouteWidth(routeId as Number, value as Number) as Void {
         ensureRouteId(routeId);
         var routeIndex = getRouteIndexById(routeId);
@@ -1600,6 +1615,7 @@ class Settings {
 
         routes[routeIndex]["width"] = value;
         saveRoutes();
+        recomputeRouteTexture(routeIndex, routeStyle(routeId), value, routeColour(routeId));
     }
 
     function setRouteEnabled(routeId as Number, value as Boolean) as Void {
@@ -1717,6 +1733,41 @@ class Settings {
     function setTrackColour(value as Number) as Void {
         trackColour = value;
         setValue("trackColour", trackColour.format("%X"));
+        recomputeTrackTexture();
+    }
+
+    function recomputeTrackTexture() as Void {
+        trackTexture = getTexture(trackStyle, trackWidth, trackWidth / 2, trackColour);
+    }
+
+    function recomputeRouteTexture(
+        routeIndex as Number,
+        currentStyle as Number,
+        currentWidth as Number,
+        currentColour as Number
+    ) as Void {
+        padRouteTextures(routeIndex);
+        routeTextures[routeIndex] = getTexture(
+            currentStyle,
+            currentWidth,
+            currentWidth / 2,
+            currentColour
+        );
+    }
+
+    function padRouteTextures(routeIndex as Number) as Void {
+        if (routeTextures.size() <= routeIndex) {
+            // Calculate how many new slots we need
+            var elementsToAdd = routeIndex + 1 - routeTextures.size();
+
+            // Create the "padding" array filled with -1
+            var padding = new [elementsToAdd] as Array<Graphics.BitmapTexture or Number>;
+            for (var i = 0; i < elementsToAdd; i++) {
+                padding[i] = -1;
+            }
+
+            routeTextures.addAll(padding);
+        }
     }
 
     (:settingsView)
@@ -2465,6 +2516,15 @@ class Settings {
         loadSettings();
         updateMapChoiceChange(mapChoice);
         setMinTrackPointDistanceMSideEffect();
+        for (var i = 0; i < routes.size(); ++i) {
+            var routeId = routes[i]["routeId"] as Number;
+            recomputeRouteTexture(
+                i,
+                routeStyle(routeId),
+                routeWidth(routeId),
+                routeColour(routeId)
+            );
+        }
     }
 
     function loadSettingsPart1() as Void {
@@ -2654,7 +2714,7 @@ class Settings {
     function defaultNumberParser(key as String, value as PropertyValueType) as Number {
         return parseNumberRaw(key, value, 0);
     }
-    
+
     function defaultNumberParser4(key as String, value as PropertyValueType) as Number {
         return parseNumberRaw(key, value, 4);
     }
@@ -2694,6 +2754,9 @@ class Settings {
         var oldTileErrorColour = tileErrorColour;
         var oldShowErrorTileMessages = showErrorTileMessages;
         var oldMinTrackPointDistanceM = minTrackPointDistanceM;
+        var oldTrackStyle = trackStyle;
+        var oldTrackWidth = trackWidth;
+        var oldTrackColour = trackColour;
         loadSettings();
         // route settins do not work because garmins setting spage cannot edit them
         // when any property is modified, so we have to explain to users not to touch the settings, but we cannot because it looks
@@ -2705,8 +2768,20 @@ class Settings {
             var routeIndex = getRouteIndexById(oldRouteId);
             if (routeIndex != null) {
                 // we have the same route
-                if (oldRouteEntry["reversed"] != routes[routeIndex]["reversed"]) {
+                var currentRouteEntry = routes[routeIndex];
+                if (oldRouteEntry["reversed"] != currentRouteEntry["reversed"]) {
                     getApp()._breadcrumbContext.reverseRouteId(oldRouteId);
+                }
+
+                var currentStyle = currentRouteEntry["style"] as Number;
+                var currentWidth = currentRouteEntry["width"] as Number;
+                var currentColour = currentRouteEntry["colour"] as Number;
+                if (
+                    oldRouteEntry["style"] != currentStyle ||
+                    oldRouteEntry["width"] != currentWidth ||
+                    oldRouteEntry["colour"] != currentColour
+                ) {
+                    recomputeRouteTexture(routeIndex, currentStyle, currentWidth, currentColour);
                 }
 
                 continue;
@@ -2771,6 +2846,14 @@ class Settings {
 
         if (oldMinTrackPointDistanceM != minTrackPointDistanceM) {
             setMinTrackPointDistanceMSideEffect();
+        }
+
+        if (
+            oldTrackStyle != trackStyle ||
+            oldTrackWidth != trackWidth ||
+            oldTrackColour != trackColour
+        ) {
+            recomputeTrackTexture();
         }
 
         setValueSideEffect();

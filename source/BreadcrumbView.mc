@@ -806,6 +806,7 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                 routeColour,
                 true,
                 settings.routeStyle(route.storageIndex),
+                settings.routeTexture(route.storageIndex),
                 settings.routeWidth(route.storageIndex)
             );
             if (settings.showPoints) {
@@ -824,6 +825,7 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             settings.trackColour,
             false,
             settings.trackStyle,
+            settings.trackTexture,
             settings.trackWidth
         );
         if (settings.showPoints) {
@@ -855,6 +857,7 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                 routeColour,
                 true,
                 settings.routeStyle(route.storageIndex),
+                settings.routeTexture(route.storageIndex),
                 settings.routeWidth(route.storageIndex)
             );
             if (settings.showPoints) {
@@ -873,6 +876,7 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             settings.trackColour,
             false,
             settings.trackStyle,
+            settings.trackTexture,
             settings.trackWidth
         );
         if (settings.showPoints) {
@@ -1242,6 +1246,9 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                     renderer._xElevationStart,
                     route,
                     settings.routeColour(route.storageIndex),
+                    settings.routeStyle(route.storageIndex),
+                    settings.routeTexture(route.storageIndex),
+                    settings.routeWidth(route.storageIndex),
                     hScale,
                     vScale,
                     startAt
@@ -1253,6 +1260,9 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             renderer._xElevationStart,
             track,
             settings.trackColour,
+            settings.trackStyle,
+            settings.trackTexture,
+            settings.trackWidth,
             hScale,
             vScale,
             startAt
@@ -1305,6 +1315,9 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                     elevationStartX,
                     route,
                     settings.routeColour(route.storageIndex),
+                    settings.routeStyle(route.storageIndex),
+                    settings.routeTexture(route.storageIndex),
+                    settings.routeWidth(route.storageIndex),
                     hScale,
                     vScale,
                     startAt
@@ -1316,6 +1329,9 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             renderer._xElevationStart,
             track,
             settings.trackColour,
+            settings.trackStyle,
+            settings.trackTexture,
+            settings.trackWidth,
             hScale,
             vScale,
             startAt
