@@ -609,15 +609,13 @@ class BreadcrumbRenderer {
         var rotateAroundScreenYOffsetFactoredIn = _cachedValues.rotateAroundScreenYOffsetFactoredIn; // local lookup faster
 
         if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            // its very cofusing seeing the routes disappear when scrolling
-            // and it makes sense to want to sroll around the route too
             return;
         }
 
         dc.setColor(colour, Graphics.COLOR_BLACK);
         dc.setPenWidth(width);
-        if (style == TRACK_STYLE_BOXES) {
-            dc.setPenWidth(1); // to only change once, not every renderLine call
+        if (style == TRACK_STYLE_BOXES || style == TRACK_STYLE_BOXES_INTERPOLATED || style == TRACK_STYLE_POINTS_OUTLINE || style == TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED) {
+            dc.setPenWidth(2); // to only change once, not every renderLine call
         }
         var halfWidth = width / 2;
         if (isTextureStyle(style)) {
@@ -1070,8 +1068,8 @@ class BreadcrumbRenderer {
 
         dc.setColor(colour, Graphics.COLOR_BLACK);
         dc.setPenWidth(width);
-        if (style == TRACK_STYLE_BOXES) {
-            dc.setPenWidth(1); // to only change once, not every renderLine call
+        if (style == TRACK_STYLE_BOXES || style == TRACK_STYLE_BOXES_INTERPOLATED || style == TRACK_STYLE_POINTS_OUTLINE || style == TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED) {
+            dc.setPenWidth(2); // to only change once, not every renderLine call
         }
         var halfWidth = width / 2;
         if (isTextureStyle(style)) {
@@ -1281,7 +1279,33 @@ class BreadcrumbRenderer {
         return new Graphics.BitmapTexture({ :bitmap => bitmap });
     }
 
+    var oldTextureStyle as Number = -1;
+    var oldTextureWidth as Number = -1;
+    var oldTextureColour as Number = -1;
+    var cachedTexture as Graphics.BitmapTexture or Number = -1;
+
     function getTexture(
+        style as Number,
+        width as Number,
+        halfWidth as Number,
+        colour as Number
+    ) as Graphics.BitmapTexture or Number {
+        if (oldTextureStyle == style && oldTextureWidth == width && oldTextureColour == colour) {
+            // we have to cache it because making the buffered bitmap over and over again each render causes delays (and eventually locks up the datafield)
+            // I think its because the graphics pool just keeps getting added to over and over again
+            // we should probably keep the last 4 (track and 3 routes, otherwise it will swap out each time)
+            // but then we need a LRU cache dictionary and a whole heap of hell
+            return cachedTexture;
+        }
+
+        cachedTexture = getTextureRaw(style, width, halfWidth, colour);
+        oldTextureStyle = style;
+        oldTextureWidth = width;
+        oldTextureColour = colour;
+        return cachedTexture;
+    }
+
+    function getTextureRaw(
         style as Number,
         width as Number,
         halfWidth as Number,
