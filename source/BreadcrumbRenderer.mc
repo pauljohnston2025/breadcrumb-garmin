@@ -627,8 +627,7 @@ class BreadcrumbRenderer {
         if (texture != -1) {
             dc.setStroke(texture);
         }
-
-        _distanceAccumulator = 0.0f;
+        _distanceAccumulator = 0.0f; // without this the track shifts around, might actually be a nice setting/look we could make the track move in the direction of travel, and it would look like an animation
 
         var size = breadcrumb.coordinates.size();
         var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
@@ -1088,8 +1087,7 @@ class BreadcrumbRenderer {
         if (texture != -1) {
             dc.setStroke(texture);
         }
-
-        _distanceAccumulator = 0.0f;
+        _distanceAccumulator = 0.0f; // without this the track shifts around, might actually be a nice setting/look we could make the track move in the direction of travel, and it would look like an animation
 
         var size = breadcrumb.coordinates.size();
         var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
@@ -2712,6 +2710,7 @@ class BreadcrumbRenderer {
         if (texture != -1) {
             dc.setStroke(texture);
         }
+        _distanceAccumulator = 0.0f; // without this the track shifts around, might actually be a nice setting/look we could make the track move in the direction of travel, and it would look like an animation
 
         var coordinatesRaw = track.coordinates._internalArrayBuffer;
         var prevPointX = coordinatesRaw[0];
