@@ -649,7 +649,7 @@ class BreadcrumbRenderer {
                     rotateAroundScreenYOffsetFactoredIn -
                     (coordinatesRaw[i + 1] - centerPosition.y);
 
-                renderLine(dc, style, texture, width, halfWidth, lastX, lastY, nextX, nextY);
+                renderLineChecked(dc, style, texture, width, halfWidth, lastX, lastY, nextX, nextY);
 
                 lastX = nextX;
                 lastY = nextY;
@@ -1122,7 +1122,7 @@ class BreadcrumbRenderer {
                     rotateAroundScreenYOffsetFactoredIn -
                     (rotateSin * nextXScaledAtCenter + rotateCos * nextYScaledAtCenter);
 
-                renderLine(
+                renderLineChecked(
                     dc,
                     style,
                     texture,
@@ -1149,7 +1149,7 @@ class BreadcrumbRenderer {
         }
     }
 
-    function renderLineSafe(
+    function renderLineStyle(
         dc as Dc,
         style as Number,
         width as Number,
@@ -1179,6 +1179,50 @@ class BreadcrumbRenderer {
         return false;
     }
 
+    function renderLineChecked(
+        dc as Dc,
+        style as Number,
+        texture as Graphics.BitmapTexture or Number,
+        width as Number,
+        halfWidth as Number,
+        xStart as Float,
+        yStart as Float,
+        xEnd as Float,
+        yEnd as Float
+    ) as Void {
+        // I assumed garmin checked the limits of the line before trying to render it, but textured line renders take a long time at high zoom levels.
+        // I assume garmin expect all calls to dc.draw to be on the screen, and so they try and grab the colour for each pixel from the texture before rendering it to their buffer.
+        // This proves to be extremely slow, since at high zoom levels the pixel dimensions are really large, and most will be off screen.
+        // Also my renderInterpolatedLineStyle algorithm takes longer and longer, as the length of the line segments becomes larger as we zoom in further. This leads to watchdog crashes, so I've got to handle it anyway for that.
+
+        // how expensive are these function calls?
+        // and all these checks?
+        var screenWidth = dc.getWidth();
+        var screenHeight = dc.getHeight();
+        // note: this check is not perfect, as the line has width, but its normally on the order of <10 pixels, which means only 5 pixels form the corners 'might' be touching the edge of the screen.
+        // Its a round screen most of the time anyway, so it would only be clipping the very edge of frame, so we will just skip it for now, so we do not have to do more math and more computations here.
+        // We could pass in screenWidth and screenHeight that is already offset
+        if (
+            (xStart < 0 && xEnd < 0) ||
+            (yStart < 0 && yEnd < 0) ||
+            (xStart > screenWidth && xEnd > screenWidth) ||
+            (yStart > screenHeight && yEnd > screenHeight)
+        ) {
+            // wow this is expensive if we are not in a renderInterpolatedLineStyle mode
+            // do we even need it? It does maintain consistent dashes/dots etc
+            var dx = xEnd - xStart;
+            var dy = yEnd - yStart;
+            var distance = Math.sqrt(dx * dx + dy * dy).toFloat();
+            _distanceAccumulator += distance;
+            var stepSize = calcStepSize(width);
+            var wraps = (_distanceAccumulator / stepSize).toNumber();
+            _distanceAccumulator -= wraps * stepSize;
+            return;
+        }
+
+        renderLine(dc, style, texture, width, halfWidth, xStart, yStart, xEnd, yEnd);
+    }
+
     function renderLine(
         dc as Dc,
         style as Number,
@@ -1195,14 +1239,18 @@ class BreadcrumbRenderer {
             return;
         }
 
-        if (renderLineSafe(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd)) {
+        if (renderLineStyle(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd)) {
             return;
         }
 
-        renderInterpolatedLines(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd);
+        renderInterpolatedLineStyle(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd);
     }
 
-    function renderInterpolatedLines(
+    function calcStepSize(width as Number) as Float {
+        return width * 4.0f;
+    }
+
+    function renderInterpolatedLineStyle(
         dc as Dc,
         style as Number,
         width as Number,
@@ -1224,11 +1272,26 @@ class BreadcrumbRenderer {
         var unitX = dx / distance;
         var unitY = dy / distance;
 
-        var isDashed = (style == TRACK_STYLE_DASHED);
+        var isDashed = style == TRACK_STYLE_DASHED;
         // var dashLength = isDashed ? width * 2.0f : width; This make the shapes to close together at high zoom levels, and results in extreme lag due to so many points being interpolated
         // so leaving at width * 2.0f for now (even though it does not look as good)
         var dashLength = width * 2.0f;
-        var stepSize = dashLength *2;
+        var stepSize = calcStepSize(width);
+
+        // --- SAFETY VALVE ---
+        // If the segment is massive (e.g. 5000px, like a really long diagonal that goes through the screen), don't loop 500 times.
+        // Just draw a solid line and sync the accumulator.
+        // This is pretty unlikely, since the route points are normally fairly close together.
+        // We would have to be incredibly zoomed in and then 90% of the other segments would be off screen anyway, so calculating the entire length of this one is probably fine.
+        var numberOfLoops = distance / stepSize;
+        if (numberOfLoops > 100.0f) {
+            dc.drawLine(xStart, yStart, xEnd, yEnd);
+
+            _distanceAccumulator += distance;
+            var wraps = (_distanceAccumulator / stepSize).toNumber();
+            _distanceAccumulator -= wraps * stepSize;
+            return;
+        }
 
         // IMPORTANT: currentDist starts at the "debt" from the last segment.
         // If _distanceAccumulator is 2.0 and stepSize is 10.0,
@@ -1261,7 +1324,7 @@ class BreadcrumbRenderer {
                 if (currentDist >= 0) {
                     var posX = xStart + unitX * currentDist;
                     var posY = yStart + unitY * currentDist;
-                    renderLineSafe(dc, style - 1, width, halfWidth, posX, posY, posX, posY);
+                    renderLineStyle(dc, style - 1, width, halfWidth, posX, posY, posX, posY);
                 }
             }
             currentDist += stepSize;
@@ -2727,6 +2790,7 @@ class BreadcrumbRenderer {
             var currChartX = prevChartX + xDistance * hScale;
             var currChartY = prevChartY + yDistance * vScale;
 
+            // all elevation points are on screen, so we do not need to do renderLineChecked, though maybe we should for consistency?
             renderLine(
                 dc,
                 style,
