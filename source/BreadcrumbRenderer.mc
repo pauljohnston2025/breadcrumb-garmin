@@ -1158,114 +1158,29 @@ class BreadcrumbRenderer {
         yStart as Float,
         xEnd as Float,
         yEnd as Float
-    ) as Void {
-        if (style == TRACK_STYLE_POINTS) {
+    ) as Boolean {
+        if (style == TRACK_STYLE_LINE) {
+            dc.drawLine(xStart, yStart, xEnd, yEnd);
+            return true;
+        } else if (style == TRACK_STYLE_POINTS) {
             dc.fillCircle(xStart, yStart, halfWidth);
+            return true;
         } else if (style == TRACK_STYLE_POINTS_OUTLINE) {
             dc.drawCircle(xStart, yStart, halfWidth);
+            return true;
         } else if (style == TRACK_STYLE_FILLED_SQUARE) {
             dc.fillRectangle(xStart - halfWidth, yStart - halfWidth, width, width);
+            return true;
         } else if (style == TRACK_STYLE_BOXES) {
             dc.drawRectangle(xStart - halfWidth, yStart - halfWidth, width, width);
+            return true;
         }
 
-        logE("no line drawn");
-    }
-
-    // Liang-Barsky Parametric Line Clipping Algorithm
-    // Returns [tEntry, tExit] where t is a value from 0.0 to 1.0 along the line.
-    // Returns null if the line is completely outside the clipping window.
-    private function getClipTs(
-        xStart as Float,
-        yStart as Float,
-        dx as Float,
-        dy as Float,
-        w as Number,
-        h as Number
-    ) as Array<Float>? {
-        var t0 = 0.0f; // The "Time of Entry" into the screen
-        var t1 = 1.0f; // The "Time of Exit" from the screen
-        var t = 0.0f;
-
-        // --- X-AXIS BOUNDARIES (Left & Right) ---
-        if (dx == 0) {
-            // Vertical line check: If x is off-screen, the whole line is out.
-            if (xStart < 0 || xStart > w) {
-                return null;
-            }
-        } else {
-            // Cache the inverse to turn expensive divisions into faster multiplications.
-            var invDx = 1.0f / dx;
-
-            // Edge: Left (x=0)
-            t = -xStart * invDx;
-            if (dx > 0) {
-                if (t > t0) {
-                    t0 = t;
-                }
-            } // Entering from left: maximize t0
-            else {
-                if (t < t1) {
-                    t1 = t;
-                }
-            } // Leaving to the left: minimize t1
-
-            // Edge: Right (x=w)
-            t = (w - xStart) * invDx;
-            if (dx < 0) {
-                if (t > t0) {
-                    t0 = t;
-                }
-            } // Entering from right: maximize t0
-            else {
-                if (t < t1) {
-                    t1 = t;
-                }
-            } // Leaving to the right: minimize t1
-        }
-
-        // --- Y-AXIS BOUNDARIES (Top & Bottom) ---
-        if (dy == 0) {
-            // Horizontal line check: If y is off-screen, the whole line is out.
-            if (yStart < 0 || yStart > h) {
-                return null;
-            }
-        } else {
-            var invDy = 1.0f / dy;
-
-            // Edge: Top (y=0)
-            t = -yStart * invDy;
-            if (dy > 0) {
-                if (t > t0) {
-                    t0 = t;
-                }
-            } // Entering from top: maximize t0
-            else {
-                if (t < t1) {
-                    t1 = t;
-                }
-            } // Leaving to the top: minimize t1
-
-            // Edge: Bottom (y=h)
-            t = (h - yStart) * invDy;
-            if (dy < 0) {
-                if (t > t0) {
-                    t0 = t;
-                }
-            } // Entering from bottom: maximize t0
-            else {
-                if (t < t1) {
-                    t1 = t;
-                }
-            } // Leaving to the bottom: minimize t1
-        }
-
-        // If Entry Time is after Exit Time, the line missed the window entirely.
-        return t0 <= t1 ? [t0, t1] as Array<Float> : null;
+        return false;
     }
 
     function renderLineChecked(
-        dc as Graphics.Dc,
+        dc as Dc,
         style as Number,
         texture as Graphics.BitmapTexture or Number,
         width as Number,
@@ -1275,78 +1190,143 @@ class BreadcrumbRenderer {
         xEnd as Float,
         yEnd as Float
     ) as Void {
-        // until I trust the below code, going to add a back compat that does the old logic.
-        // The below code might be significantly slower, and result in watchdog errors since im doing all the math now rather than garmins graphics engine)
-        if (style == TRACK_STYLE_LINE) {
-            dc.drawLine(xStart, yStart, xEnd, yEnd);
-            return;
-        }
-
         // I assumed garmin checked the limits of the line before trying to render it, but textured line renders take a long time at high zoom levels.
         // I assume garmin expect all calls to dc.draw to be on the screen, and so they try and grab the colour for each pixel from the texture before rendering it to their buffer.
         // This proves to be extremely slow, since at high zoom levels the pixel dimensions are really large, and most will be off screen.
         // Also my renderInterpolatedLineStyle algorithm takes longer and longer, as the length of the line segments becomes larger as we zoom in further. This leads to watchdog crashes, so I've got to handle it anyway for that.
 
-        var sw = dc.getWidth();
-        var sh = dc.getHeight();
-        var dx = xEnd - xStart;
-        var dy = yEnd - yStart;
-
-        // Total geometric length of this segment
-        var distance = Math.sqrt(dx * dx + dy * dy).toFloat();
-        // Step size for dashes/points (e.g., width * 4.0)
-        var stepSize = calcStepSize(width);
-
-        // --- CATEGORY 1: VERTEX STYLES ---
-        // These styles only draw once at the start coordinate (xStart, yStart).
-        // Based on your enum, these are even numbers >= 2.
-        if (style >= 2 && style % 2 == 0 && texture == -1) {
-            // Clip the point itself: Only draw if the vertex is actually on the screen.
-            if (xStart >= 0 && xStart <= sw && yStart >= 0 && yStart <= sh) {
-                renderLineStyle(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd);
-            }
-            // IMPORTANT: We must update the distance accumulator even for off-screen points
-            // so that the NEXT line segment starts its dashes at the correct phase.
+        // how expensive are these function calls?
+        // and all these checks?
+        var screenWidth = dc.getWidth();
+        var screenHeight = dc.getHeight();
+        // note: this check is not perfect, as the line has width, but its normally on the order of <10 pixels, which means only 5 pixels form the corners 'might' be touching the edge of the screen.
+        // Its a round screen most of the time anyway, so it would only be clipping the very edge of frame, so we will just skip it for now, so we do not have to do more math and more computations here.
+        // We could pass in screenWidth and screenHeight that is already offset
+        if (
+            (xStart < 0 && xEnd < 0) ||
+            (yStart < 0 && yEnd < 0) ||
+            (xStart > screenWidth && xEnd > screenWidth) ||
+            (yStart > screenHeight && yEnd > screenHeight)
+        ) {
+            // wow this is expensive if we are not in a renderInterpolatedLineStyle mode
+            // do we even need it? It does maintain consistent dashes/dots etc
+            var dx = xEnd - xStart;
+            var dy = yEnd - yStart;
+            var distance = Math.sqrt(dx * dx + dy * dy).toFloat();
+            var stepSize = calcStepSize(width);
             updateAccumulator(distance, stepSize);
             return;
         }
 
-        // --- CATEGORY 2: PATH STYLES (Lines, Dashes, Interpolated Patterns) ---
-        if (distance < 0.1f) {
+        renderLine(dc, style, texture, width, halfWidth, xStart, yStart, xEnd, yEnd);
+    }
+
+    function renderLine(
+        dc as Dc,
+        style as Number,
+        texture as Graphics.BitmapTexture or Number,
+        width as Number,
+        halfWidth as Number,
+        xStart as Float,
+        yStart as Float,
+        xEnd as Float,
+        yEnd as Float
+    ) as Void {
+        if (texture != -1) {
+            dc.drawLine(xStart, yStart, xEnd, yEnd);
             return;
         }
 
-        // Run the Liang-Barsky clipper to get visible range [t0, t1]
-        var clip = getClipTs(xStart, yStart, dx, dy, sw, sh);
-
-        if (clip != null) {
-            var t0 = clip[0]; // Start of visible line
-            var t1 = clip[1]; // End of visible line
-
-            if (texture != -1 || style == TRACK_STYLE_LINE) {
-                // Standard continuous line: Just draw the clipped segment.
-                dc.drawLine(xStart + dx * t0, yStart + dy * t0, xStart + dx * t1, yStart + dy * t1);
-            } else {
-                // Complex styles: Call the watchdog-safe interpolation loop.
-                renderInterpolated(
-                    dc,
-                    style,
-                    width,
-                    halfWidth,
-                    xStart,
-                    yStart,
-                    dx,
-                    dy,
-                    distance,
-                    t0,
-                    t1,
-                    stepSize
-                );
-            }
+        if (renderLineStyle(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd)) {
+            return;
         }
 
-        // Always sync the distance debt for the next segment.
-        updateAccumulator(distance, stepSize);
+        renderInterpolatedLineStyle(dc, style, width, halfWidth, xStart, yStart, xEnd, yEnd);
+    }
+
+    function calcStepSize(width as Number) as Float {
+        return width * 4.0f;
+    }
+
+    function renderInterpolatedLineStyle(
+        dc as Dc,
+        style as Number,
+        width as Number,
+        halfWidth as Number,
+        xStart as Float,
+        yStart as Float,
+        xEnd as Float,
+        yEnd as Float
+    ) as Void {
+        var dx = xEnd - xStart;
+        var dy = yEnd - yStart;
+        var distance = Math.sqrt(dx * dx + dy * dy).toFloat();
+
+        if (distance < 0.1f) {
+            _distanceAccumulator += distance;
+            return;
+        }
+
+        var unitX = dx / distance;
+        var unitY = dy / distance;
+
+        // var isDashed = style == TRACK_STYLE_DASHED;
+        // var dashLength = isDashed ? width * 2.0f : width; This make the shapes to close together at high zoom levels, and results in extreme lag due to so many points being interpolated
+        // so leaving at width * 2.0f for now (even though it does not look as good)
+        var dashLength = width * 2.0f;
+        var stepSize = calcStepSize(width);
+
+        // --- SAFETY VALVE ---
+        // If the segment is too long, like a really long diagonal that goes through the screen, don't loop 500 times.
+        // Just draw a solid line and sync the accumulator.
+        // This is pretty unlikely, since the route points are normally fairly close together.
+        // We would have to be incredibly zoomed in and then 90% of the other segments would be off screen anyway, so calculating the entire length of this one is probably fine.
+        var numberOfLoops = distance / stepSize;
+        if (numberOfLoops > 50f) {
+            dc.drawLine(xStart, yStart, xEnd, yEnd);
+            updateAccumulator(distance, stepSize);
+            return;
+        }
+
+        // IMPORTANT: currentDist starts at the "debt" from the last segment.
+        // If _distanceAccumulator is 2.0 and stepSize is 10.0,
+        // we need to travel 8.0 more units.
+        var currentDist = stepSize - _distanceAccumulator;
+
+        // If this is the very first segment of the whole line,
+        // you might want to start at 0. (Check if _distanceAccumulator is 0)
+        if (_distanceAccumulator == 0.0f) {
+            // Add in the offset for drawing points at the mid way mark of where the dashes would be
+            // this offset only gets added on the very first call, adding it every call will result in 'clumping'
+            currentDist = style == TRACK_STYLE_DASHED ? 0.0f : dashLength / 2.0f;
+        }
+
+        while (currentDist < distance) {
+            if (style == TRACK_STYLE_DASHED) {
+                var dashEnd = currentDist + dashLength;
+                var drawStart = currentDist < 0 ? 0.0f : currentDist;
+                var drawEnd = dashEnd > distance ? distance : dashEnd;
+
+                if (drawEnd > drawStart) {
+                    dc.drawLine(
+                        xStart + unitX * drawStart,
+                        yStart + unitY * drawStart,
+                        xStart + unitX * drawEnd,
+                        yStart + unitY * drawEnd
+                    );
+                }
+            } else {
+                if (currentDist >= 0) {
+                    var posX = xStart + unitX * currentDist;
+                    var posY = yStart + unitY * currentDist;
+                    renderLineStyle(dc, style - 1, width, halfWidth, posX, posY, posX, posY);
+                }
+            }
+            currentDist += stepSize;
+        }
+
+        // Save how much of the "step" we have traveled past the end point
+        _distanceAccumulator = distance - (currentDist - stepSize);
     }
 
     // Helper for manual floating-point modulo
@@ -1354,64 +1334,6 @@ class BreadcrumbRenderer {
         var total = _distanceAccumulator + distance;
         // Monkey C doesn't support % for Floats. Manual remainder: total - (step * floor(total/step))
         _distanceAccumulator = total - stepSize * (total / stepSize).toNumber();
-    }
-
-    private function renderInterpolated(
-        dc as Graphics.Dc,
-        style as Number,
-        width as Number,
-        halfWidth as Number,
-        xStart as Float,
-        yStart as Float,
-        dx as Float,
-        dy as Float,
-        distance as Float,
-        t0 as Float,
-        t1 as Float,
-        stepSize as Float
-    ) as Void {
-        // Pre-calculate unit vectors for fast point placement
-        var unitX = dx / distance;
-        var unitY = dy / distance;
-
-        // currentDist is the distance from (xStart, yStart) where the next dash/point should appear.
-        var currentDist = stepSize - _distanceAccumulator;
-        if (currentDist >= stepSize) {
-            currentDist = 0.0f;
-        }
-
-        // The pixel-distance boundaries where the line is visible on screen.
-        var startLimit = distance * t0;
-        var endLimit = distance * t1;
-
-        // --- WATCHDOG PROTECTION ---
-        // If the line is 5000px long but only visible at pixel 4800,
-        // this "Math.ceil" jump prevents us from looping 600 times through invisible space.
-        if (currentDist < startLimit) {
-            var skips = Math.ceil((startLimit - currentDist) / stepSize).toNumber();
-            currentDist += skips * stepSize;
-        }
-
-        // Render only the visible portion of the line.
-        while (currentDist <= endLimit) {
-            var posX = xStart + unitX * currentDist;
-            var posY = yStart + unitY * currentDist;
-
-            if (style == TRACK_STYLE_DASHED) {
-                var dashEnd = currentDist + width * 2.0f;
-                if (dashEnd > endLimit) {
-                    dashEnd = endLimit;
-                }
-                dc.drawLine(posX, posY, xStart + unitX * dashEnd, yStart + unitY * dashEnd);
-            } else {
-                renderLineStyle(dc, style - 1, width, halfWidth, posX, posY, posX, posY);
-            }
-            currentDist += stepSize;
-        }
-    }
-
-    function calcStepSize(width as Number) as Float {
-        return width * 4.0f;
     }
 
     (:noUnbufferedRotations)
@@ -2870,8 +2792,10 @@ class BreadcrumbRenderer {
             var currChartX = prevChartX + xDistance * hScale;
             var currChartY = prevChartY + yDistance * vScale;
 
-            // all elevation points are on screen, so we do not need to do renderLineChecked, though maybe we should for consistency?
-            renderLineChecked(
+            // All elevation points are on screen, so we do not need to do renderLineChecked, though maybe we should for consistency?
+            // Elevation page actually already does a whole heap of math to figure out scales/distances and render.
+            // It Also has all lines render on screen, skip the check and just draw them, otherwise 3 large (400point) routes cannot render.
+            renderLine(
                 dc,
                 style,
                 texture,
