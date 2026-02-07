@@ -28,9 +28,7 @@ function getHazardTexture(
     // texture docs are crap, this is the one example i could find https://forums.garmin.com/developer/connect-iq/f/discussion/292995/setstroke-and-bitmaptexture
     var bitmap = newBitmap(width, width);
     var bDc = bitmap.getDc();
-    bDc.setColor(colour, colour);
-    bDc.clear();
-    bDc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT); // note: we could invert this so there is not a black section
+    bDc.setColor(colour, Graphics.COLOR_TRANSPARENT);
 
     // Draw two diagonal triangles to create a tiling stripe
     var pts = [
