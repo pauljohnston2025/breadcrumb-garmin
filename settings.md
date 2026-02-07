@@ -164,8 +164,7 @@ The maximum number of coordinates to store for the current track the user is mov
 ### Track Style
 
 ***BEWARE***
-This feature is still highly experimental, and it is quite easy to cause a watchdog error, or lock your device up so much that you need to do a hard poweroff (by holding the power button down until the device shuts down).  
-Anything without (CPU Intensive) or (Texture) might be fine to use, and anything with (CPU Intensive) only seems to crash with watchdog error at high zoom levels.  
+Anything with (CPU Intensive) might crash with watchdog errors, since it uses line interpolations to draw the line in multiple sections.
 
 Determines the visual appearance of your breadcrumb trail.
 
@@ -185,12 +184,11 @@ Determines the visual appearance of your breadcrumb trail.
 * Polka Dot: Stylized dots; provides a clear but non-distracting path (Texture).  
 * Diamond Scale: Overlapping geometric pattern resembling scales (Texture).  
 
+(Raw) Styles should be used with a high [Max Track Points](#max-track-points) or [Coordinate Point Limit](https://github.com/pauljohnston2025/breadcrumb-mobile/blob/master/manual.md#routes) so that the points/boxes appear along the whole path, rather than just at the corners. For best results you should use [Track Point Reduction Method](#track-point-reduction-method) `Downsample` so that points are kept a consistent distance apart.  
 
-(Texture) denotes styles that are generated with a texture, this may only work on some supported devices. Please note this is experimental, and seems to be locking up the device if too many routes and textures are used (especially with wider routes/track). USE AT OWN RISK.
+(Texture) denotes styles that are generated with a texture, this may only work on some supported devices.
 
 Performance Note: Styles labeled as (CPU Intensive) use interpolation to create a smooth, high-density visual path. This requires significantly more calculations per frame than "Raw" or "Line" styles and may impact battery life, or result in watchdog errors that cause a crash, use them with care.
-
-Note: (CPU Intensive) Styles do more and more cpu work at higher zoom levels, if you zoom in really close the pixel coordinates are further apart, and so more interpolation needs to be done to fill in the gaps (since the whole route/track is still interpolated). Developers Note: Perhaps the distance between interpolated points should be based on meters rather than the pixel width of the track.
 
 ### Track Width
 

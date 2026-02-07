@@ -152,20 +152,20 @@
     <string id="showDirectionPointTextUnderIndexTitle">Show Turn Point Text Under Index</string>
 
     <string id="trackStyleLine">Line</string>
-    <string id="trackStyleDashed">Dashed</string>
+    <string id="trackStyleDashed">Dashed (CPU)</string>
     <string id="trackStylePoints">Raw Points</string>
-    <string id="trackStylePointsInterp">Points</string>
+    <string id="trackStylePointsInterp">Points (CPU)</string>
     <string id="trackStyleBoxes">Raw Boxes</string>
-    <string id="trackStyleBoxesInterp">Boxes</string>
+    <string id="trackStyleBoxesInterp">Boxes (CPU)</string>
     <string id="trackStyleFilledSquare">Raw Filled Squares</string>
-    <string id="trackStyleFilledSquareInterp">Filled Squares</string>
+    <string id="trackStyleFilledSquareInterp">Filled Squares (CPU)</string>
     <string id="trackStylePointsOutline">Raw Circle Outlines</string>
-    <string id="trackStylePointsOutlineInterp">Circle Outlines</string>
-    <string id="trackStyleChecker">Checkerboard</string>
-    <string id="trackStyleHazard">Hazard Stripes</string>
-    <string id="trackStyleMatrix">Dot Matrix</string>
-    <string id="trackStylePolka">Polka Dot</string>
-    <string id="trackStyleDiamond">Diamond Scale</string>
+    <string id="trackStylePointsOutlineInterp">Circle Outlines (CPU)</string>
+    <string id="trackStyleChecker">Checkerboard (Texture)</string>
+    <string id="trackStyleHazard">Hazard Stripes (Texture)</string>
+    <string id="trackStyleMatrix">Dot Matrix (Texture)</string>
+    <string id="trackStylePolka">Polka Dot (Texture)</string>
+    <string id="trackStyleDiamond">Diamond Scale (Texture)</string>
 
 
     <string id="enableMaps1">Enable maps. This breaks on some devices. Are you sure?</string>
