@@ -166,7 +166,7 @@ The maximum number of coordinates to store for the current track the user is mov
 Determines the visual appearance of your breadcrumb trail.
 
 * Line: A standard continuous solid line.  
-* Dashed: A dashed line path.  
+* Dashed: A dashed line path. (CPU Intensive)   
 * Raw Points: Dots drawn only at actual GPS coordinates.  
 * Points: Dots spaced evenly along the path using interpolation. (CPU Intensive)  
 * Raw Boxes: Square outlines only at actual GPS coordinates.  
@@ -182,13 +182,15 @@ Determines the visual appearance of your breadcrumb trail.
 * Diamond Scale: Overlapping geometric pattern resembling scales (Texture).  
 
 
-(Texture) denotes styles that are generated with a texture, this may only work on some supported devices.   
+(Texture) denotes styles that are generated with a texture, this may only work on some supported devices. Please note this is experimental, and seems to be locking up the device if too many routes and textures are used (especially with wider routes/track). USE AT OWN RISK.
 
 Performance Note: Styles labeled as (CPU Intensive) use interpolation to create a smooth, high-density visual path. This requires significantly more calculations per frame than "Raw" or "Line" styles and may impact battery life, or result in watchdog errors that cause a crash, use them with care.
 
 ### Track Width
 
-The thickness (in pixels) of the track drawn on the screen. Default is usually 4 pixels. Larger widths make the track easier to see but may obscure map details.
+The thickness (in pixels) of the track drawn on the screen. Default is usually 4 pixels. Larger widths make the track easier to see but may obscure map details.  
+Be careful about making the track/route too wide, it leads to more pixels needing to be drawn, and can slow down the renders (especially if using a texture).
+
 
 ### Use Track As Heading Speed 
 

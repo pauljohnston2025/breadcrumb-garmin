@@ -1227,37 +1227,6 @@ class BreadcrumbRenderer {
         var stepSize = width * 4.0f;
         var dashLength = width * 2.0f;
 
-        // --- 1. FALLBACK FOR SMALL SEGMENTS (Zoomed Out) ---
-        // If the segment is shorter than one dash/dot cycle, we don't loop.
-        if (distance < stepSize - _distanceAccumulator) {
-            // If we are in the "visible" part of the accumulator cycle, draw the segment.
-            if (_distanceAccumulator < dashLength || style != TRACK_STYLE_DASHED) {
-                renderLineSafe(
-                    dc,
-                    style == TRACK_STYLE_DASHED ? TRACK_STYLE_LINE : style - 1,
-                    width,
-                    halfWidth,
-                    xStart,
-                    yStart,
-                    xEnd,
-                    yEnd
-                );
-            }
-            _distanceAccumulator += distance;
-
-            // Reset accumulator if it exceeds a full cycle
-            if (_distanceAccumulator >= stepSize) {
-                _distanceAccumulator -= stepSize;
-            }
-            return;
-        }
-
-        // --- 2. VERTEX PROTECTION ---
-        // Only draw the actual vertex if the pattern rhythm calls for it.
-        if (style != TRACK_STYLE_DASHED && _distanceAccumulator <= 0.1f) {
-            renderLineSafe(dc, style - 1, width, halfWidth, xStart, yStart, xStart, yStart);
-        }
-
         // --- 3. MAIN INTERPOLATION LOOP ---
         var currentDist = stepSize - _distanceAccumulator;
 
