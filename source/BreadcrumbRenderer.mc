@@ -1217,7 +1217,6 @@ class BreadcrumbRenderer {
         var distance = Math.sqrt(dx * dx + dy * dy).toFloat();
 
         if (distance < 0.1f) {
-            // Add this distance to the accumulator so it's not "lost"
             _distanceAccumulator += distance;
             return;
         }
@@ -1225,22 +1224,27 @@ class BreadcrumbRenderer {
         var unitX = dx / distance;
         var unitY = dy / distance;
 
-        // Adjust these based on preference.
-        // dashLength, gaps are the same size
-
         var isDashed = (style == TRACK_STYLE_DASHED);
-        var dashLength = isDashed ? width * 2.0f : width;
+        // var dashLength = isDashed ? width * 2.0f : width; This make the shapes to close together at high zoom levels, and results in extreme lag due to so many points being interpolated
+        // so leaving at width * 2.0f for now (even though it does not look as good)
+        var dashLength = width * 2.0f;
         var stepSize = dashLength *2;
 
-        // Start relative to the remainder of the previous segment
-        // OFFSET LOGIC:
-        // For shapes, we want to draw at the MIDPOINT of the step for better alignment
-        var offset = isDashed ? 0.0f : dashLength / 2.0f;
-        var currentDist = offset - _distanceAccumulator;
+        // IMPORTANT: currentDist starts at the "debt" from the last segment.
+        // If _distanceAccumulator is 2.0 and stepSize is 10.0,
+        // we need to travel 8.0 more units.
+        var currentDist = stepSize - _distanceAccumulator;
+
+        // If this is the very first segment of the whole line,
+        // you might want to start at 0. (Check if _distanceAccumulator is 0)
+        if (_distanceAccumulator == 0.0f) {
+            // Add in the offset for drawing points at the mid way mark of where the dashes would be
+            // this offset only gets added on the very first call, adding it every call will result in 'clumping'
+            currentDist = style == TRACK_STYLE_DASHED ? 0.0f : dashLength / 2.0f;
+        }
 
         while (currentDist < distance) {
             if (style == TRACK_STYLE_DASHED) {
-                // --- LOGIC FOR CONTINUOUS DASHES ---
                 var dashEnd = currentDist + dashLength;
                 var drawStart = currentDist < 0 ? 0.0f : currentDist;
                 var drawEnd = dashEnd > distance ? distance : dashEnd;
@@ -1254,23 +1258,17 @@ class BreadcrumbRenderer {
                     );
                 }
             } else {
-                // --- INTERPOLATED SHAPE LOGIC ---
-                // If currentDist is negative, it means the point belongs to the PREVIOUS segment
                 if (currentDist >= 0) {
                     var posX = xStart + unitX * currentDist;
                     var posY = yStart + unitY * currentDist;
-                    // Note: Use style - 1 or a specific mapping to convert 
-                    // "INTERPOLATED_DOTS" to "DOT"
                     renderLineSafe(dc, style - 1, width, halfWidth, posX, posY, posX, posY);
                 }
             }
-
             currentDist += stepSize;
         }
 
-        // Sync the accumulator so the next segment starts its first dash/point
-        // at the mathematically correct distance.
-        _distanceAccumulator = currentDist - distance;
+        // Save how much of the "step" we have traveled past the end point
+        _distanceAccumulator = distance - (currentDist - stepSize);
     }
 
     (:noUnbufferedRotations)

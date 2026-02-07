@@ -163,6 +163,10 @@ The maximum number of coordinates to store for the current track the user is mov
 
 ### Track Style
 
+***BEWARE***
+This feature is still highly experimental, and it is quite easy to cause a watchdog error, or lock your device up so much that you need to do a hard poweroff (by holding the power button down until the device shuts down).  
+Anything without (CPU Intensive) or (Texture) might be fine to use, and anything with (CPU Intensive) only seems to crash with watchdog error at high zoom levels.  
+
 Determines the visual appearance of your breadcrumb trail.
 
 * Line: A standard continuous solid line.  
