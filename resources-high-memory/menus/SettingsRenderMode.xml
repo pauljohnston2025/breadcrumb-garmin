@@ -1,6 +1,0 @@
-<menu2 id="SettingsRenderMode" title="@Strings.renderModeTitle" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <menu-item id="settingsRenderModeBufferedRotating" label="@Strings.renderModeBufferedRotating"/>
-    <menu-item id="settingsRenderModeUnbufferedRotating" label="@Strings.renderModeUnbufferedRotating"/>
-    <menu-item id="settingsRenderModeBufferedNoRotating" label="@Strings.renderModeBufferedNoRotating"/>
-    <menu-item id="settingsRenderModeNoBufferedNoRotating" label="@Strings.renderModeNoBufferedNoRotating"/>
-</menu2>

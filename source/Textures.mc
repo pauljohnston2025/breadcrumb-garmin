@@ -136,8 +136,6 @@ function getTexture(
         ++$.globalExceptionCounter;
         return -1;
     }
-
-    return -1;
 }
 
 function isTextureStyle(style as Number) as Boolean {

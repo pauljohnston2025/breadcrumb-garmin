@@ -1,5 +1,0 @@
-<menu2 id="SettingsAlertType" title="@Strings.alertTypeTitle" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <menu-item id="settingsAlertTypeToast" label="@Strings.alertTypeToast"/>
-    <menu-item id="settingsAlertTypeAlert" label="@Strings.alertTypeAlert"/>
-    <menu-item id="settingsAlertTypeImage" label="@Strings.alertTypeImage"/>
-</menu2>

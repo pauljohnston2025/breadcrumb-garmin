@@ -1,6 +1,0 @@
-<menu2 id="SettingsMode" title="@Strings.modeTitle" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <menu-item id="settingsModeTrackRoute" label="@Strings.trackRouteMode"/>
-    <menu-item id="settingsModeElevation" label="@Strings.elevationMode"/>
-    <menu-item id="settingsModeMapMove" label="@Strings.mapMove"/>
-    <menu-item id="settingsModeDebug" label="@Strings.debug"/>
-</menu2>

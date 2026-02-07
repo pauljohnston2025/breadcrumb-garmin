@@ -1,5 +1,0 @@
-<menu2 id="SettingsUiMode" title="@Strings.uiModeTitle" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <menu-item id="settingsUiModeShowall" label="@Strings.uiModeShowAll"/>
-    <menu-item id="settingsUiModeHidden" label="@Strings.uiModeHidden"/>
-    <menu-item id="settingsUiModeNone" label="@Strings.uiModeNone"/>
-</menu2>

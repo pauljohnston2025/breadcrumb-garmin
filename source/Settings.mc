@@ -30,6 +30,8 @@ enum /* TrackStyle */ {
 enum /*TrackPointReductionMethod*/ {
     TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE = 0,
     TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM = 1,
+    
+    TRACK_POINT_REDUCTION_METHOD_MAX
 }
 
 enum /*DataType*/ {
@@ -54,6 +56,8 @@ enum /*DataType*/ {
     // time of day - wall clock
     // last lap time
     // current lap time
+
+    DATA_TYPE_MAX,
 }
 
 enum /*Mode*/ {

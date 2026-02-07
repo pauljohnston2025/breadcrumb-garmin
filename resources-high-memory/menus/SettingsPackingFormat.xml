@@ -1,6 +1,0 @@
-<menu2 id="SettingsPackingFormat" title="@Strings.packingFormatTitle" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <menu-item id="settingsPackingFormatDefault" label="@Strings.packingFormatDefault"/>
-    <menu-item id="settingsPackingFormatYUV" label="@Strings.packingFormatYUV"/>
-    <menu-item id="settingsPackingFormatPNG" label="@Strings.packingFormatPNG"/>
-    <menu-item id="settingsPackingFormatJPG" label="@Strings.packingFormatJPG"/>
-</menu2>

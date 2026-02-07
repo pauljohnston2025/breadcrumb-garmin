@@ -156,13 +156,11 @@ class SettingsMain extends Rez.Menus.SettingsMain {
         rerender();
     }
 
-    function rerender() as Void {
-        var settings = getApp()._breadcrumbContext.settings;
-    }
+    function rerender() as Void {}
 }
 
 (:settingsView)
-function getDataTypeString(type as Number) as ResourceId {
+function getDataTypeString(type as Number) as ResourceId or String {
     switch (type) {
         case DATA_TYPE_NONE:
             return Rez.Strings.dataTypeNone;
@@ -191,7 +189,25 @@ function getDataTypeString(type as Number) as ResourceId {
         case DATA_TYPE_CURRENT_PACE:
             return Rez.Strings.dataTypeCurPace;
         default:
-            return Rez.Strings.dataTypeNone;
+            return "";
+    }
+}
+
+(:settingsView)
+function getZoomAtPaceModeString(mode as Number) as ResourceId or String {
+    switch (mode) {
+        case ZOOM_AT_PACE_MODE_PACE:
+            return Rez.Strings.zoomAtPaceModePace;
+        case ZOOM_AT_PACE_MODE_STOPPED:
+            return Rez.Strings.zoomAtPaceModeStopped;
+        case ZOOM_AT_PACE_MODE_NEVER_ZOOM:
+            return Rez.Strings.zoomAtPaceModeNever;
+        case ZOOM_AT_PACE_MODE_ALWAYS_ZOOM:
+            return Rez.Strings.zoomAtPaceModeAlways;
+        case ZOOM_AT_PACE_MODE_SHOW_ROUTES_WITHOUT_TRACK:
+            return Rez.Strings.zoomAtPaceModeRoutesWithoutTrack;
+        default:
+            return "";
     }
 }
 
@@ -204,25 +220,11 @@ class SettingsZoomAtPace extends Rez.Menus.SettingsZoomAtPace {
 
     function rerender() as Void {
         var settings = getApp()._breadcrumbContext.settings;
-        var modeString = "";
-        switch (settings.zoomAtPaceMode) {
-            case ZOOM_AT_PACE_MODE_PACE:
-                modeString = Rez.Strings.zoomAtPaceModePace;
-                break;
-            case ZOOM_AT_PACE_MODE_STOPPED:
-                modeString = Rez.Strings.zoomAtPaceModeStopped;
-                break;
-            case ZOOM_AT_PACE_MODE_NEVER_ZOOM:
-                modeString = Rez.Strings.zoomAtPaceModeNever;
-                break;
-            case ZOOM_AT_PACE_MODE_ALWAYS_ZOOM:
-                modeString = Rez.Strings.zoomAtPaceModeAlways;
-                break;
-            case ZOOM_AT_PACE_MODE_SHOW_ROUTES_WITHOUT_TRACK:
-                modeString = Rez.Strings.zoomAtPaceModeRoutesWithoutTrack;
-                break;
-        }
-        safeSetSubLabel(me, :settingsZoomAtPaceMode, modeString);
+        safeSetSubLabel(
+            me,
+            :settingsZoomAtPaceMode,
+            getZoomAtPaceModeString(settings.zoomAtPaceMode)
+        );
         safeSetSubLabel(
             me,
             :settingsZoomAtPaceUserMeters,
@@ -237,6 +239,64 @@ class SettingsZoomAtPace extends Rez.Menus.SettingsZoomAtPace {
 }
 
 (:settingsView)
+function getModeString(mode as Number) as ResourceId or String {
+    switch (mode) {
+        case MODE_NORMAL:
+            return Rez.Strings.trackRouteMode;
+        case MODE_ELEVATION:
+            return Rez.Strings.elevationMode;
+        case MODE_MAP_MOVE:
+            return Rez.Strings.mapMove;
+        case MODE_DEBUG:
+            return Rez.Strings.debug;
+        default:
+            return "";
+    }
+}
+
+(:settingsView)
+function getUiModeString(mode as Number) as ResourceId or String {
+    switch (mode) {
+        case UI_MODE_SHOW_ALL:
+            return Rez.Strings.uiModeShowAll;
+        case UI_MODE_HIDDEN:
+            return Rez.Strings.uiModeHidden;
+        case UI_MODE_NONE:
+            return Rez.Strings.uiModeNone;
+        default:
+            return "";
+    }
+}
+
+(:settingsView)
+function getElevationModeString(mode as Number) as ResourceId or String {
+    switch (mode) {
+        case ELEVATION_MODE_STACKED:
+            return Rez.Strings.elevationModeStacked;
+        case ELEVATION_MODE_ORDERED_ROUTES:
+            return Rez.Strings.elevationModeOrderedRoutes;
+        default:
+            return "";
+    }
+}
+
+(:settingsView)
+function getRenderModeString(mode as Number) as ResourceId or String {
+    switch (mode) {
+        case RENDER_MODE_BUFFERED_ROTATING:
+            return Rez.Strings.renderModeBufferedRotating;
+        case RENDER_MODE_UNBUFFERED_ROTATING:
+            return Rez.Strings.renderModeUnbufferedRotating;
+        case RENDER_MODE_BUFFERED_NO_ROTATION:
+            return Rez.Strings.renderModeBufferedNoRotating;
+        case RENDER_MODE_UNBUFFERED_NO_ROTATION:
+            return Rez.Strings.renderModeNoBufferedNoRotating;
+        default:
+            return "";
+    }
+}
+
+(:settingsView)
 class SettingsGeneral extends Rez.Menus.SettingsGeneral {
     function initialize() {
         Rez.Menus.SettingsGeneral.initialize();
@@ -245,66 +305,20 @@ class SettingsGeneral extends Rez.Menus.SettingsGeneral {
 
     function rerender() as Void {
         var settings = getApp()._breadcrumbContext.settings;
-        var modeString = "";
-        switch (settings.mode) {
-            case MODE_NORMAL:
-                modeString = Rez.Strings.trackRouteMode;
-                break;
-            case MODE_ELEVATION:
-                modeString = Rez.Strings.elevationMode;
-                break;
-            case MODE_MAP_MOVE:
-                modeString = Rez.Strings.mapMove;
-                break;
-            case MODE_DEBUG:
-                modeString = Rez.Strings.debug;
-                break;
-        }
-        safeSetSubLabel(me, :settingsGeneralMode, modeString);
-        var uiModeString = "";
-        switch (settings.uiMode) {
-            case UI_MODE_SHOW_ALL:
-                uiModeString = Rez.Strings.uiModeShowAll;
-                break;
-            case UI_MODE_HIDDEN:
-                uiModeString = Rez.Strings.uiModeHidden;
-                break;
-            case UI_MODE_NONE:
-                uiModeString = Rez.Strings.uiModeNone;
-                break;
-        }
-        safeSetSubLabel(me, :settingsGeneralModeUiMode, uiModeString);
-        var elevationModeString = "";
-        switch (settings.elevationMode) {
-            case ELEVATION_MODE_STACKED:
-                elevationModeString = Rez.Strings.elevationModeStacked;
-                break;
-            case ELEVATION_MODE_ORDERED_ROUTES:
-                elevationModeString = Rez.Strings.elevationModeOrderedRoutes;
-                break;
-        }
-        safeSetSubLabel(me, :settingsGeneralModeElevationMode, elevationModeString);
+
+        safeSetSubLabel(me, :settingsGeneralMode, getModeString(settings.mode));
+        safeSetSubLabel(me, :settingsGeneralModeUiMode, getUiModeString(settings.uiMode));
+        safeSetSubLabel(
+            me,
+            :settingsGeneralModeElevationMode,
+            getElevationModeString(settings.elevationMode)
+        );
         safeSetSubLabel(
             me,
             :settingsGeneralRecalculateIntervalS,
             settings.recalculateIntervalS.toString()
         );
-        var renderModeString = "";
-        switch (settings.renderMode) {
-            case RENDER_MODE_BUFFERED_ROTATING:
-                renderModeString = Rez.Strings.renderModeBufferedRotating;
-                break;
-            case RENDER_MODE_UNBUFFERED_ROTATING:
-                renderModeString = Rez.Strings.renderModeUnbufferedRotating;
-                break;
-            case RENDER_MODE_BUFFERED_NO_ROTATION:
-                renderModeString = Rez.Strings.renderModeBufferedNoRotating;
-                break;
-            case RENDER_MODE_UNBUFFERED_NO_ROTATION:
-                renderModeString = Rez.Strings.renderModeNoBufferedNoRotating;
-                break;
-        }
-        safeSetSubLabel(me, :settingsGeneralRenderMode, renderModeString);
+        safeSetSubLabel(me, :settingsGeneralRenderMode, getRenderModeString(settings.renderMode));
         safeSetSubLabel(
             me,
             :settingsGeneralCenterUserOffsetY,
@@ -316,6 +330,18 @@ class SettingsGeneral extends Rez.Menus.SettingsGeneral {
             :settingsGeneralMapMoveScreenSize,
             settings.mapMoveScreenSize.format("%.2f")
         );
+    }
+}
+
+(:settingsView)
+function getTrackPointReductionMethodString(mode as Number) as ResourceId or String {
+    switch (mode) {
+        case TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE:
+            return Rez.Strings.trackPointReductionMethodDownsample;
+        case TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM:
+            return Rez.Strings.trackPointReductionMethodReumannWitkam;
+        default:
+            return "";
     }
 }
 
@@ -336,20 +362,10 @@ class SettingsTrack extends Rez.Menus.SettingsTrack {
             :settingsTrackMinTrackPointDistanceM,
             settings.minTrackPointDistanceM.toString()
         );
-        var trackPointReductionMethodString = "";
-        switch (settings.trackPointReductionMethod) {
-            case TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE:
-                trackPointReductionMethodString = Rez.Strings.trackPointReductionMethodDownsample;
-                break;
-            case TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM:
-                trackPointReductionMethodString =
-                    Rez.Strings.trackPointReductionMethodReumannWitkam;
-                break;
-        }
         safeSetSubLabel(
             me,
             :settingTrackTrackPointReductionMethod,
-            trackPointReductionMethodString
+            getTrackPointReductionMethodString(settings.trackPointReductionMethod)
         );
         safeSetSubLabel(
             me,
@@ -379,6 +395,22 @@ class SettingsDataField extends Rez.Menus.SettingsDataField {
             :settingsDataFieldBottomDataType,
             getDataTypeString(settings.bottomDataType)
         );
+    }
+}
+
+(:settingsView)
+function getPackingFormatString(mode as Number) as ResourceId or String {
+    switch (mode) {
+        case Communications.PACKING_FORMAT_DEFAULT:
+            return Rez.Strings.packingFormatDefault;
+        case Communications.PACKING_FORMAT_YUV:
+            return Rez.Strings.packingFormatYUV;
+        case Communications.PACKING_FORMAT_PNG:
+            return Rez.Strings.packingFormatPNG;
+        case Communications.PACKING_FORMAT_JPG:
+            return Rez.Strings.packingFormatJPG;
+        default:
+            return "";
     }
 }
 
@@ -419,22 +451,85 @@ class SettingsMap extends Rez.Menus.SettingsMap {
         safeSetSubLabel(me, :settingsMapHttpErrorTileTTLS, settings.httpErrorTileTTLS.toString());
         safeSetSubLabel(me, :settingsMapErrorTileTTLS, settings.errorTileTTLS.toString());
         safeSetToggle(me, :settingsMapUseDrawBitmap, settings.useDrawBitmap);
-        var packingFormatString = "";
-        switch (settings.packingFormat) {
-            case 0:
-                packingFormatString = Rez.Strings.packingFormatDefault;
-                break;
-            case 1:
-                packingFormatString = Rez.Strings.packingFormatYUV;
-                break;
-            case 2:
-                packingFormatString = Rez.Strings.packingFormatPNG;
-                break;
-            case 3:
-                packingFormatString = Rez.Strings.packingFormatJPG;
-                break;
-        }
-        safeSetSubLabel(me, :settingsMapPackingFormat, packingFormatString);
+        safeSetSubLabel(
+            me,
+            :settingsMapPackingFormat,
+            getPackingFormatString(settings.packingFormat)
+        );
+    }
+}
+
+(:settingsView)
+function getMapChoiceString(mapChoice as Number) as ResourceId {
+    switch (mapChoice) {
+        case 0:
+            return Rez.Strings.custom;
+        case 1:
+            return Rez.Strings.companionApp;
+        case 2:
+            return Rez.Strings.openTopoMap;
+        case 3:
+            return Rez.Strings.esriWorldImagery;
+        case 4:
+            return Rez.Strings.esriWorldStreetMap;
+        case 5:
+            return Rez.Strings.esriWorldTopoMap;
+        case 6:
+            return Rez.Strings.esriWorldTransportation;
+        case 7:
+            return Rez.Strings.esriWorldDarkGrayBase;
+        case 8:
+            return Rez.Strings.esriWorldHillshade;
+        case 9:
+            return Rez.Strings.esriWorldHillshadeDark;
+        case 10:
+            return Rez.Strings.esriWorldLightGrayBase;
+        case 11:
+            return Rez.Strings.esriUSATopoMaps;
+        case 12:
+            return Rez.Strings.esriWorldOceanBase;
+        case 13:
+            return Rez.Strings.esriWorldShadedRelief;
+        case 14:
+            return Rez.Strings.esriNatGeoWorldMap;
+        case 15:
+            return Rez.Strings.esriWorldNavigationCharts;
+        case 16:
+            return Rez.Strings.esriWorldPhysicalMap;
+        case 17:
+            return Rez.Strings.openStreetMapcyclosm;
+        case 18:
+            return Rez.Strings.stadiaAlidadeSmooth;
+        case 19:
+            return Rez.Strings.stadiaAlidadeSmoothDark;
+        case 20:
+            return Rez.Strings.stadiaOutdoors;
+        case 21:
+            return Rez.Strings.stadiaStamenToner;
+        case 22:
+            return Rez.Strings.stadiaStamenTonerLite;
+        case 23:
+            return Rez.Strings.stadiaStamenTerrain;
+        case 24:
+            return Rez.Strings.stadiaStamenWatercolor;
+        case 25:
+            return Rez.Strings.stadiaOSMBright;
+        case 26:
+            return Rez.Strings.cartoVoyager;
+        case 27:
+            return Rez.Strings.cartoDarkMatter;
+        case 28:
+            return Rez.Strings.cartoDarkLightAll;
+        case 29:
+            return Rez.Strings.mapyBasic;
+        case 30:
+            return Rez.Strings.mapyOutdoor;
+        case 31:
+            return Rez.Strings.mapyWinter;
+        case 32:
+            return Rez.Strings.mapyAerial;
+        default:
+            return Rez.Strings.custom;
     }
 }
 
@@ -448,109 +543,7 @@ class SettingsTileServer extends Rez.Menus.SettingsTileServer {
     function rerender() as Void {
         var settings = getApp()._breadcrumbContext.settings;
 
-        var mapChoiceString = "";
-        switch (settings.mapChoice) {
-            case 0:
-                mapChoiceString = Rez.Strings.custom;
-                break;
-            case 1:
-                mapChoiceString = Rez.Strings.companionApp;
-                break;
-            case 2:
-                mapChoiceString = Rez.Strings.openTopoMap;
-                break;
-            case 3:
-                mapChoiceString = Rez.Strings.esriWorldImagery;
-                break;
-            case 4:
-                mapChoiceString = Rez.Strings.esriWorldStreetMap;
-                break;
-            case 5:
-                mapChoiceString = Rez.Strings.esriWorldTopoMap;
-                break;
-            case 6:
-                mapChoiceString = Rez.Strings.esriWorldTransportation;
-                break;
-            case 7:
-                mapChoiceString = Rez.Strings.esriWorldDarkGrayBase;
-                break;
-            case 8:
-                mapChoiceString = Rez.Strings.esriWorldHillshade;
-                break;
-            case 9:
-                mapChoiceString = Rez.Strings.esriWorldHillshadeDark;
-                break;
-            case 10:
-                mapChoiceString = Rez.Strings.esriWorldLightGrayBase;
-                break;
-            case 11:
-                mapChoiceString = Rez.Strings.esriUSATopoMaps;
-                break;
-            case 12:
-                mapChoiceString = Rez.Strings.esriWorldOceanBase;
-                break;
-            case 13:
-                mapChoiceString = Rez.Strings.esriWorldShadedRelief;
-                break;
-            case 14:
-                mapChoiceString = Rez.Strings.esriNatGeoWorldMap;
-                break;
-            case 15:
-                mapChoiceString = Rez.Strings.esriWorldNavigationCharts;
-                break;
-            case 16:
-                mapChoiceString = Rez.Strings.esriWorldPhysicalMap;
-                break;
-            case 17:
-                mapChoiceString = Rez.Strings.openStreetMapcyclosm;
-                break;
-            case 18:
-                mapChoiceString = Rez.Strings.stadiaAlidadeSmooth;
-                break;
-            case 19:
-                mapChoiceString = Rez.Strings.stadiaAlidadeSmoothDark;
-                break;
-            case 20:
-                mapChoiceString = Rez.Strings.stadiaOutdoors;
-                break;
-            case 21:
-                mapChoiceString = Rez.Strings.stadiaStamenToner;
-                break;
-            case 22:
-                mapChoiceString = Rez.Strings.stadiaStamenTonerLite;
-                break;
-            case 23:
-                mapChoiceString = Rez.Strings.stadiaStamenTerrain;
-                break;
-            case 24:
-                mapChoiceString = Rez.Strings.stadiaStamenWatercolor;
-                break;
-            case 25:
-                mapChoiceString = Rez.Strings.stadiaOSMBright;
-                break;
-            case 26:
-                mapChoiceString = Rez.Strings.cartoVoyager;
-                break;
-            case 27:
-                mapChoiceString = Rez.Strings.cartoDarkMatter;
-                break;
-            case 28:
-                mapChoiceString = Rez.Strings.cartoDarkLightAll;
-                break;
-            case 29:
-                mapChoiceString = Rez.Strings.mapyBasic;
-                break;
-            case 30:
-                mapChoiceString = Rez.Strings.mapyOutdoor;
-                break;
-            case 31:
-                mapChoiceString = Rez.Strings.mapyWinter;
-                break;
-            case 32:
-                mapChoiceString = Rez.Strings.mapyAerial;
-                break;
-        }
-        safeSetSubLabel(me, :settingsMapChoice, mapChoiceString);
+        safeSetSubLabel(me, :settingsMapChoice, getMapChoiceString(settings.mapChoice));
         safeSetSubLabel(me, :settingsTileUrl, settings.tileUrl);
         safeSetSubLabel(me, :settingsAuthToken, settings.authToken);
         safeSetSubLabel(me, :settingsMapTileSize, settings.tileSize.toString());
@@ -632,6 +625,20 @@ class SettingsAlerts extends Rez.Menus.SettingsAlerts {
 }
 
 (:settingsView)
+function getAlertTypeString(mode as Number) as ResourceId or String {
+    switch (mode) {
+        case ALERT_TYPE_TOAST:
+            return Rez.Strings.alertTypeToast;
+        case ALERT_TYPE_ALERT:
+            return Rez.Strings.alertTypeAlert;
+        case ALERT_TYPE_IMAGE:
+            return Rez.Strings.alertTypeImage;
+        default:
+            return "";
+    }
+}
+
+(:settingsView)
 function alertsCommon(menu as WatchUi.Menu2, settings as Settings) as Void {
     safeSetSubLabel(
         menu,
@@ -653,19 +660,7 @@ function alertsCommon(menu as WatchUi.Menu2, settings as Settings) as Void {
         :settingsAlertsMinTurnAlertDistanceM,
         settings.minTurnAlertDistanceM.toString()
     );
-    var alertTypeString = "";
-    switch (settings.alertType) {
-        case ALERT_TYPE_TOAST:
-            alertTypeString = Rez.Strings.alertTypeToast;
-            break;
-        case ALERT_TYPE_ALERT:
-            alertTypeString = Rez.Strings.alertTypeAlert;
-            break;
-        case ALERT_TYPE_IMAGE:
-            alertTypeString = Rez.Strings.alertTypeImage;
-            break;
-    }
-    safeSetSubLabel(menu, :settingsAlertsAlertType, alertTypeString);
+    safeSetSubLabel(menu, :settingsAlertsAlertType, getAlertTypeString(settings.alertType));
 }
 
 (:settingsView)
@@ -1085,178 +1080,6 @@ class DeleteRouteDelegate extends WatchUi.ConfirmationDelegate {
     }
 }
 
-(:settingsView)
-class SettingsModeDelegate extends WatchUi.Menu2InputDelegate {
-    var parent as SettingsGeneral;
-    function initialize(parent as SettingsGeneral) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-    }
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var settings = getApp()._breadcrumbContext.settings;
-        var itemId = item.getId();
-        if (itemId == :settingsModeTrackRoute) {
-            settings.setMode(MODE_NORMAL);
-        } else if (itemId == :settingsModeElevation) {
-            settings.setMode(MODE_ELEVATION);
-        } else if (itemId == :settingsModeMapMove) {
-            settings.setMode(MODE_MAP_MOVE);
-        } else if (itemId == :settingsModeMapDebug) {
-            settings.setMode(MODE_DEBUG);
-        }
-
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    }
-}
-
-(:settingsView)
-class SettingsMapChoiceDelegate extends WatchUi.Menu2InputDelegate {
-    var parent as SettingsTileServer;
-    function initialize(parent as SettingsTileServer) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-    }
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var settings = getApp()._breadcrumbContext.settings;
-        var itemId = item.getId() as Object;
-        switch (itemId) {
-            case :settingsMapChoiceCustom:
-                settings.setMapChoice(0);
-                break;
-            case :settingsMapChoiceCompanionApp:
-                settings.setMapChoice(1);
-                break;
-            case :settingsMapChoiceOpenTopoMap:
-                settings.setMapChoice(2);
-                break;
-            case :settingsMapChoiceEsriWorldImagery:
-                settings.setMapChoice(3);
-                break;
-            case :settingsMapChoiceEsriWorldStreetMap:
-                settings.setMapChoice(4);
-                break;
-            case :settingsMapChoiceEsriWorldTopoMap:
-                settings.setMapChoice(5);
-                break;
-            case :settingsMapChoiceEsriWorldTransportation:
-                settings.setMapChoice(6);
-                break;
-            case :settingsMapChoiceEsriWorldDarkGrayBase:
-                settings.setMapChoice(7);
-                break;
-            case :settingsMapChoiceEsriWorldHillshade:
-                settings.setMapChoice(8);
-                break;
-            case :settingsMapChoiceEsriWorldHillshadeDark:
-                settings.setMapChoice(9);
-                break;
-            case :settingsMapChoiceEsriWorldLightGrayBase:
-                settings.setMapChoice(10);
-                break;
-            case :settingsMapChoiceEsriUSATopoMaps:
-                settings.setMapChoice(11);
-                break;
-            case :settingsMapChoiceEsriWorldOceanBase:
-                settings.setMapChoice(12);
-                break;
-            case :settingsMapChoiceEsriWorldShadedRelief:
-                settings.setMapChoice(13);
-                break;
-            case :settingsMapChoiceEsriNatGeoWorldMap:
-                settings.setMapChoice(14);
-                break;
-            case :settingsMapChoiceEsriWorldNavigationCharts:
-                settings.setMapChoice(15);
-                break;
-            case :settingsMapChoiceEsriWorldPhysicalMap:
-                settings.setMapChoice(16);
-                break;
-            case :settingsMapChoiceOpenStreetMapcyclosm:
-                settings.setMapChoice(17);
-                break;
-            case :settingsMapChoiceStadiaAlidadeSmooth:
-                settings.setMapChoice(18);
-                break;
-            case :settingsMapChoiceStadiaAlidadeSmoothDark:
-                settings.setMapChoice(19);
-                break;
-            case :settingsMapChoiceStadiaOutdoors:
-                settings.setMapChoice(20);
-                break;
-            case :settingsMapChoiceStadiaStamenToner:
-                settings.setMapChoice(21);
-                break;
-            case :settingsMapChoiceStadiaStamenTonerLite:
-                settings.setMapChoice(22);
-                break;
-            case :settingsMapChoiceStadiaStamenTerrain:
-                settings.setMapChoice(23);
-                break;
-            case :settingsMapChoiceStadiaStamenWatercolor:
-                settings.setMapChoice(24);
-                break;
-            case :settingsMapChoiceStadiaOSMBright:
-                settings.setMapChoice(25);
-                break;
-            case :settingsMapChoiceCartoVoyager:
-                settings.setMapChoice(26);
-                break;
-            case :settingsMapChoiceCartoDarkMatter:
-                settings.setMapChoice(27);
-                break;
-            case :settingsMapChoiceCartoDarkLightAll:
-                settings.setMapChoice(28);
-                break;
-            case :settingsMapChoiceMapyBasic:
-                settings.setMapChoice(29);
-                break;
-            case :settingsMapChoiceMapyOutdoor:
-                settings.setMapChoice(30);
-                break;
-            case :settingsMapChoiceMapyWinter:
-                settings.setMapChoice(31);
-                break;
-            case :settingsMapChoiceMapyAerial:
-                settings.setMapChoice(32);
-                break;
-        }
-
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    }
-}
-
-(:settingsView)
-class SettingsPackingFormatDelegate extends WatchUi.Menu2InputDelegate {
-    var parent as SettingsMap;
-    function initialize(parent as SettingsMap) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-    }
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var settings = getApp()._breadcrumbContext.settings;
-        var itemId = item.getId() as Object;
-        switch (itemId) {
-            case :settingsPackingFormatDefault:
-                settings.setPackingFormat(0);
-                break;
-            case :settingsPackingFormatYUV:
-                settings.setPackingFormat(1);
-                break;
-            case :settingsPackingFormatPNG:
-                settings.setPackingFormat(2);
-                break;
-            case :settingsPackingFormatJPG:
-                settings.setPackingFormat(3);
-                break;
-        }
-
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    }
-}
-
 class SettingsMapAttributionDelegate extends WatchUi.Menu2InputDelegate {
     function initialize() {
         WatchUi.Menu2InputDelegate.initialize();
@@ -1295,111 +1118,30 @@ class SettingsMapAttributionDelegate extends WatchUi.Menu2InputDelegate {
 }
 
 (:settingsView)
-class SettingsUiModeDelegate extends WatchUi.Menu2InputDelegate {
-    var parent as SettingsGeneral;
-    function initialize(parent as SettingsGeneral) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-    }
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var settings = getApp()._breadcrumbContext.settings;
-        var itemId = item.getId();
-        if (itemId == :settingsUiModeShowall) {
-            settings.setUiMode(UI_MODE_SHOW_ALL);
-        } else if (itemId == :settingsUiModeHidden) {
-            settings.setUiMode(UI_MODE_HIDDEN);
-        } else if (itemId == :settingsUiModeNone) {
-            settings.setUiMode(UI_MODE_NONE);
-        }
-
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    }
-}
-
-(:settingsView)
-class SettingsElevationModeDelegate extends WatchUi.Menu2InputDelegate {
-    var parent as SettingsGeneral;
-    function initialize(parent as SettingsGeneral) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-    }
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var settings = getApp()._breadcrumbContext.settings;
-        var itemId = item.getId();
-        if (itemId == :settingsElevationModeStacked) {
-            settings.setElevationMode(ELEVATION_MODE_STACKED);
-        } else if (itemId == :settingsElevationModeOrderedRoutes) {
-            settings.setElevationMode(ELEVATION_MODE_ORDERED_ROUTES);
-        }
-
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    }
-}
-
-(:settingsView)
-class SettingsAlertTypeDelegate extends WatchUi.Menu2InputDelegate {
-    var parent as SettingsAlerts or SettingsAlertsDisabled;
-    function initialize(parent as SettingsAlerts or SettingsAlertsDisabled) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-    }
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var settings = getApp()._breadcrumbContext.settings;
-        var itemId = item.getId();
-        if (itemId == :settingsAlertTypeToast) {
-            settings.setAlertType(ALERT_TYPE_TOAST);
-        } else if (itemId == :settingsAlertTypeAlert) {
-            settings.setAlertType(ALERT_TYPE_ALERT);
-        } else if (itemId == :settingsAlertTypeImage) {
-            settings.setAlertType(ALERT_TYPE_IMAGE);
-        }
-
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    }
-}
-
-(:settingsView)
-class SettingsRenderModeDelegate extends WatchUi.Menu2InputDelegate {
-    var parent as SettingsGeneral;
-    function initialize(parent as SettingsGeneral) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-    }
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var settings = getApp()._breadcrumbContext.settings;
-        var itemId = item.getId();
-        if (itemId == :settingsRenderModeBufferedRotating) {
-            settings.setRenderMode(RENDER_MODE_BUFFERED_ROTATING);
-        } else if (itemId == :settingsRenderModeUnbufferedRotating) {
-            settings.setRenderMode(RENDER_MODE_UNBUFFERED_ROTATING);
-        } else if (itemId == :settingsRenderModeBufferedNoRotating) {
-            settings.setRenderMode(RENDER_MODE_BUFFERED_NO_ROTATION);
-        } else if (itemId == :settingsRenderModeNoBufferedNoRotating) {
-            settings.setRenderMode(RENDER_MODE_UNBUFFERED_NO_ROTATION);
-        }
-
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    }
-}
-
-(:settingsView)
 class SettingsZoomAtPaceDelegate extends WatchUi.Menu2InputDelegate {
     var view as SettingsZoomAtPace;
     function initialize(view as SettingsZoomAtPace) {
         WatchUi.Menu2InputDelegate.initialize();
         me.view = view;
     }
+
+    // compiler complains it cannot find the global ones
+    // even $.method(:...) does not seem to work
+    public function getZoomAtPaceModeStringL(value as Number) as ResourceId or String {
+        return getZoomAtPaceModeString(value);
+    }
     public function onSelect(item as WatchUi.MenuItem) as Void {
         var settings = getApp()._breadcrumbContext.settings;
         var itemId = item.getId();
         if (itemId == :settingsZoomAtPaceMode) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsZoomAtPaceMode(),
-                new $.SettingsZoomAtPaceModeDelegate(view),
+                new EnumMenu(
+                    Rez.Strings.zoomAtPaceModeTitle,
+                    method(:getZoomAtPaceModeStringL),
+                    settings.zoomAtPaceMode,
+                    ZOOM_AT_PACE_MODE_MAX
+                ),
+                new $.EnumDelegate(settings.method(:setZoomAtPaceMode), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsZoomAtPaceUserMeters) {
@@ -1429,26 +1171,60 @@ class SettingsGeneralDelegate extends WatchUi.Menu2InputDelegate {
         WatchUi.Menu2InputDelegate.initialize();
         me.view = view;
     }
+
+    // compiler complains it cannot find the global ones
+    // even $.method(:...) does not seem to work
+    public function getModeStringL(value as Number) as ResourceId or String {
+        return getModeString(value);
+    }
+
+    public function getUiModeStringL(value as Number) as ResourceId or String {
+        return getUiModeString(value);
+    }
+
+    public function getElevationModeStringL(value as Number) as ResourceId or String {
+        return getElevationModeString(value);
+    }
+
+    public function getRenderModeStringL(value as Number) as ResourceId or String {
+        return getRenderModeString(value);
+    }
+
     public function onSelect(item as WatchUi.MenuItem) as Void {
         var settings = getApp()._breadcrumbContext.settings;
         var itemId = item.getId();
 
         if (itemId == :settingsGeneralMode) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsMode(),
-                new $.SettingsModeDelegate(view),
+                new EnumMenu(
+                    Rez.Strings.modeTitle,
+                    method(:getModeStringL),
+                    settings.mode,
+                    MODE_MAX
+                ),
+                new $.EnumDelegate(settings.method(:setMode), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsGeneralModeUiMode) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsUiMode(),
-                new $.SettingsUiModeDelegate(view),
+                new EnumMenu(
+                    Rez.Strings.uiModeTitle,
+                    method(:getUiModeStringL),
+                    settings.uiMode,
+                    UI_MODE_MAX
+                ),
+                new $.EnumDelegate(settings.method(:setUiMode), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsGeneralModeElevationMode) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsElevationMode(),
-                new $.SettingsElevationModeDelegate(view),
+                new EnumMenu(
+                    Rez.Strings.elevationModeTitle,
+                    method(:getElevationModeStringL),
+                    settings.elevationMode,
+                    ELEVATION_MODE_MAX
+                ),
+                new $.EnumDelegate(settings.method(:setElevationMode), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsGeneralRecalculateIntervalS) {
@@ -1461,8 +1237,13 @@ class SettingsGeneralDelegate extends WatchUi.Menu2InputDelegate {
             );
         } else if (itemId == :settingsGeneralRenderMode) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsRenderMode(),
-                new $.SettingsRenderModeDelegate(view),
+                new EnumMenu(
+                    Rez.Strings.renderModeTitle,
+                    method(:getRenderModeStringL),
+                    settings.renderMode,
+                    RENDER_MODE_MAX
+                ),
+                new $.EnumDelegate(settings.method(:setRenderMode), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsGeneralCenterUserOffsetY) {
@@ -1495,6 +1276,17 @@ class SettingsTrackDelegate extends WatchUi.Menu2InputDelegate {
         WatchUi.Menu2InputDelegate.initialize();
         me.view = view;
     }
+
+    // compiler complains it cannot find the global ones
+    // even $.method(:...) does not seem to work
+    public function getTrackStyleStringL(value as Number) as ResourceId or String {
+        return getTrackStyleString(value);
+    }
+
+    public function getTrackPointReductionMethodStringL(value as Number) as ResourceId or String {
+        return getTrackPointReductionMethodString(value);
+    }
+
     public function onSelect(item as WatchUi.MenuItem) as Void {
         var settings = getApp()._breadcrumbContext.settings;
         var itemId = item.getId();
@@ -1509,8 +1301,13 @@ class SettingsTrackDelegate extends WatchUi.Menu2InputDelegate {
             );
         } else if (itemId == :settingsTrackTrackStyle) {
             // Push the style picker
-            var menu = new $.SettingsTrackStyleMenu(settings.trackStyle);
-            var delegate = new $.SettingsTrackStyleDelegate(settings.method(:setTrackStyle), view);
+            var menu = new EnumMenu(
+                Rez.Strings.trackStyleTitle,
+                method(:getTrackStyleStringL),
+                settings.trackStyle,
+                TRACK_STYLE_MAX
+            );
+            var delegate = new $.EnumDelegate(settings.method(:setTrackStyle), view);
             WatchUi.pushView(menu, delegate, WatchUi.SLIDE_IMMEDIATE);
         } else if (itemId == :settingsTrackTrackWidth) {
             startPicker(
@@ -1526,8 +1323,13 @@ class SettingsTrackDelegate extends WatchUi.Menu2InputDelegate {
             );
         } else if (itemId == :settingTrackTrackPointReductionMethod) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsTrackPointReductionMethod(),
-                new $.SettingsTrackPointReductionMethodDelegate(view),
+                new EnumMenu(
+                    Rez.Strings.trackPointReductionMethodTitle,
+                    method(:getTrackPointReductionMethodStringL),
+                    settings.trackPointReductionMethod,
+                    TRACK_POINT_REDUCTION_METHOD_MAX
+                ),
+                new $.EnumDelegate(settings.method(:setTrackPointReductionMethod), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsTrackUseTrackAsHeadingSpeedMPS) {
@@ -1549,26 +1351,51 @@ class SettingsDataFieldDelegate extends WatchUi.Menu2InputDelegate {
         WatchUi.Menu2InputDelegate.initialize();
         me.view = view;
     }
+
+    // compiler complains it cannot find the global ones
+    // even $.method(:...) does not seem to work
+    public function getDataTypeStringL(value as Number) as ResourceId or String {
+        return getDataTypeString(value);
+    }
+    public function getFontSizeStringL(value as Number) as ResourceId or String {
+        return getFontSizeString(value);
+    }
+
     public function onSelect(item as WatchUi.MenuItem) as Void {
         var settings = getApp()._breadcrumbContext.settings;
         var itemId = item.getId();
 
         if (itemId == :settingsDataFieldTopDataType) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsDataFieldType(),
-                new $.SettingsDataFieldTypeDelegate(view, settings.method(:setTopDataType)),
+                new EnumMenu(
+                    "Data Type",
+                    method(:getDataTypeStringL),
+                    settings.topDataType,
+                    DATA_TYPE_MAX
+                ),
+                new $.EnumDelegate(settings.method(:setTopDataType), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsDataFieldBottomDataType) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsDataFieldType(),
-                new $.SettingsDataFieldTypeDelegate(view, settings.method(:setBottomDataType)),
+                new EnumMenu(
+                    "Data Type",
+                    method(:getDataTypeStringL),
+                    settings.bottomDataType,
+                    DATA_TYPE_MAX
+                ),
+                new $.EnumDelegate(settings.method(:setBottomDataType), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsDataFieldTextSize) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsFontSize(),
-                new $.SettingsFontSizeDelegate(view, settings.method(:setDataFieldTextSize)),
+                new EnumMenu(
+                    "Font Size",
+                    method(:getFontSizeStringL),
+                    settings.dataFieldTextSize,
+                    5
+                ),
+                new $.EnumDelegate(settings.method(:setDataFieldTextSize), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         }
@@ -1681,8 +1508,13 @@ class SettingsRouteDelegate extends WatchUi.Menu2InputDelegate {
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsRouteStyle) {
-            var menu = new $.SettingsTrackStyleMenu(view.settings.routeStyle(view.routeId));
-            var delegate = new $.SettingsTrackStyleDelegate(view.method(:setStyle), view);
+            var menu = new EnumMenu(
+                Rez.Strings.trackStyleTitle,
+                method(:getTrackStyleStringL),
+                view.settings.routeStyle(view.routeId),
+                TRACK_STYLE_MAX
+            );
+            var delegate = new $.EnumDelegate(view.method(:setStyle), view);
             WatchUi.pushView(menu, delegate, WatchUi.SLIDE_IMMEDIATE);
         } else if (itemId == :settingsRouteWidth) {
             startPicker(
@@ -1694,32 +1526,11 @@ class SettingsRouteDelegate extends WatchUi.Menu2InputDelegate {
             );
         }
     }
-}
 
-(:settingsView)
-class SettingsZoomAtPaceModeDelegate extends WatchUi.Menu2InputDelegate {
-    var parent as SettingsZoomAtPace;
-    function initialize(parent as SettingsZoomAtPace) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-    }
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var settings = getApp()._breadcrumbContext.settings;
-        var itemId = item.getId();
-        if (itemId == :settingsZoomAtPaceModePace) {
-            settings.setZoomAtPaceMode(ZOOM_AT_PACE_MODE_PACE);
-        } else if (itemId == :settingsZoomAtPaceModeStopped) {
-            settings.setZoomAtPaceMode(ZOOM_AT_PACE_MODE_STOPPED);
-        } else if (itemId == :settingsZoomAtPaceModeNever) {
-            settings.setZoomAtPaceMode(ZOOM_AT_PACE_MODE_NEVER_ZOOM);
-        } else if (itemId == :settingsZoomAtPaceModeAlways) {
-            settings.setZoomAtPaceMode(ZOOM_AT_PACE_MODE_ALWAYS_ZOOM);
-        } else if (itemId == :settingsZoomAtPaceModeRoutesWithoutTrack) {
-            settings.setZoomAtPaceMode(ZOOM_AT_PACE_MODE_SHOW_ROUTES_WITHOUT_TRACK);
-        }
-
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+    // compiler complains it cannot find the global ones
+    // even $.method(:...) does not seem to work
+    public function getTrackStyleStringL(value as Number) as ResourceId or String {
+        return getTrackStyleString(value);
     }
 }
 
@@ -1822,8 +1633,13 @@ class SettingsMapDelegate extends WatchUi.Menu2InputDelegate {
             view.rerender();
         } else if (itemId == :settingsMapPackingFormat) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsPackingFormat(),
-                new $.SettingsPackingFormatDelegate(view),
+                new EnumMenu(
+                    Rez.Strings.packingFormatTitle,
+                    method(:getPackingFormatStringL),
+                    settings.packingFormat,
+                    4
+                ),
+                new $.EnumDelegate(settings.method(:setPackingFormat), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsMapStorageSettings) {
@@ -1834,6 +1650,12 @@ class SettingsMapDelegate extends WatchUi.Menu2InputDelegate {
             WatchUi.pushView(view, new $.SettingsTileServerDelegate(view), WatchUi.SLIDE_IMMEDIATE);
         }
     }
+
+    // compiler complains it cannot find the global ones
+    // even $.method(:...) does not seem to work
+    public function getPackingFormatStringL(value as Number) as ResourceId or String {
+        return getPackingFormatString(value);
+    }
 }
 
 (:settingsView)
@@ -1843,13 +1665,25 @@ class SettingsTileServerDelegate extends WatchUi.Menu2InputDelegate {
         WatchUi.Menu2InputDelegate.initialize();
         me.view = view;
     }
+
+    // compiler complains it cannot find the global ones
+    // even $.method(:...) does not seem to work
+    public function getMapChoiceStringL(value as Number) as ResourceId or String {
+        return getMapChoiceString(value);
+    }
+
     public function onSelect(item as WatchUi.MenuItem) as Void {
         var settings = getApp()._breadcrumbContext.settings;
         var itemId = item.getId();
         if (itemId == :settingsMapChoice) {
             WatchUi.pushView(
-                new $.Rez.Menus.SettingsMapChoice(),
-                new $.SettingsMapChoiceDelegate(view),
+                new EnumMenu(
+                    Rez.Strings.mapChoice,
+                    method(:getMapChoiceStringL),
+                    settings.mapChoice,
+                    33
+                ),
+                new $.EnumDelegate(settings.method(:setMapChoice), view),
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsTileUrl) {
@@ -2056,10 +1890,23 @@ function onSelectAlertCommon(
         );
     } else if (itemId == :settingsAlertsAlertType) {
         WatchUi.pushView(
-            new $.Rez.Menus.SettingsAlertType(),
-            new $.SettingsAlertTypeDelegate(view),
+            new EnumMenu(
+                Rez.Strings.alertTypeTitle,
+                (new GetAlertTypeStringLProxy()).method(:getAlertTypeStringL),
+                settings.alertType,
+                ALERT_TYPE_MAX
+            ),
+            new $.EnumDelegate(settings.method(:setAlertType), view),
             WatchUi.SLIDE_IMMEDIATE
         );
+    }
+}
+
+class GetAlertTypeStringLProxy {
+    // compiler complains it cannot find the global ones
+    // even $.method(:...) does not seem to work
+    public function getAlertTypeStringL(value as Number) as ResourceId or String {
+        return getAlertTypeString(value);
     }
 }
 
@@ -2254,54 +2101,7 @@ class SettingsDebugDelegate extends WatchUi.Menu2InputDelegate {
 }
 
 (:settingsView)
-class SettingsDataFieldTypeDelegate extends WatchUi.Menu2InputDelegate {
-    private var callback as (Method(value as Number) as Void);
-    var parent as SettingsDataField;
-    function initialize(
-        parent as SettingsDataField,
-        _callback as (Method(value as Number) as Void)
-    ) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-        me.callback = _callback;
-    }
-
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var itemId = item.getId();
-        if (itemId == :settingsDataTypeNone) {
-            callback.invoke(DATA_TYPE_NONE);
-        } else if (itemId == :settingsDataTypeScale) {
-            callback.invoke(DATA_TYPE_SCALE);
-        } else if (itemId == :settingsDataTypeAltitude) {
-            callback.invoke(DATA_TYPE_ALTITUDE);
-        } else if (itemId == :settingsDataTypeAvgHR) {
-            callback.invoke(DATA_TYPE_AVERAGE_HEART_RATE);
-        } else if (itemId == :settingsDataTypeAvgSpeed) {
-            callback.invoke(DATA_TYPE_AVERAGE_SPEED);
-        } else if (itemId == :settingsDataTypeCurHR) {
-            callback.invoke(DATA_TYPE_CURRENT_HEART_RATE);
-        } else if (itemId == :settingsDataTypeCurSpeed) {
-            callback.invoke(DATA_TYPE_CURRENT_SPEED);
-        } else if (itemId == :settingsDataTypeDistance) {
-            callback.invoke(DATA_TYPE_ELAPSED_DISTANCE);
-        } else if (itemId == :settingsDataTypeTime) {
-            callback.invoke(DATA_TYPE_ELAPSED_TIME);
-        } else if (itemId == :settingsDataTypeAscent) {
-            callback.invoke(DATA_TYPE_TOTAL_ASCENT);
-        } else if (itemId == :settingsDataTypeDescent) {
-            callback.invoke(DATA_TYPE_TOTAL_DESCENT);
-        } else if (itemId == :settingsDataTypeAvgPace) {
-            callback.invoke(DATA_TYPE_AVERAGE_PACE);
-        } else if (itemId == :settingsDataTypeCurPace) {
-            callback.invoke(DATA_TYPE_CURRENT_PACE);
-        }
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    }
-}
-
-(:settingsView)
-function getFontSizeString(font as Number) as ResourceId {
+function getFontSizeString(font as Number) as ResourceId or String {
     switch (font) {
         case Graphics.FONT_XTINY:
             return Rez.Strings.fontXTiny;
@@ -2325,92 +2125,7 @@ function getFontSizeString(font as Number) as ResourceId {
         // case Graphics.FONT_SYSTEM_MEDIUM: return Rez.Strings.fontSysMedium;
         // case Graphics.FONT_SYSTEM_LARGE: return Rez.Strings.fontSysLarge;
         default:
-            return Rez.Strings.fontMedium;
-    }
-}
-
-(:settingsView)
-class SettingsFontSizeDelegate extends WatchUi.Menu2InputDelegate {
-    private var callback as (Method(value as Number) as Void);
-    private var parent as SettingsDataField;
-
-    function initialize(
-        parent as SettingsDataField,
-        _callback as (Method(value as Number) as Void)
-    ) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-        me.callback = _callback;
-    }
-
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var itemId = item.getId();
-
-        // Map the symbol ID back to the Graphics Font constant
-        var fontValue = Graphics.FONT_MEDIUM; // Default
-
-        if (itemId == :fontXTiny) {
-            fontValue = Graphics.FONT_XTINY;
-        } else if (itemId == :fontTiny) {
-            fontValue = Graphics.FONT_TINY;
-        } else if (itemId == :fontSmall) {
-            fontValue = Graphics.FONT_SMALL;
-        } else if (itemId == :fontMedium) {
-            fontValue = Graphics.FONT_MEDIUM;
-        } else if (itemId == :fontLarge) {
-            fontValue = Graphics.FONT_LARGE;
-        }
-        /* else if (itemId == :fontNumMild) {
-            fontValue = Graphics.FONT_NUMBER_MILD;
-        } else if (itemId == :fontNumMedium) {
-            fontValue = Graphics.FONT_NUMBER_MEDIUM;
-        } else if (itemId == :fontNumHot) {
-            fontValue = Graphics.FONT_NUMBER_HOT;
-        } else if (itemId == :fontNumThaiHot) {
-            fontValue = Graphics.FONT_NUMBER_THAI_HOT;
-        } else if (itemId == :fontSysXTiny) {
-            fontValue = Graphics.FONT_SYSTEM_XTINY;
-        }
-         else if (itemId == :fontSysTiny) {
-            fontValue = Graphics.FONT_SYSTEM_TINY;
-        } else if (itemId == :fontSysSmall) {
-            fontValue = Graphics.FONT_SYSTEM_SMALL;
-        } else if (itemId == :fontSysMedium) {
-            fontValue = Graphics.FONT_SYSTEM_MEDIUM;
-        } else if (itemId == :fontSysLarge) {
-            fontValue = Graphics.FONT_SYSTEM_LARGE;
-        }*/
-
-        callback.invoke(fontValue);
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    }
-}
-
-(:settingsView)
-class SettingsTrackPointReductionMethodDelegate extends WatchUi.Menu2InputDelegate {
-    private var parent as SettingsTrack;
-
-    function initialize(parent as SettingsTrack) {
-        WatchUi.Menu2InputDelegate.initialize();
-        me.parent = parent;
-    }
-
-    public function onSelect(item as WatchUi.MenuItem) as Void {
-        var itemId = item.getId();
-
-        var settings = getApp()._breadcrumbContext.settings;
-        var value = TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE;
-
-        if (itemId == :trackPointReductionMethodDownsample) {
-            value = TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE;
-        } else if (itemId == :trackPointReductionMethodReumannWitkam) {
-            value = TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM;
-        }
-
-        settings.setTrackPointReductionMethod(value);
-        parent.rerender();
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+            return "";
     }
 }
 
@@ -2453,21 +2168,24 @@ function getTrackStyleString(style as Number) as ResourceId {
     }
 }
 
-(:settingsView)
-class SettingsTrackStyleMenu extends WatchUi.Menu2 {
-    function initialize(currentStyle as Number) {
-        Menu2.initialize({ :title => Rez.Strings.trackStyleTitle });
-
-        for (var i = 0; i < TRACK_STYLE_MAX; i++) {
-            var label = getTrackStyleString(i);
-            var isSelected = i == currentStyle;
+class EnumMenu extends WatchUi.Menu2 {
+    function initialize(
+        title as String or ResourceId,
+        callback as (Method(value as Number) as ResourceId or String),
+        current as Number,
+        max as Number
+    ) {
+        Menu2.initialize({ :title => title });
+        for (var i = 0; i < max; i++) {
+            var label = callback.invoke(i);
+            var isSelected = i == current;
             addItem(new MenuItem(label, isSelected ? "Selected" : "", i, {}));
         }
     }
 }
 
 (:settingsView)
-class SettingsTrackStyleDelegate extends WatchUi.Menu2InputDelegate {
+class EnumDelegate extends WatchUi.Menu2InputDelegate {
     private var callback as (Method(value as Number) as Void);
     private var parent as Renderable;
 
