@@ -2178,6 +2178,9 @@ class EnumMenu extends WatchUi.Menu2 {
         Menu2.initialize({ :title => title });
         for (var i = 0; i < max; i++) {
             var label = callback.invoke(i);
+            if (label.equals("")) {
+                continue;
+            }
             var isSelected = i == current;
             addItem(new MenuItem(label, isSelected ? "Selected" : "", i, {}));
         }
