@@ -30,7 +30,7 @@ enum /* TrackStyle */ {
 enum /*TrackPointReductionMethod*/ {
     TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE = 0,
     TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM = 1,
-    
+
     TRACK_POINT_REDUCTION_METHOD_MAX
 }
 
@@ -1669,6 +1669,7 @@ class Settings {
             "style" => routeStyle(routeId),
             "width" => routeWidth(routeId),
         });
+        routeTextures.add(-1);
         saveRoutes();
     }
 
@@ -1685,6 +1686,7 @@ class Settings {
 
     function clearRoutes() as Void {
         routes = [];
+        routeTextures = [];
         saveRoutes();
     }
 
@@ -1699,6 +1701,7 @@ class Settings {
             return;
         }
         routes.remove(routes[routeIndex]);
+        routeTextures.remove(routeTextures[routeIndex]);
         saveRoutes();
     }
 
