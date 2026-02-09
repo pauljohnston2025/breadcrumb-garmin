@@ -12,14 +12,15 @@
     <string id="tileLayerMinPrompt">2</string>
     <string id="tileCacheSizeTitle">Tile Cache Size (tiles)</string>
     <string id="modeTitle">Display Mode</string>
+    <string id="modeDisplayOrderTitle">Mode Display Order</string>
     <string id="elevationModeTitle">Elevation Mode</string>
     <string id="elevationModeStacked">Stacked</string>
     <string id="elevationModeOrderedRoutes">Ordered Routes</string>
     <string id="tileUrlTitle">Tile Url</string>
     <string id="authTokenTitle">Auth Token</string>
     <string id="tileUrlPrompt">https://fancytileserver/{z}/{x}/{y}.png</string>
-    <string id="elevationMode">Elevation</string>
-    <string id="trackRouteMode">Track/Route</string>
+    <string id="elevationMode">(1) Elevation</string>
+    <string id="trackRouteMode">(0) Track/Route</string>
     <string id="mapEnabledTitle">Map Enabled</string>
     <string id="trackColourTitle">Track Colour</string>
     <string id="trackColour2Title">Track Colour 2</string>
@@ -121,8 +122,8 @@
     <string id="routeEnabled">Enabled</string>
     <string id="routeReversed">Reversed</string>
     <string id="routesEnabled">Enable Routes</string>
-    <string id="mapMove">Map Move</string>
-    <string id="debug">Debug</string>
+    <string id="mapMove">(2) Map Move</string>
+    <string id="debug">(3) Debug</string>
     <string id="clearRoutes">Clear All Routes</string>
 
     <string id="mapChoice">Map Choice</string>

@@ -31,7 +31,7 @@ enum /*TrackPointReductionMethod*/ {
     TRACK_POINT_REDUCTION_METHOD_DOWNSAMPLE = 0,
     TRACK_POINT_REDUCTION_METHOD_REUMANN_WITKAM = 1,
 
-    TRACK_POINT_REDUCTION_METHOD_MAX
+    TRACK_POINT_REDUCTION_METHOD_MAX,
 }
 
 enum /*DataType*/ {
@@ -61,10 +61,14 @@ enum /*DataType*/ {
 }
 
 enum /*Mode*/ {
-    MODE_NORMAL,
-    MODE_ELEVATION,
-    MODE_MAP_MOVE,
-    MODE_DEBUG,
+    MODE_NORMAL = 0,
+    MODE_ELEVATION = 1,
+    MODE_MAP_MOVE = 2,
+    MODE_DEBUG = 3,
+    MODE_MAP_MOVE_ZOOM = 4, // mostly for app (and button presses), but also allows larger touch zones
+    MODE_MAP_MOVE_UP_DOWN = 5, // mostly for app (and button presses), but also allows larger touch zones
+    MODE_MAP_MOVE_LEFT_RIGHT = 6, // mostly for app (and button presses), but also allows larger touch zones
+
     MODE_MAX,
 }
 
@@ -444,6 +448,7 @@ class Settings {
     (:noCompanionTiles)
     var tileCacheSize as Number = 8;
     var mode as Number = MODE_NORMAL;
+    var modeDisplayOrder as Array<Number> = [0, 1, 2];
     var elevationMode as Number = ELEVATION_MODE_STACKED;
     var mapEnabled as Boolean = false;
     // cache the tiles in storage when they are loaded, allows for fully offline maps
@@ -1503,7 +1508,7 @@ class Settings {
 
         return routes[routeIndex]["colour"] as Number;
     }
-    
+
     function routeColour2(routeId as Number) as Number {
         var routeIndex = getRouteIndexById(routeId);
         if (routeIndex == null) {
@@ -1593,9 +1598,15 @@ class Settings {
 
         routes[routeIndex]["colour"] = value;
         saveRoutes();
-        recomputeRouteTexture(routeIndex, routeStyle(routeId), routeWidth(routeId), value, routeColour2(routeId));
+        recomputeRouteTexture(
+            routeIndex,
+            routeStyle(routeId),
+            routeWidth(routeId),
+            value,
+            routeColour2(routeId)
+        );
     }
-    
+
     function setRouteColour2(routeId as Number, value as Number) as Void {
         ensureRouteId(routeId);
         var routeIndex = getRouteIndexById(routeId);
@@ -1605,7 +1616,13 @@ class Settings {
 
         routes[routeIndex]["colour2"] = value;
         saveRoutes();
-        recomputeRouteTexture(routeIndex, routeStyle(routeId), routeWidth(routeId), routeColour(routeId), value);
+        recomputeRouteTexture(
+            routeIndex,
+            routeStyle(routeId),
+            routeWidth(routeId),
+            routeColour(routeId),
+            value
+        );
     }
 
     // see oddity with route name and route loading new in context.newRoute
@@ -1629,7 +1646,13 @@ class Settings {
 
         routes[routeIndex]["style"] = value;
         saveRoutes();
-        recomputeRouteTexture(routeIndex, value, routeWidth(routeId), routeColour(routeId), routeColour2(routeId));
+        recomputeRouteTexture(
+            routeIndex,
+            value,
+            routeWidth(routeId),
+            routeColour(routeId),
+            routeColour2(routeId)
+        );
     }
 
     function setRouteWidth(routeId as Number, value as Number) as Void {
@@ -1641,7 +1664,13 @@ class Settings {
 
         routes[routeIndex]["width"] = value;
         saveRoutes();
-        recomputeRouteTexture(routeIndex, routeStyle(routeId), value, routeColour(routeId), routeColour2(routeId));
+        recomputeRouteTexture(
+            routeIndex,
+            routeStyle(routeId),
+            value,
+            routeColour(routeId),
+            routeColour2(routeId)
+        );
     }
 
     function setRouteEnabled(routeId as Number, value as Boolean) as Void {
@@ -1766,7 +1795,7 @@ class Settings {
         setValue("trackColour", trackColour.format("%X"));
         recomputeTrackTexture();
     }
-    
+
     (:settingsView)
     function setTrackColour2(value as Number) as Void {
         trackColour2 = value;
@@ -1775,7 +1804,13 @@ class Settings {
     }
 
     function recomputeTrackTexture() as Void {
-        trackTexture = getTexture(trackStyle, trackWidth, trackWidth / 2, trackColour, trackColour2);
+        trackTexture = getTexture(
+            trackStyle,
+            trackWidth,
+            trackWidth / 2,
+            trackColour,
+            trackColour2
+        );
     }
 
     function recomputeRouteTexture(
@@ -1968,18 +2003,28 @@ class Settings {
         setValue("routesEnabled", routesEnabled);
     }
 
+    function getNextMode() as Number {
+
+        // does not handle dupes, but thats the user error if they do that
+        if (modeDisplayOrder.size() < 1)
+        {
+            // no modes to display, jsut use mode 0 overy time
+            return MODE_NORMAL;
+        }
+
+        var curentModeIndex = modeDisplayOrder.indexOf(mode);
+        if (curentModeIndex == -1 || curentModeIndex == modeDisplayOrder.size() -1)
+        {
+            // not found, or we need to go back to the star of the array
+            return modeDisplayOrder[0];
+        }
+
+        return modeDisplayOrder[curentModeIndex + 1]; 
+    }
+    
     function nextMode() as Void {
         // logT("mode cycled");
-        // could just add one and check if over MODE_MAX?
-        mode++;
-        if (mode >= MODE_MAX) {
-            mode = MODE_NORMAL;
-        }
-
-        if (mode == MODE_DEBUG && !includeDebugPageInOnScreenUi) {
-            nextMode();
-        }
-
+        mode = getNextMode();
         setMode(mode);
     }
 
@@ -2063,9 +2108,18 @@ class Settings {
     //
     // Error: Unhandled Exception
     // Exception: UnexpectedTypeException: Expected Number/Float/Long/Double/Char, given null/Number
-    function parseColourTransparency(key as String, defaultValue as Number, allowTransparent as Boolean) as Number {
+    function parseColourTransparency(
+        key as String,
+        defaultValue as Number,
+        allowTransparent as Boolean
+    ) as Number {
         try {
-            return parseColourRaw(key, Application.Properties.getValue(key), defaultValue, allowTransparent);
+            return parseColourRaw(
+                key,
+                Application.Properties.getValue(key),
+                defaultValue,
+                allowTransparent
+            );
         } catch (e) {
             logE("Error parsing float: " + key);
         }
@@ -2153,6 +2207,67 @@ class Settings {
             return defaultValue;
         } catch (e) {
             logE("Error parsing number: " + key + " " + value);
+        }
+        return defaultValue;
+    }
+
+    typedef ReturnType as Number /* or String*/;
+    function parseCSVString(
+        key as String,
+        defaultValue as Array<ReturnType>,
+        callback as (Method(key as String, value as String) as ReturnType)
+    ) as Array<ReturnType> {
+        try {
+            return parseCSVStringRaw(
+                key,
+                Application.Properties.getValue(key),
+                defaultValue,
+                callback
+            );
+        } catch (e) {
+            logE("Error parsing float: " + key);
+        }
+        return defaultValue;
+    }
+
+    function parseCSVStringRaw(
+        key as String,
+        value as PropertyValueType,
+        defaultValue as Array<ReturnType>,
+        callback as (Method(key as String, value as String) as ReturnType)
+    ) as Array<ReturnType> {
+        try {
+            if (value == null) {
+                return defaultValue;
+            }
+
+            if (value instanceof String) {
+                var string = value;
+                var splitter = ",";
+                var result = [] as Array<ReturnType>;
+                var location = string.find(splitter) as Number?;
+
+                while (location != null) {
+                    result.add(callback.invoke(key, string.substring(0, location) as String));
+
+                    // Truncate the string to look for the next splitter
+                    string =
+                        string.substring(location + splitter.length(), string.length()) as String;
+
+                    location = string.find(splitter);
+                }
+
+                // Add the remaining part of the string if it's not empty
+                if (string.length() > 0) {
+                    result.add(callback.invoke(key, string));
+                }
+
+                return result;
+            }
+
+            return defaultValue;
+        } catch (e) {
+            logE("Error parsing string: " + key + " " + value);
         }
         return defaultValue;
     }
@@ -2636,6 +2751,11 @@ class Settings {
         recalculateIntervalS = parseNumber("recalculateIntervalS", recalculateIntervalS);
         recalculateIntervalS = recalculateIntervalS <= 0 ? 1 : recalculateIntervalS;
         mode = parseNumber("mode", mode);
+        modeDisplayOrder = parseCSVString(
+            "modeDisplayOrder",
+            modeDisplayOrder,
+            method(:defaultNumberParser)
+        );
         mapEnabled = parseBool("mapEnabled", mapEnabled);
         setMapEnabledRaw(mapEnabled); // prompt for app to open if needed
         cacheTilesInStorage = parseBool("cacheTilesInStorage", cacheTilesInStorage);
@@ -2781,7 +2901,7 @@ class Settings {
     function defaultColourParser(key as String, value as PropertyValueType) as Number {
         return parseColourRaw(key, value, Graphics.COLOR_RED, false);
     }
-    
+
     function defaultColourParserTransparent(key as String, value as PropertyValueType) as Number {
         return parseColourRaw(key, value, Graphics.COLOR_TRANSPARENT, true);
     }
@@ -2839,7 +2959,13 @@ class Settings {
                     oldRouteEntry["colour"] != currentColour ||
                     oldRouteEntry["colour2"] != currentColour2
                 ) {
-                    recomputeRouteTexture(routeIndex, currentStyle, currentWidth, currentColour, currentColour2);
+                    recomputeRouteTexture(
+                        routeIndex,
+                        currentStyle,
+                        currentWidth,
+                        currentColour,
+                        currentColour2
+                    );
                 }
 
                 continue;

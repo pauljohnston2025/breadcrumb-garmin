@@ -1,6 +1,7 @@
 <properties>
     <!-- https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/ -->
 	<property id="mode" type="number">0</property>
+	<property id="modeDisplayOrder" type="string">0,1,2</property>
 	<property id="elevationMode" type="number">0</property>
 	<property id="uiMode" type="number">0</property>
 	<property id="renderMode" type="number">0</property>

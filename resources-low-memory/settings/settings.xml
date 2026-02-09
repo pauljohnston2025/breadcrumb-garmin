@@ -2,6 +2,10 @@
     <!-- https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/ -->
     <!-- todo add prompt to some of these -->
 
+    <setting propertyKey="@Properties.modeDisplayOrder" title="@Strings.modeDisplayOrderTitle">
+        <settingConfig type="alphaNumeric"/>
+    </setting>
+
     <setting propertyKey="@Properties.mode" title="@Strings.modeTitle">
         <settingConfig type="list">
             <listEntry value="0">@Strings.trackRouteMode</listEntry>
