@@ -27,7 +27,7 @@
 	<property id="packingFormat" type="number">1</property>
 
 	<property id="trackColour" type="string">00FF00</property>
-	<property id="routeColour" type="string">0000FF</property>
+	<property id="trackColour2" type="string">FFFFFFFF</property>
 	<property id="elevationColour" type="string">FF5500</property>
 	<property id="userColour" type="string">FF5500</property>
 	<property id="normalModeColour" type="string">0000FF</property>

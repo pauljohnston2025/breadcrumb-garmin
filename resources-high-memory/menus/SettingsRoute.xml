@@ -2,6 +2,7 @@
     <menu-item id="settingsRouteName" label="@Strings.routeName"/>
     <toggle-menu-item id="settingsRouteEnabled" label="@Strings.routeEnabled"/>
     <icon-menu-item id="settingsRouteColour" label="@Strings.routeColourTitle" icon="@Drawables.LauncherIcon"/>
+    <icon-menu-item id="settingsRouteColour2" label="@Strings.routeColour2Title" icon="@Drawables.LauncherIcon"/>
     <toggle-menu-item id="settingsRouteReversed" label="@Strings.routeReversed"/>
     <menu-item id="settingsRouteStyle" label="@Strings.routeStyleTitle"/>
     <menu-item id="settingsRouteWidth" label="@Strings.routeWidthTitle"/>

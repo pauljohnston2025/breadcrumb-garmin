@@ -247,7 +247,6 @@ class SettingsNumberPicker extends NumberPicker {
         self.parent = parent;
     }
 
-    
     protected function onReading(value as String) as Void {
         callback.invoke(Settings.parseNumberRaw("key", value, defaultVal));
         parent.rerender();
@@ -255,24 +254,54 @@ class SettingsNumberPicker extends NumberPicker {
 }
 
 (:settingsView)
-class SettingsColourPicker extends NumberPicker {
+class SettingsColourPickerTransparency extends NumberPicker {
     private var callback as (Method(value as Number) as Void);
     private var parent as Renderable;
     private var defaultVal as Number;
-    function initialize(callback as (Method(value as Number) as Void), defaultVal as Number, parent as Renderable) {
-        NumberPicker.initialize("0123456789ABCDEF", 6);
+    private var allowTransparent as Boolean;
+    function initialize(
+        callback as (Method(value as Number) as Void),
+        defaultVal as Number,
+        parent as Renderable,
+        allowTransparent as Boolean
+    ) {
+        var defaultOptions = "0123456789ABCDEF";
+        if (allowTransparent) {
+            defaultOptions += "T"; // transparent
+        }
+        NumberPicker.initialize(defaultOptions, 6);
         self.defaultVal = defaultVal;
         self.callback = callback;
         self.parent = parent;
+        self.allowTransparent = allowTransparent;
     }
 
     protected function onReading(value as String) as Void {
-        callback.invoke(Settings.parseColourRaw("key", value, defaultVal));
+        if (value.find("T") != null) {
+            callback.invoke(Graphics.COLOR_TRANSPARENT); // transparent
+        } else {
+            callback.invoke(Settings.parseColourRaw("key", value, defaultVal, allowTransparent));
+        }
+
         parent.rerender();
     }
 
     protected function backgroundColour(value as String) as Number {
-        return Settings.parseColourRaw("key", value, Graphics.COLOR_BLACK);
+        if (value.find("T") != null) {
+            return Graphics.COLOR_TRANSPARENT;
+        }
+
+        return Settings.parseColourRaw("key", value, Graphics.COLOR_BLACK, allowTransparent);
+    }
+}
+
+class SettingsColourPicker extends SettingsColourPickerTransparency {
+    function initialize(
+        callback as (Method(value as Number) as Void),
+        defaultVal as Number,
+        parent as Renderable
+    ) {
+        SettingsColourPickerTransparency.initialize(callback, defaultVal, parent, false);
     }
 }
 

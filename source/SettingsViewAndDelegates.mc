@@ -42,7 +42,7 @@ class SettingsStringPicker extends MyTextPickerDelegate {
 
 (:settingsView)
 function startPicker(
-    picker as SettingsFloatPicker or SettingsColourPicker or SettingsNumberPicker
+    picker as SettingsFloatPicker or SettingsColourPicker or SettingsNumberPicker or SettingsColourPickerTransparency
 ) as Void {
     WatchUi.pushView(
         new $.NumberPickerView(picker),
@@ -686,6 +686,7 @@ class SettingsColours extends Rez.Menus.SettingsColours {
     function rerender() as Void {
         var settings = getApp()._breadcrumbContext.settings;
         safeSetIcon(me, :settingsColoursTrackColour, new ColourIcon(settings.trackColour));
+        safeSetIcon(me, :settingsColoursTrackColour2, new ColourIcon(settings.trackColour2));
         safeSetIcon(
             me,
             :settingsColoursDefaultRouteColour,
@@ -751,6 +752,7 @@ class SettingsRoute extends Rez.Menus.SettingsRoute {
         safeSetSubLabel(me, :settingsRouteName, name);
         safeSetToggle(me, :settingsRouteEnabled, settings.routeEnabled(routeId));
         safeSetIcon(me, :settingsRouteColour, new ColourIcon(settings.routeColour(routeId)));
+        safeSetIcon(me, :settingsRouteColour2, new ColourIcon(settings.routeColour2(routeId)));
         safeSetSubLabel(me, :settingsRouteStyle, getTrackStyleString(settings.routeStyle(routeId)));
         safeSetSubLabel(me, :settingsRouteWidth, settings.routeWidth(routeId).toString() + "px");
         safeSetToggle(me, :settingsRouteReversed, settings.routeReversed(routeId));
@@ -780,9 +782,17 @@ class SettingsRoute extends Rez.Menus.SettingsRoute {
     function routeColour() as Number {
         return settings.routeColour(routeId);
     }
+    
+    function routeColour2() as Number {
+        return settings.routeColour2(routeId);
+    }
 
     function setColour(value as Number) as Void {
         settings.setRouteColour(routeId, value);
+    }
+    
+    function setColour2(value as Number) as Void {
+        settings.setRouteColour2(routeId, value);
     }
 
     function setStyle(value as Number) as Void {
@@ -1498,6 +1508,10 @@ class SettingsRouteDelegate extends WatchUi.Menu2InputDelegate {
             startPicker(
                 new SettingsColourPicker(view.method(:setColour), view.routeColour(), view)
             );
+        } else if (itemId == :settingsRouteColour2) {
+            startPicker(
+                new SettingsColourPickerTransparency(view.method(:setColour2), view.routeColour2(), view, true)
+            );
         } else if (itemId == :settingsRouteDelete) {
             var dialog = new WatchUi.Confirmation(
                 WatchUi.loadResource(Rez.Strings.routeDelete) as String
@@ -2003,6 +2017,15 @@ class SettingsColoursDelegate extends WatchUi.Menu2InputDelegate {
                     settings.method(:setTrackColour),
                     settings.trackColour,
                     view
+                )
+            );
+        }else if (itemId == :settingsColoursTrackColour2) {
+            startPicker(
+                new SettingsColourPickerTransparency(
+                    settings.method(:setTrackColour2),
+                    settings.trackColour2,
+                    view,
+                    true
                 )
             );
         } else if (itemId == :settingsColoursDefaultRouteColour) {

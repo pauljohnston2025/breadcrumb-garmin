@@ -5,13 +5,14 @@ import Toybox.Graphics;
 function getCheckerboardTexture(
     width as Number,
     halfWidth as Number,
-    colour as Number
+    colour as Number,
+    colour2 as Number
 ) as Graphics.BitmapTexture {
     // checkerboard texture
     // texture docs are crap, this is the one example i could find https://forums.garmin.com/developer/connect-iq/f/discussion/292995/setstroke-and-bitmaptexture
     var bitmap = newBitmap(width, width);
     var bitmapDc = bitmap.getDc();
-    bitmapDc.setColor(colour, Graphics.COLOR_TRANSPARENT);
+    bitmapDc.setColor(colour, colour2);
     bitmapDc.clear();
     bitmapDc.fillRectangle(0, 0, halfWidth, halfWidth); // half colour and half transparent checkerboard (so both x and y are stripped)
     bitmapDc.fillRectangle(halfWidth, halfWidth, halfWidth, halfWidth); // half colour and half transparent checkerboard (so both x and y are stripped)
@@ -22,13 +23,15 @@ function getCheckerboardTexture(
 function getHazardTexture(
     width as Number,
     halfWidth as Number,
-    colour as Number
+    colour as Number,
+    colour2 as Number
 ) as Graphics.BitmapTexture {
     // checkerboard texture
     // texture docs are crap, this is the one example i could find https://forums.garmin.com/developer/connect-iq/f/discussion/292995/setstroke-and-bitmaptexture
     var bitmap = newBitmap(width, width);
     var bDc = bitmap.getDc();
-    bDc.setColor(colour, Graphics.COLOR_TRANSPARENT);
+    bDc.setColor(colour, colour2);
+    bDc.clear();
 
     // Draw two diagonal triangles to create a tiling stripe
     var pts = [
@@ -50,12 +53,14 @@ function getHazardTexture(
 function dotMatrixTexture(
     width as Number,
     halfWidth as Number,
-    colour as Number
+    colour as Number,
+    colour2 as Number
 ) as Graphics.BitmapTexture {
     var bitmap = newBitmap(4, 4);
 
     var bDc = bitmap.getDc();
-    bDc.setColor(colour, Graphics.COLOR_TRANSPARENT);
+    bDc.setColor(colour, colour2);
+    bDc.clear();
 
     bDc.drawPoint(0, 0);
     bDc.drawPoint(2, 2);
@@ -66,7 +71,8 @@ function dotMatrixTexture(
 function polkaDotTexture(
     width as Number,
     halfWidth as Number,
-    colour as Number
+    colour as Number,
+    colour2 as Number
 ) as Graphics.BitmapTexture {
     var bitmap = newBitmap(width, width);
     var bDc = bitmap.getDc();
@@ -77,7 +83,8 @@ function polkaDotTexture(
     }
 
     // Centered Dot
-    bDc.setColor(colour, Graphics.COLOR_TRANSPARENT);
+    bDc.setColor(colour, colour2);
+    bDc.clear();
     bDc.fillCircle(halfWidth, halfWidth, dotSize);
 
     // Offset "half dots" at corners for perfect tiling
@@ -93,12 +100,14 @@ function polkaDotTexture(
 function diamondTexture(
     width as Number,
     halfWidth as Number,
-    colour as Number
+    colour as Number,
+    colour2 as Number
 ) as Graphics.BitmapTexture {
     var bitmap = newBitmap(width, width);
     var bDc = bitmap.getDc();
 
-    bDc.setColor(colour, Graphics.COLOR_TRANSPARENT);
+    bDc.setColor(colour, colour2);
+    bDc.clear();
     // Draw a diamond shape
     var pts = [
         [halfWidth, 0],
@@ -115,19 +124,20 @@ function getTexture(
     style as Number,
     width as Number,
     halfWidth as Number,
-    colour as Number
+    colour as Number,
+    colour2 as Number
 ) as Graphics.BitmapTexture or Number {
     try {
         if (style == TRACK_STYLE_CHECKERBOARD) {
-            return getCheckerboardTexture(width, halfWidth, colour);
+            return getCheckerboardTexture(width, halfWidth, colour, colour2);
         } else if (style == TRACK_STYLE_HAZARD) {
-            return getHazardTexture(width, halfWidth, colour);
+            return getHazardTexture(width, halfWidth, colour, colour2);
         } else if (style == TRACK_STYLE_DOT_MATRIX) {
-            return dotMatrixTexture(width, halfWidth, colour);
+            return dotMatrixTexture(width, halfWidth, colour, colour2);
         } else if (style == TRACK_STYLE_POLKA_DOT) {
-            return polkaDotTexture(width, halfWidth, colour);
+            return polkaDotTexture(width, halfWidth, colour, colour2);
         } else if (style == TRACK_STYLE_DIAMOND) {
-            return diamondTexture(width, halfWidth, colour);
+            return diamondTexture(width, halfWidth, colour, colour2);
         }
 
         return -1;

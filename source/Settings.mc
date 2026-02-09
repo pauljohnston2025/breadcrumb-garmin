@@ -460,6 +460,7 @@ class Settings {
     var storageTileCachePageCount as Number = 1;
 
     var trackColour as Number = Graphics.COLOR_GREEN;
+    var trackColour2 as Number = Graphics.COLOR_TRANSPARENT;
     var defaultRouteColour as Number = Graphics.COLOR_BLUE;
     var elevationColour as Number = Graphics.COLOR_ORANGE;
     var userColour as Number = Graphics.COLOR_ORANGE;
@@ -1502,6 +1503,15 @@ class Settings {
 
         return routes[routeIndex]["colour"] as Number;
     }
+    
+    function routeColour2(routeId as Number) as Number {
+        var routeIndex = getRouteIndexById(routeId);
+        if (routeIndex == null) {
+            return Graphics.COLOR_TRANSPARENT;
+        }
+
+        return routes[routeIndex]["colour2"] as Number;
+    }
 
     // see oddity with route name and route loading new in context.newRoute
     function routeName(routeId as Number) as String {
@@ -1583,7 +1593,19 @@ class Settings {
 
         routes[routeIndex]["colour"] = value;
         saveRoutes();
-        recomputeRouteTexture(routeIndex, routeStyle(routeId), routeWidth(routeId), value);
+        recomputeRouteTexture(routeIndex, routeStyle(routeId), routeWidth(routeId), value, routeColour2(routeId));
+    }
+    
+    function setRouteColour2(routeId as Number, value as Number) as Void {
+        ensureRouteId(routeId);
+        var routeIndex = getRouteIndexById(routeId);
+        if (routeIndex == null) {
+            return;
+        }
+
+        routes[routeIndex]["colour2"] = value;
+        saveRoutes();
+        recomputeRouteTexture(routeIndex, routeStyle(routeId), routeWidth(routeId), routeColour(routeId), value);
     }
 
     // see oddity with route name and route loading new in context.newRoute
@@ -1607,7 +1629,7 @@ class Settings {
 
         routes[routeIndex]["style"] = value;
         saveRoutes();
-        recomputeRouteTexture(routeIndex, value, routeWidth(routeId), routeColour(routeId));
+        recomputeRouteTexture(routeIndex, value, routeWidth(routeId), routeColour(routeId), routeColour2(routeId));
     }
 
     function setRouteWidth(routeId as Number, value as Number) as Void {
@@ -1619,7 +1641,7 @@ class Settings {
 
         routes[routeIndex]["width"] = value;
         saveRoutes();
-        recomputeRouteTexture(routeIndex, routeStyle(routeId), value, routeColour(routeId));
+        recomputeRouteTexture(routeIndex, routeStyle(routeId), value, routeColour(routeId), routeColour2(routeId));
     }
 
     function setRouteEnabled(routeId as Number, value as Boolean) as Void {
@@ -1665,6 +1687,7 @@ class Settings {
             "name" => routeName(routeId),
             "enabled" => true,
             "colour" => routeColour(routeId),
+            "colour2" => routeColour2(routeId),
             "reversed" => routeReversed(routeId),
             "style" => routeStyle(routeId),
             "width" => routeWidth(routeId),
@@ -1715,6 +1738,7 @@ class Settings {
                     "name" => entry["name"] as String,
                     "enabled" => entry["enabled"] as Boolean,
                     "colour" => (entry["colour"] as Number).format("%X"), // this is why we have to copy it :(
+                    "colour2" => (entry["colour2"] as Number).format("%X"), // this is why we have to copy it :(
                     "reversed" => entry["reversed"] as Boolean,
                     "style" => entry["style"] as Number,
                     "width" => entry["width"] as Number,
@@ -1742,23 +1766,32 @@ class Settings {
         setValue("trackColour", trackColour.format("%X"));
         recomputeTrackTexture();
     }
+    
+    (:settingsView)
+    function setTrackColour2(value as Number) as Void {
+        trackColour2 = value;
+        setValue("trackColour2", trackColour2.format("%X"));
+        recomputeTrackTexture();
+    }
 
     function recomputeTrackTexture() as Void {
-        trackTexture = getTexture(trackStyle, trackWidth, trackWidth / 2, trackColour);
+        trackTexture = getTexture(trackStyle, trackWidth, trackWidth / 2, trackColour, trackColour2);
     }
 
     function recomputeRouteTexture(
         routeIndex as Number,
         currentStyle as Number,
         currentWidth as Number,
-        currentColour as Number
+        currentColour as Number,
+        currentColour2 as Number
     ) as Void {
         padRouteTextures(routeIndex);
         routeTextures[routeIndex] = getTexture(
             currentStyle,
             currentWidth,
             currentWidth / 2,
-            currentColour
+            currentColour,
+            currentColour2
         );
     }
 
@@ -2030,19 +2063,24 @@ class Settings {
     //
     // Error: Unhandled Exception
     // Exception: UnexpectedTypeException: Expected Number/Float/Long/Double/Char, given null/Number
-    function parseColour(key as String, defaultValue as Number) as Number {
+    function parseColourTransparency(key as String, defaultValue as Number, allowTransparent as Boolean) as Number {
         try {
-            return parseColourRaw(key, Application.Properties.getValue(key), defaultValue);
+            return parseColourRaw(key, Application.Properties.getValue(key), defaultValue, allowTransparent);
         } catch (e) {
             logE("Error parsing float: " + key);
         }
         return defaultValue;
     }
 
+    function parseColour(key as String, defaultValue as Number) as Number {
+        return parseColourTransparency(key, defaultValue, false);
+    }
+
     static function parseColourRaw(
         key as String,
         colourString as PropertyValueType,
-        defaultValue as Number
+        defaultValue as Number,
+        allowTransparent as Boolean
     ) as Number {
         try {
             if (colourString == null) {
@@ -2064,7 +2102,7 @@ class Settings {
 
                 // calling tonumber breaks - because its out of range, but we need to set the alpha bits
                 var number = (long & 0xffffffffl).toNumber();
-                if (number == 0xffffffff) {
+                if (number == 0xffffffff && !allowTransparent) {
                     // -1 is transparent and will not render
                     number = 0xfeffffff;
                 }
@@ -2353,6 +2391,7 @@ class Settings {
         displayLatLong = defaultSettings.displayLatLong;
         _scaleRestrictedToTileLayers = defaultSettings.scaleRestrictedToTileLayers();
         trackColour = defaultSettings.trackColour;
+        trackColour2 = defaultSettings.trackColour2;
         defaultRouteColour = defaultSettings.defaultRouteColour;
         tileErrorColour = defaultSettings.tileErrorColour;
         elevationColour = defaultSettings.elevationColour;
@@ -2452,6 +2491,7 @@ class Settings {
                 "displayLatLong" => displayLatLong,
                 "scaleRestrictedToTileLayers" => scaleRestrictedToTileLayers(),
                 "trackColour" => trackColour.format("%X"),
+                "trackColour2" => trackColour2.format("%X"),
                 "defaultRouteColour" => defaultRouteColour.format("%X"),
                 "tileErrorColour" => tileErrorColour.format("%X"),
                 "elevationColour" => elevationColour.format("%X"),
@@ -2523,13 +2563,15 @@ class Settings {
         loadSettings();
         updateMapChoiceChange(mapChoice);
         setMinTrackPointDistanceMSideEffect();
+        recomputeTrackTexture();
         for (var i = 0; i < routes.size(); ++i) {
             var routeId = routes[i]["routeId"] as Number;
             recomputeRouteTexture(
                 i,
                 routeStyle(routeId),
                 routeWidth(routeId),
-                routeColour(routeId)
+                routeColour(routeId),
+                routeColour2(routeId)
             );
         }
     }
@@ -2620,6 +2662,7 @@ class Settings {
         drawCheverons = parseBool("drawCheverons", drawCheverons);
         routesEnabled = parseBool("routesEnabled", routesEnabled);
         trackColour = parseColour("trackColour", trackColour);
+        trackColour2 = parseColourTransparency("trackColour2", trackColour2, true);
         defaultRouteColour = parseColour("defaultRouteColour", defaultRouteColour);
         tileErrorColour = parseColour("tileErrorColour", tileErrorColour);
         elevationColour = parseColour("elevationColour", elevationColour);
@@ -2660,12 +2703,13 @@ class Settings {
         mapChoice = parseNumber("mapChoice", mapChoice);
         routes = getArraySchema(
             "routes",
-            ["routeId", "name", "enabled", "colour", "reversed", "style", "width"],
+            ["routeId", "name", "enabled", "colour", "colour2", "reversed", "style", "width"],
             [
                 method(:defaultNumberParser),
                 method(:emptyString),
                 method(:defaultFalse),
                 method(:defaultColourParser),
+                method(:defaultColourParserTransparent),
                 method(:defaultFalse),
                 method(:defaultNumberParser),
                 method(:defaultNumberParser4),
@@ -2735,7 +2779,11 @@ class Settings {
     }
 
     function defaultColourParser(key as String, value as PropertyValueType) as Number {
-        return parseColourRaw(key, value, Graphics.COLOR_RED);
+        return parseColourRaw(key, value, Graphics.COLOR_RED, false);
+    }
+    
+    function defaultColourParserTransparent(key as String, value as PropertyValueType) as Number {
+        return parseColourRaw(key, value, Graphics.COLOR_TRANSPARENT, true);
     }
 
     function onSettingsChanged() as Void {
@@ -2764,6 +2812,7 @@ class Settings {
         var oldTrackStyle = trackStyle;
         var oldTrackWidth = trackWidth;
         var oldTrackColour = trackColour;
+        var oldTrackColour2 = trackColour2;
         loadSettings();
         // route settins do not work because garmins setting spage cannot edit them
         // when any property is modified, so we have to explain to users not to touch the settings, but we cannot because it looks
@@ -2783,12 +2832,14 @@ class Settings {
                 var currentStyle = currentRouteEntry["style"] as Number;
                 var currentWidth = currentRouteEntry["width"] as Number;
                 var currentColour = currentRouteEntry["colour"] as Number;
+                var currentColour2 = currentRouteEntry["colour"] as Number;
                 if (
                     oldRouteEntry["style"] != currentStyle ||
                     oldRouteEntry["width"] != currentWidth ||
-                    oldRouteEntry["colour"] != currentColour
+                    oldRouteEntry["colour"] != currentColour ||
+                    oldRouteEntry["colour2"] != currentColour2
                 ) {
-                    recomputeRouteTexture(routeIndex, currentStyle, currentWidth, currentColour);
+                    recomputeRouteTexture(routeIndex, currentStyle, currentWidth, currentColour, currentColour2);
                 }
 
                 continue;
@@ -2858,7 +2909,8 @@ class Settings {
         if (
             oldTrackStyle != trackStyle ||
             oldTrackWidth != trackWidth ||
-            oldTrackColour != trackColour
+            oldTrackColour != trackColour ||
+            oldTrackColour2 != trackColour2
         ) {
             recomputeTrackTexture();
         }

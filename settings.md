@@ -632,6 +632,7 @@ How often, in seconds, an alert should fire. Alerts will continue firing until y
 Should be set to a valid hex code RRGGBB not all are required eg. FF00 will render as green
 
 Track Colour - The colour of the in progress track  
+Track Colour 2 - The secondary colour of the in progress track (only used in some track styles) 
 Default Route Colour - The default colour of newly loaded routes
 Elevation Colour - The colour of the scale/numbers on the elevation page  
 User Colour - The colour of the user triangle (current user position)  
@@ -666,6 +667,7 @@ Id - The id of the route - read only
 Name - Defaults to the route name that was added, but can be modified to anything you desire.  
 Enabled - If this route appears on any of the device screens, routes can be disabled so that multiple routes can be pre loaded and enabled when needed. eg. Day 1, Day 2.  
 Route Colour - The colour of the route.  
+Route Colour 2 - The secondary colour of the route (only used with some route styles).  
 Reversed - To reverse the direction of the route.  
 Style - see [Track Style](#track-style).  
 Width - see [Track Width](#track-width).  
