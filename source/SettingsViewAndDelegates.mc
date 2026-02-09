@@ -306,6 +306,7 @@ class SettingsGeneral extends Rez.Menus.SettingsGeneral {
     function rerender() as Void {
         var settings = getApp()._breadcrumbContext.settings;
 
+        safeSetSubLabel(me, :settingsGeneralModeDisplayOrder, Settings.encodeCSV(settings.modeDisplayOrder));
         safeSetSubLabel(me, :settingsGeneralMode, getModeString(settings.mode));
         safeSetSubLabel(me, :settingsGeneralModeUiMode, getUiModeString(settings.uiMode));
         safeSetSubLabel(
@@ -1204,7 +1205,11 @@ class SettingsGeneralDelegate extends WatchUi.Menu2InputDelegate {
         var settings = getApp()._breadcrumbContext.settings;
         var itemId = item.getId();
 
-        if (itemId == :settingsGeneralMode) {
+        if (itemId == :settingsGeneralModeDisplayOrder) {
+            var pickerView = new TextPickerView(Rez.Strings.modeDisplayOrderTitle, "", 0, 256, Settings.encodeCSV(settings.modeDisplayOrder));
+            var picker = new SettingsStringPicker(settings.method(:setModeDisplayOrder), view, pickerView);
+            WatchUi.pushView(pickerView, picker, WatchUi.SLIDE_IMMEDIATE);
+        }else if (itemId == :settingsGeneralMode) {
             WatchUi.pushView(
                 new EnumMenu(
                     Rez.Strings.modeTitle,

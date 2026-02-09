@@ -1124,6 +1124,18 @@ class Settings {
     }
 
     (:settingsView)
+    function setModeDisplayOrder(value as String) as Void {
+        // try and validate it before saving the setting
+        modeDisplayOrder = parseCSVStringRaw(
+            "modeDisplayOrder",
+            value,
+            modeDisplayOrder,
+            method(:defaultNumberParser)
+        );
+        setValue("modeDisplayOrder", encodeCSV(modeDisplayOrder));
+    }
+
+    (:settingsView)
     function setMaxTrackPoints(value as Number) as Void {
         var oldmaxTrackPoints = maxTrackPoints;
         maxTrackPoints = value;
@@ -2004,24 +2016,21 @@ class Settings {
     }
 
     function getNextMode() as Number {
-
         // does not handle dupes, but thats the user error if they do that
-        if (modeDisplayOrder.size() < 1)
-        {
+        if (modeDisplayOrder.size() < 1) {
             // no modes to display, jsut use mode 0 overy time
             return MODE_NORMAL;
         }
 
         var curentModeIndex = modeDisplayOrder.indexOf(mode);
-        if (curentModeIndex == -1 || curentModeIndex == modeDisplayOrder.size() -1)
-        {
+        if (curentModeIndex == -1 || curentModeIndex == modeDisplayOrder.size() - 1) {
             // not found, or we need to go back to the star of the array
             return modeDisplayOrder[0];
         }
 
-        return modeDisplayOrder[curentModeIndex + 1]; 
+        return modeDisplayOrder[curentModeIndex + 1];
     }
-    
+
     function nextMode() as Void {
         // logT("mode cycled");
         mode = getNextMode();
@@ -2209,6 +2218,23 @@ class Settings {
             logE("Error parsing number: " + key + " " + value);
         }
         return defaultValue;
+    }
+
+    function encodeCSV(value as Array<ReturnType>) as String {
+        var result = "";
+        var size = value.size();
+
+        for (var i = 0; i < size; ++i) {
+            // Convert element to string (works for both Number and String)
+            result += value[i].toString();
+
+            // Add a comma after every element except the last one
+            if (i < size - 1) {
+                result += ",";
+            }
+        }
+
+        return result;
     }
 
     typedef ReturnType as Number /* or String*/;
@@ -2471,6 +2497,7 @@ class Settings {
         httpErrorTileTTLS = defaultSettings.httpErrorTileTTLS;
         turnAlertTimeS = defaultSettings.turnAlertTimeS;
         minTurnAlertDistanceM = defaultSettings.minTurnAlertDistanceM;
+        modeDisplayOrder = defaultSettings.modeDisplayOrder;
         maxTrackPoints = defaultSettings.maxTrackPoints;
         trackStyle = defaultSettings.trackStyle;
         trackWidth = defaultSettings.trackWidth;
@@ -2571,6 +2598,7 @@ class Settings {
                 "httpErrorTileTTLS" => httpErrorTileTTLS,
                 "turnAlertTimeS" => turnAlertTimeS,
                 "minTurnAlertDistanceM" => minTurnAlertDistanceM,
+                "modeDisplayOrder" => encodeCSV(modeDisplayOrder),
                 "maxTrackPoints" => maxTrackPoints,
                 "trackStyle" => trackStyle,
                 "trackWidth" => trackWidth,

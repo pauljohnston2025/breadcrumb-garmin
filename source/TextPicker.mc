@@ -63,7 +63,7 @@ class TextPickerView extends Ui.View {
     static const FONT_PICKER_LETTER_NOT_SELECTED = Gfx.FONT_XTINY;
     static const FONT_PICKER_LETTER_SELECTED = Gfx.FONT_TINY;
 
-    var mTitle as String;
+    var mTitle as String or ResourceId;
     var mSubTitle as String;
     var mMinChars as Number;
     var mMaxChars as Number;
@@ -72,7 +72,7 @@ class TextPickerView extends Ui.View {
     var charIdx as Number = 0;
 
     function initialize(
-        title as String,
+        title as String or ResourceId,
         subTitle as String,
         minChars as Number,
         maxChars as Number,

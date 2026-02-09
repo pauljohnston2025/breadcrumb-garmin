@@ -1,4 +1,5 @@
 <menu2 id="SettingsGeneral" title="@Strings.generalSettingsTitle">
+    <menu-item id="settingsGeneralModeDisplayOrder" label="@Strings.modeDisplayOrderTitle"/>
     <menu-item id="settingsGeneralMode" label="@Strings.modeTitle"/>
     <menu-item id="settingsGeneralModeUiMode" label="@Strings.uiModeTitle"/>
     <menu-item id="settingsGeneralModeElevationMode" label="@Strings.elevationModeTitle"/>
