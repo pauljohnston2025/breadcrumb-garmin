@@ -11,8 +11,8 @@ class PositionPickerGeneric {
     private var choicePositions as Array<[Float, Float]>;
     private var halfWidth as Number?;
     protected var myText as WatchUi.Text;
-    var halfHitboxSize as Number = 35;
-    var currentSelected as Number = 0; // needs to always be a valid index of choices array
+    private var halfHitboxSize as Number = 35;
+    private var currentSelected as Number = 0; // needs to always be a valid index of choices array
 
     function initialize(choices as Array<String>) {
         self.choices = choices;
@@ -74,13 +74,6 @@ class PositionPickerGeneric {
         dc.setColor(Graphics.COLOR_WHITE, bgColour);
         dc.clear();
         dc.setPenWidth(4);
-        dc.drawText(
-            choicePositions[0][0],
-            choicePositions[0][1],
-            Graphics.FONT_SMALL,
-            "OK",
-            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-        );
         for (var i = 0; i < choicePositions.size(); ++i) {
             var point = choicePositions[i];
             var pointX = point[0];
@@ -158,9 +151,128 @@ class PositionPickerGeneric {
     protected function performAction(tapIndex as Number) as Boolean {
         return false;
     }
-    protected function onReading(value as String) as Void;
     protected function backgroundColourInner() as Number {
         return Graphics.COLOR_BLACK;
+    }
+}
+
+(:settingsView)
+class SingleLetterPicker extends PositionPickerGeneric {
+    private var charset as String;
+    private var onReading as (Method(value as String) as Void);
+
+    function initialize(charset as String, onReading as (Method(value as String) as Void)) {
+        self.charset = charset;
+        self.onReading = onReading;
+
+        var stringArr = [] as Array<String>;
+        for (var i = 0; i < charset.length(); ++i) {
+            stringArr.add(charset.substring(i, i + 1) as String);
+        }
+
+        PositionPickerGeneric.initialize(stringArr as Array<String>);
+    }
+
+    function performAction(tapIndex as Number) as Boolean {
+        onReading.invoke(self.charset.substring(tapIndex, tapIndex + 1) as String);
+        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+        return true;
+    }
+}
+
+enum /*TextEditor*/ {
+    TEXT_EDITOR_OK,
+    TEXT_EDITOR_DEL,
+    TEXT_EDITOR_LEFT,
+    TEXT_EDITOR_RIGHT,
+
+    TEXT_EDITOR_MAX,
+}
+
+
+(:settingsView)
+class TextEditorPicker extends PositionPickerGeneric {
+    private var onReading as (Method(value as String) as Void);
+    private var currentVal as String;
+    private var parent as Renderable;
+    private var pickers as Array<SingleLetterPicker>;
+
+    function initialize(onReading as (Method(value as String) as Void), initialValue as String, parent as Renderable) {
+        self.currentVal = initialValue;
+        self.onReading = onReading;
+        self.parent = parent;
+        
+        self.pickers = [
+            new SingleLetterPicker("abcdefghijklm", method(:addLetter)),
+            new SingleLetterPicker("nopqrstuvwxyz", method(:addLetter)),
+            new SingleLetterPicker("ABCDEFGHIJKLM", method(:addLetter)),
+            new SingleLetterPicker("NOPQRSTUVWXYZ", method(:addLetter)),
+            new SingleLetterPicker("0123456789", method(:addLetter)),
+            new SingleLetterPicker("`~!@#$%^&*()-_=+", method(:addLetter)),
+            new SingleLetterPicker("[]{}\\|;:'\"/,.<>?", method(:addLetter)),
+        ];
+
+        PositionPickerGeneric.initialize(
+            [
+                "OK",
+                "del",
+                "<<",
+                ">>",
+                "a-m",
+                "n-z",
+                "A-M",
+                "N-Z",
+                "0-9",
+                "~-=",
+                "[-?",
+            ]
+        );
+
+        myText.setText(currentVal);
+        forceRefresh();
+    }
+
+    function addLetter(letter as String) as Void {
+        currentVal += letter;
+        myText.setText(currentVal);
+        // forceRefresh(); do not push another view the SingleLetterPicker will pop its view and we will render
+    }
+
+    function performAction(tapIndex as Number) as Boolean {
+        if (tapIndex == TEXT_EDITOR_OK) {
+            onReading.invoke(currentVal);
+            parent.rerender();
+            WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+            return true;
+        } else if (tapIndex == TEXT_EDITOR_DEL) {
+            onBack();
+            return true;
+        } else if (tapIndex == TEXT_EDITOR_LEFT) {
+            return false;
+        } else if (tapIndex == TEXT_EDITOR_RIGHT) {
+            return false;
+        }
+
+        var picker = self.pickers[tapIndex - TEXT_EDITOR_MAX];
+        WatchUi.pushView(
+            new $.NumberPickerView(picker),
+            new $.NumberPickerDelegate(picker),
+            WatchUi.SLIDE_IMMEDIATE
+        );
+        return true;
+    }
+
+    function onBack() as Void {
+        if (currentVal.length() <= 0) {
+            return;
+        }
+
+        var subStr = currentVal.substring(null, -1);
+        if (subStr != null) {
+            currentVal = subStr;
+            myText.setText(currentVal);
+            forceRefresh();
+        }
     }
 }
 
@@ -180,11 +292,11 @@ class NumberPicker extends PositionPickerGeneric {
             stringArr.add(charset.substring(i, i + 1) as String);
         }
 
-        PositionPickerGeneric.initialize(stringArr);
+        PositionPickerGeneric.initialize(stringArr as Array<String>);
     }
 
     function performAction(tapIndex as Number) as Boolean {
-        if (currentSelected == 0) {
+        if (tapIndex == 0) {
             // we are on the 'OK' button
             onReading(currentVal);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
@@ -226,6 +338,8 @@ class NumberPicker extends PositionPickerGeneric {
     protected function backgroundColour(value as String) as Number {
         return Graphics.COLOR_BLACK;
     }
+
+    protected function onReading(value as String) as Void;
 }
 
 (:settingsView)
@@ -352,9 +466,9 @@ function forceRefresh() as Void {
 
 (:settingsView)
 class NumberPickerView extends WatchUi.View {
-    private var picker as NumberPicker;
+    private var picker as PositionPickerGeneric;
 
-    function initialize(picker as NumberPicker) {
+    function initialize(picker as PositionPickerGeneric) {
         self.picker = picker;
         View.initialize();
 

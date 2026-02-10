@@ -42,7 +42,7 @@ class SettingsStringPicker extends MyTextPickerDelegate {
 
 (:settingsView)
 function startPicker(
-    picker as SettingsFloatPicker or SettingsColourPicker or SettingsNumberPicker or SettingsColourPickerTransparency
+    picker as SettingsFloatPicker or SettingsColourPicker or SettingsNumberPicker or SettingsColourPickerTransparency or TextEditorPicker
 ) as Void {
     WatchUi.pushView(
         new $.NumberPickerView(picker),
@@ -1206,9 +1206,17 @@ class SettingsGeneralDelegate extends WatchUi.Menu2InputDelegate {
         var itemId = item.getId();
 
         if (itemId == :settingsGeneralModeDisplayOrder) {
-            var pickerView = new TextPickerView(Rez.Strings.modeDisplayOrderTitle, "", 0, 256, Settings.encodeCSV(settings.modeDisplayOrder));
-            var picker = new SettingsStringPicker(settings.method(:setModeDisplayOrder), view, pickerView);
-            WatchUi.pushView(pickerView, picker, WatchUi.SLIDE_IMMEDIATE);
+            startPicker(
+                new TextEditorPicker(
+                    settings.method(:setModeDisplayOrder),
+                    Settings.encodeCSV(settings.modeDisplayOrder),
+                    view
+                )
+            );
+
+            // var pickerView = new TextPickerView(Rez.Strings.modeDisplayOrderTitle, "", 0, 256, );
+            // var picker = new SettingsStringPicker(, view, pickerView);
+            // WatchUi.pushView(pickerView, picker, WatchUi.SLIDE_IMMEDIATE);
         }else if (itemId == :settingsGeneralMode) {
             WatchUi.pushView(
                 new EnumMenu(
