@@ -10,35 +10,6 @@ typedef Renderable as interface {
     function rerender() as Void;
 };
 
-(:settingsView)
-class SettingsStringPicker extends MyTextPickerDelegate {
-    private var callback as (Method(value as String) as Void);
-    public var parent as Renderable;
-    function initialize(
-        callback as (Method(value as String) as Void),
-        parent as Renderable,
-        picker as TextPickerView
-    ) {
-        MyTextPickerDelegate.initialize(me.method(:onTextEntered), picker);
-        self.callback = callback;
-        self.parent = parent;
-    }
-
-    function onTextEntered(text as Lang.String) as Lang.Boolean {
-        logT("onTextEntered: " + text);
-
-        callback.invoke(text);
-        parent.rerender();
-
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-        return true;
-    }
-
-    function onCancel() as Boolean {
-        logT("canceled");
-        return true;
-    }
-}
 
 (:settingsView)
 function startPicker(
@@ -1213,10 +1184,6 @@ class SettingsGeneralDelegate extends WatchUi.Menu2InputDelegate {
                     view
                 )
             );
-
-            // var pickerView = new TextPickerView(Rez.Strings.modeDisplayOrderTitle, "", 0, 256, );
-            // var picker = new SettingsStringPicker(, view, pickerView);
-            // WatchUi.pushView(pickerView, picker, WatchUi.SLIDE_IMMEDIATE);
         }else if (itemId == :settingsGeneralMode) {
             WatchUi.pushView(
                 new EnumMenu(
@@ -1494,15 +1461,13 @@ class SettingsRouteDelegate extends WatchUi.Menu2InputDelegate {
     public function onSelect(item as WatchUi.MenuItem) as Void {
         var itemId = item.getId();
         if (itemId == :settingsRouteName) {
-            var pickerView = new TextPickerView(
-                "Route Name",
-                "",
-                0,
-                256,
-                settings.routeName(view.routeId)
+            startPicker(
+                new TextEditorPicker(
+                    view.method(:setName),
+                    settings.routeName(view.routeId),
+                    view
+                )
             );
-            var picker = new SettingsStringPicker(view.method(:setName), view, pickerView);
-            WatchUi.pushView(pickerView, picker, WatchUi.SLIDE_IMMEDIATE);
         } else if (itemId == :settingsRouteEnabled) {
             if (view.routeEnabled()) {
                 view.setEnabled(false);
@@ -1714,13 +1679,21 @@ class SettingsTileServerDelegate extends WatchUi.Menu2InputDelegate {
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsTileUrl) {
-            var pickerView = new TextPickerView("Tile Url", "", 0, 256, settings.tileUrl);
-            var picker = new SettingsStringPicker(settings.method(:setTileUrl), view, pickerView);
-            WatchUi.pushView(pickerView, picker, WatchUi.SLIDE_IMMEDIATE);
+            startPicker(
+                new TextEditorPicker(
+                    settings.method(:setTileUrl),
+                    settings.tileUrl,
+                    view
+                )
+            );
         } else if (itemId == :settingsAuthToken) {
-            var pickerView = new TextPickerView("Auth Token", "", 0, 256, settings.authToken);
-            var picker = new SettingsStringPicker(settings.method(:setAuthToken), view, pickerView);
-            WatchUi.pushView(pickerView, picker, WatchUi.SLIDE_IMMEDIATE);
+            startPicker(
+                new TextEditorPicker(
+                    settings.method(:setAuthToken),
+                    settings.authToken,
+                    view
+                )
+            );
         } else if (itemId == :settingsMapTileSize) {
             startPicker(
                 new SettingsNumberPicker(settings.method(:setTileSize), settings.tileSize, view)
