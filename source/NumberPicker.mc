@@ -10,7 +10,6 @@ class PositionPickerGeneric {
     private var choices as Array<String>;
     private var choicePositions as Array<[Float, Float]>;
     private var halfWidth as Number?;
-    protected var myText as WatchUi.Text;
     private var halfHitboxSize as Number = 35;
     private var currentSelected as Number = 0; // needs to always be a valid index of choices array
 
@@ -18,14 +17,6 @@ class PositionPickerGeneric {
         self.choices = choices;
         choicePositions = [];
         halfWidth = null;
-
-        myText = new WatchUi.Text({
-            :text => "",
-            :color => Graphics.COLOR_WHITE,
-            :font => Graphics.FONT_SMALL,
-            :locX => WatchUi.LAYOUT_HALIGN_CENTER,
-            :locY => WatchUi.LAYOUT_VALIGN_CENTER,
-        });
     }
 
     function onLayout(dc as Dc) as Void {
@@ -73,6 +64,8 @@ class PositionPickerGeneric {
         var bgColour = backgroundColourInner();
         dc.setColor(Graphics.COLOR_WHITE, bgColour);
         dc.clear();
+        drawText(dc);
+        dc.setColor(Graphics.COLOR_WHITE, bgColour);
         dc.setPenWidth(4);
         for (var i = 0; i < choicePositions.size(); ++i) {
             var point = choicePositions[i];
@@ -89,9 +82,9 @@ class PositionPickerGeneric {
         }
         var selected = choicePositions[currentSelected];
         dc.drawCircle(selected[0], selected[1], halfHitboxSize);
-
-        myText.draw(dc);
     }
+
+    function drawText(dc as Dc) as Void;
 
     function confirm() as Void {
         var position = choicePositions[currentSelected];
@@ -196,6 +189,8 @@ class TextEditorPicker extends PositionPickerGeneric {
     private var parent as Renderable;
     private var pickers as Array<SingleLetterPicker>;
     private var cursorIndex as Number = 0; // Track cursor position
+    private var leftTextPart as String? = null;
+    private var rightTextPart as String? = null;
 
     function initialize(
         onReading as (Method(value as String) as Void),
@@ -242,9 +237,8 @@ class TextEditorPicker extends PositionPickerGeneric {
 
         // 1. If it fits entirely, just do the one-time build
         if (totalLen < MAX_DISPLAY_CHARS) {
-            myText.setText(
-                currentVal.substring(0, cursorIndex) + "|" + currentVal.substring(cursorIndex, null)
-            );
+            leftTextPart = currentVal.substring(0, cursorIndex);
+            rightTextPart = currentVal.substring(cursorIndex, null);
             return;
         }
 
@@ -270,10 +264,57 @@ class TextEditorPicker extends PositionPickerGeneric {
 
         // 4. Build the final display string with minimal allocations
         // This creates 2 small strings and joins them with the cursor
-        var leftPart = currentVal.substring(windowStart, cursorIndex);
-        var rightPart = currentVal.substring(cursorIndex, windowEnd);
+        leftTextPart = currentVal.substring(windowStart, cursorIndex);
+        rightTextPart = currentVal.substring(cursorIndex, windowEnd);
+    }
 
-        myText.setText(leftPart + "|" + rightPart);
+    function drawText(dc as Dc) as Void {
+        if (leftTextPart == null || rightTextPart == null) {
+            return;
+        }
+
+        var font = Graphics.FONT_SMALL;
+        var centerX = dc.getWidth() / 2;
+        var centerY = dc.getHeight() / 2;
+
+        // 1. Calculate widths so we know how to offset from center
+        var leftWidth = dc.getTextWidthInPixels(leftTextPart, font);
+        var rightWidth = dc.getTextWidthInPixels(rightTextPart, font);
+        var cursorWidth = dc.getTextWidthInPixels("|", font);
+
+        // The total width of the visible text block
+        var totalWidth = leftWidth + cursorWidth + rightWidth;
+        var startX = centerX - totalWidth / 2;
+
+        // 2. Draw Left Part
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(
+            startX,
+            centerY,
+            font,
+            leftTextPart,
+            Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER
+        );
+
+        // 3. Draw Cursor (Let's make it a distinct color like Red or Yellow)
+        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(
+            startX + leftWidth,
+            centerY,
+            font,
+            "|",
+            Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER
+        );
+
+        // 4. Draw Right Part
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(
+            startX + leftWidth + cursorWidth,
+            centerY,
+            font,
+            rightTextPart,
+            Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER
+        );
     }
 
     function addLetter(letter as String) as Void {
@@ -350,13 +391,21 @@ class TextEditorPicker extends PositionPickerGeneric {
 (:settingsView)
 class NumberPicker extends PositionPickerGeneric {
     private var _charset as String;
-    public var maxLength as Number;
-    public var currentVal as String;
+    private var maxLength as Number;
+    private var currentVal as String;
+    private var myText as WatchUi.Text;
 
     function initialize(charset as String, maxLength as Number) {
         self._charset = charset;
         self.maxLength = maxLength;
         self.currentVal = "";
+        myText = new WatchUi.Text({
+            :text => "",
+            :color => Graphics.COLOR_WHITE,
+            :font => Graphics.FONT_SMALL,
+            :locX => WatchUi.LAYOUT_HALIGN_CENTER,
+            :locY => WatchUi.LAYOUT_VALIGN_CENTER,
+        });
 
         var stringArr = ["OK"] as Array<String>;
         for (var i = 0; i < charset.length(); ++i) {
@@ -364,6 +413,10 @@ class NumberPicker extends PositionPickerGeneric {
         }
 
         PositionPickerGeneric.initialize(stringArr as Array<String>);
+    }
+
+    function drawText(dc as Dc) as Void {
+        myText.draw(dc);
     }
 
     function performAction(tapIndex as Number) as Boolean {
