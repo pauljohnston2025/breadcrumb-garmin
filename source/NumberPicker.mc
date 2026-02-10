@@ -189,19 +189,24 @@ enum /*TextEditor*/ {
     TEXT_EDITOR_MAX,
 }
 
-
 (:settingsView)
 class TextEditorPicker extends PositionPickerGeneric {
     private var onReading as (Method(value as String) as Void);
     private var currentVal as String;
     private var parent as Renderable;
     private var pickers as Array<SingleLetterPicker>;
+    private var cursorIndex as Number = 0; // Track cursor position
 
-    function initialize(onReading as (Method(value as String) as Void), initialValue as String, parent as Renderable) {
+    function initialize(
+        onReading as (Method(value as String) as Void),
+        initialValue as String,
+        parent as Renderable
+    ) {
         self.currentVal = initialValue;
         self.onReading = onReading;
         self.parent = parent;
-        
+        self.cursorIndex = initialValue.length(); // Start at the end
+
         self.pickers = [
             new SingleLetterPicker("abcdefghijklm", method(:addLetter)),
             new SingleLetterPicker("nopqrstuvwxyz", method(:addLetter)),
@@ -212,45 +217,101 @@ class TextEditorPicker extends PositionPickerGeneric {
             new SingleLetterPicker("[]{}\\|;:'\"/,.<>?", method(:addLetter)),
         ];
 
-        PositionPickerGeneric.initialize(
-            [
-                "OK",
-                "del",
-                "<<",
-                ">>",
-                "a-m",
-                "n-z",
-                "A-M",
-                "N-Z",
-                "0-9",
-                "~-=",
-                "[-?",
-            ]
-        );
+        PositionPickerGeneric.initialize([
+            "OK",
+            "del",
+            "<<",
+            ">>",
+            "a-m",
+            "n-z",
+            "A-M",
+            "N-Z",
+            "0-9",
+            "~-=",
+            "[-?",
+        ]);
 
-        myText.setText(currentVal);
+        updateDisplayText();
         forceRefresh();
     }
 
+    private const MAX_DISPLAY_CHARS = 12;
+
+    private function updateDisplayText() as Void {
+        var totalLen = currentVal.length();
+
+        // 1. If it fits entirely, just do the one-time build
+        if (totalLen < MAX_DISPLAY_CHARS) {
+            myText.setText(
+                currentVal.substring(0, cursorIndex) + "|" + currentVal.substring(cursorIndex, null)
+            );
+            return;
+        }
+
+        // 2. Calculate the window around the cursorIndex
+        // We want the cursor roughly in the middle
+        var halfWindow = MAX_DISPLAY_CHARS / 2;
+        var windowStart = cursorIndex - halfWindow;
+        var windowEnd = cursorIndex + halfWindow;
+
+        // 3. Clamp the window to string boundaries
+        if (windowStart < 0) {
+            windowEnd -= windowStart; // Shift the end right
+            windowStart = 0;
+        }
+
+        if (windowEnd > totalLen) {
+            windowStart -= windowEnd - totalLen; // Shift the start left
+            windowEnd = totalLen;
+            if (windowStart < 0) {
+                windowStart = 0;
+            }
+        }
+
+        // 4. Build the final display string with minimal allocations
+        // This creates 2 small strings and joins them with the cursor
+        var leftPart = currentVal.substring(windowStart, cursorIndex);
+        var rightPart = currentVal.substring(cursorIndex, windowEnd);
+
+        myText.setText(leftPart + "|" + rightPart);
+    }
+
     function addLetter(letter as String) as Void {
-        currentVal += letter;
-        myText.setText(currentVal);
+        // Insert letter at cursor position
+        var prefix = currentVal.substring(0, cursorIndex);
+        var suffix = currentVal.substring(cursorIndex, null);
+        if (prefix == null || suffix == null) {
+            return; // something went horribly wrong
+        }
+        currentVal = prefix + letter + suffix;
+
+        cursorIndex++; // Move cursor forward
+        updateDisplayText();
         // forceRefresh(); do not push another view the SingleLetterPicker will pop its view and we will render
     }
 
-    function performAction(tapIndex as Number) as Boolean {
+    protected function performAction(tapIndex as Number) as Boolean {
         if (tapIndex == TEXT_EDITOR_OK) {
             onReading.invoke(currentVal);
             parent.rerender();
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             return true;
         } else if (tapIndex == TEXT_EDITOR_DEL) {
-            onBack();
-            return true;
+            return deleteChar();
         } else if (tapIndex == TEXT_EDITOR_LEFT) {
-            return false;
+            if (cursorIndex > 0) {
+                cursorIndex--;
+                updateDisplayText();
+                forceRefresh();
+            }
+            return true;
         } else if (tapIndex == TEXT_EDITOR_RIGHT) {
-            return false;
+            if (cursorIndex < currentVal.length()) {
+                cursorIndex++;
+                updateDisplayText();
+                forceRefresh();
+            }
+            return true;
         }
 
         var picker = self.pickers[tapIndex - TEXT_EDITOR_MAX];
@@ -262,17 +323,27 @@ class TextEditorPicker extends PositionPickerGeneric {
         return true;
     }
 
-    function onBack() as Void {
-        if (currentVal.length() <= 0) {
-            return;
-        }
-
-        var subStr = currentVal.substring(null, -1);
-        if (subStr != null) {
-            currentVal = subStr;
-            myText.setText(currentVal);
+    function deleteChar() as Boolean {
+        if (cursorIndex > 0) {
+            // Delete character BEFORE the cursor
+            var prefix = currentVal.substring(0, cursorIndex - 1);
+            var suffix = currentVal.substring(cursorIndex, null);
+            if (prefix == null || suffix == null) {
+                return false; // something went horribly wrong
+            }
+            currentVal = prefix + suffix;
+            cursorIndex--;
+            updateDisplayText();
             forceRefresh();
         }
+        return true;
+    }
+
+    function onBack() as Void {
+        // deleteChar();
+        // just dismiss the ui, no changes
+        // its not like the number pickers where the string is small and we can re-type it
+        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     }
 }
 
@@ -308,7 +379,7 @@ class NumberPicker extends PositionPickerGeneric {
         }
 
         if (tapIndex != 0) {
-            currentVal += self._charset.substring(tapIndex -1, tapIndex);
+            currentVal += self._charset.substring(tapIndex - 1, tapIndex);
         }
 
         myText.setText(currentVal);
