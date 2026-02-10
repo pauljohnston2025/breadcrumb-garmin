@@ -2980,7 +2980,7 @@ class Settings {
                 var currentStyle = currentRouteEntry["style"] as Number;
                 var currentWidth = currentRouteEntry["width"] as Number;
                 var currentColour = currentRouteEntry["colour"] as Number;
-                var currentColour2 = currentRouteEntry["colour"] as Number;
+                var currentColour2 = currentRouteEntry["colour2"] as Number;
                 if (
                     oldRouteEntry["style"] != currentStyle ||
                     oldRouteEntry["width"] != currentWidth ||
