@@ -6,23 +6,17 @@ import Toybox.WatchUi;
 import Toybox.Lang;
 
 (:settingsView)
-class NumberPicker {
-    private var currentVal as String;
-    private var _charset as String;
-    private var maxLength as Number;
-    // letterPositions[0] is an ok button
-    private var letterPositions as Array<[Float, Float]>;
+class PositionPickerGeneric {
+    private var choices as Array<String>;
+    private var choicePositions as Array<[Float, Float]>;
     private var halfWidth as Number?;
-    private var myText as WatchUi.Text;
+    protected var myText as WatchUi.Text;
     var halfHitboxSize as Number = 35;
-    var currentSelected as Number = 0;
+    var currentSelected as Number = 0; // needs to always be a valid index of choices array
 
-    function initialize(charset as String, maxLength as Number) {
-        self.maxLength = maxLength;
-        _charset = charset;
-        currentVal = "";
-        // always force an ok button so index 0 is always valid
-        letterPositions = [[0f, 0f]];
+    function initialize(choices as Array<String>) {
+        self.choices = choices;
+        choicePositions = [];
         halfWidth = null;
 
         myText = new WatchUi.Text({
@@ -36,11 +30,11 @@ class NumberPicker {
 
     function onLayout(dc as Dc) as Void {
         halfWidth = dc.getWidth() / 2;
-        letterPositions = pointsOnCircle(
+        choicePositions = pointsOnCircle(
             halfWidth,
             halfWidth,
             halfWidth - halfHitboxSize,
-            _charset.length() + 1
+            choices.size()
         );
     }
 
@@ -76,38 +70,120 @@ class NumberPicker {
     }
 
     function onUpdate(dc as Dc) as Void {
-        var bgColour = backgroundColour(currentVal);
+        var bgColour = backgroundColourInner();
         dc.setColor(Graphics.COLOR_WHITE, bgColour);
-        dc.clear();
         dc.clear();
         dc.setPenWidth(4);
         dc.drawText(
-            letterPositions[0][0],
-            letterPositions[0][1],
+            choicePositions[0][0],
+            choicePositions[0][1],
             Graphics.FONT_SMALL,
             "OK",
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
         );
-        for (var i = 1; i < letterPositions.size(); i++) {
-            var point = letterPositions[i];
+        for (var i = 0; i < choicePositions.size(); ++i) {
+            var point = choicePositions[i];
             var pointX = point[0];
             var pointY = point[1];
-            var letter = self._charset.substring(i - 1, i);
+            var choice = self.choices[i];
             dc.drawText(
                 pointX,
                 pointY,
                 Graphics.FONT_SMALL,
-                letter,
+                choice,
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
             );
         }
-        var selected = letterPositions[currentSelected];
+        var selected = choicePositions[currentSelected];
         dc.drawCircle(selected[0], selected[1], halfHitboxSize);
 
         myText.draw(dc);
     }
 
-    function tryComplete() as Boolean {
+    function confirm() as Void {
+        var position = choicePositions[currentSelected];
+        onTap(position[0].toNumber(), position[1].toNumber());
+    }
+
+    function previousSelection() as Void {
+        --currentSelected;
+        if (currentSelected < 0) {
+            currentSelected = choicePositions.size() - 1;
+        }
+        forceRefresh();
+    }
+
+    function nextSelection() as Void {
+        ++currentSelected;
+        if (currentSelected >= choicePositions.size()) {
+            currentSelected = 0;
+        }
+        forceRefresh();
+    }
+
+    function onBack() as Void {
+        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+    }
+
+    function onTap(x as Number, y as Number) as Boolean {
+        // for touch devices if we press the ok button exit immediately
+        var tapIndex = indexOfTap(x, y);
+        if (tapIndex == null) {
+            return false;
+        }
+
+        return performAction(tapIndex);
+    }
+
+    function indexOfTap(x as Number, y as Number) as Number? {
+        for (var i = 0; i < choicePositions.size(); i++) {
+            var point = choicePositions[i];
+            var pointX = point[0];
+            var pointY = point[1];
+
+            // Check if the tap is within the hit box
+            if (inHitbox(x, y, pointX, pointY, halfHitboxSize.toFloat())) {
+                currentSelected = i;
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    // performAction for the current index
+    // eg.
+    // onReading(myLookupThingToDo[tapIndex]);
+    // WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+    protected function performAction(tapIndex as Number) as Boolean {
+        return false;
+    }
+    protected function onReading(value as String) as Void;
+    protected function backgroundColourInner() as Number {
+        return Graphics.COLOR_BLACK;
+    }
+}
+
+(:settingsView)
+class NumberPicker extends PositionPickerGeneric {
+    private var _charset as String;
+    public var maxLength as Number;
+    public var currentVal as String;
+
+    function initialize(charset as String, maxLength as Number) {
+        self._charset = charset;
+        self.maxLength = maxLength;
+        self.currentVal = "";
+
+        var stringArr = ["OK"] as Array<String>;
+        for (var i = 0; i < charset.length(); ++i) {
+            stringArr.add(charset.substring(i, i + 1) as String);
+        }
+
+        PositionPickerGeneric.initialize(stringArr);
+    }
+
+    function performAction(tapIndex as Number) as Boolean {
         if (currentSelected == 0) {
             // we are on the 'OK' button
             onReading(currentVal);
@@ -115,39 +191,21 @@ class NumberPicker {
             return true;
         }
 
-        return false;
-    }
-
-    function confirm() as Void {
-        // confirm can be completing the number pick or adding the highlighted 'currentSelected'
-        if (tryComplete()) {
-            return;
+        if (currentVal.length() >= maxLength) {
+            return false; // can't handle it
         }
 
-        // treat it like tapping the letter
-        if (currentSelected < letterPositions.size()) {
-            var position = letterPositions[currentSelected];
-            onTapInner(position[0].toNumber(), position[1].toNumber());
+        if (tapIndex != 0) {
+            currentVal += self._charset.substring(tapIndex -1, tapIndex);
         }
-    }
 
-    function previousSelection() as Void {
-        --currentSelected;
-        if (currentSelected < 0) {
-            currentSelected = letterPositions.size() - 1;
-        }
+        myText.setText(currentVal);
+
         forceRefresh();
+        return true;
     }
 
-    function nextSelection() as Void {
-        ++currentSelected;
-        if (currentSelected >= letterPositions.size()) {
-            currentSelected = 0;
-        }
-        forceRefresh();
-    }
-
-    function removeLast() as Void {
+    function onBack() as Void {
         if (currentVal.length() <= 0) {
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             return;
@@ -161,48 +219,10 @@ class NumberPicker {
         }
     }
 
-    function onTap(x as Number, y as Number) as Boolean {
-        // for touch devices if we press the ok button exit immediately
-        var res = onTapInner(x, y);
-        tryComplete();
-        return res;
+    protected function backgroundColourInner() as Number {
+        return backgroundColour(currentVal);
     }
 
-    function onTapInner(x as Number, y as Number) as Boolean {
-        var letter = letterOfTap(x, y);
-        if (letter == null || currentVal.length() >= maxLength) {
-            return false;
-        }
-
-        currentVal += letter;
-        myText.setText(currentVal);
-        forceRefresh();
-        return true;
-    }
-
-    function letterOfTap(x as Number, y as Number) as String? {
-        for (var i = 1; i < letterPositions.size(); i++) {
-            var point = letterPositions[i];
-            var pointX = point[0];
-            var pointY = point[1];
-
-            // Check if the tap is within the hit box
-            if (inHitbox(x, y, pointX, pointY, halfHitboxSize.toFloat())) {
-                currentSelected = i;
-                return self._charset.substring(i - 1, i);
-            }
-        }
-
-        var okButton = letterPositions[0];
-        if (inHitbox(x, y, okButton[0], okButton[1], halfHitboxSize.toFloat())) {
-            currentSelected = 0;
-            return null;
-        }
-
-        return null;
-    }
-
-    protected function onReading(value as String) as Void;
     protected function backgroundColour(value as String) as Number {
         return Graphics.COLOR_BLACK;
     }
@@ -359,9 +379,9 @@ class NumberPickerView extends WatchUi.View {
 
 (:settingsView)
 class NumberPickerDelegate extends WatchUi.BehaviorDelegate {
-    private var picker as NumberPicker;
+    private var picker as PositionPickerGeneric;
 
-    function initialize(picker as NumberPicker) {
+    function initialize(picker as PositionPickerGeneric) {
         self.picker = picker;
         WatchUi.BehaviorDelegate.initialize();
     }
@@ -420,7 +440,7 @@ class NumberPickerDelegate extends WatchUi.BehaviorDelegate {
 
     function onBack() as Boolean {
         // logT("got back");
-        picker.removeLast();
+        picker.onBack();
         return true;
     }
 }

@@ -2220,7 +2220,7 @@ class Settings {
         return defaultValue;
     }
 
-    function encodeCSV(value as Array<ReturnType>) as String {
+    static function encodeCSV(value as Array<ReturnType>) as String {
         var result = "";
         var size = value.size();
 
@@ -2241,7 +2241,7 @@ class Settings {
     function parseCSVString(
         key as String,
         defaultValue as Array<ReturnType>,
-        callback as (Method(key as String, value as String) as ReturnType)
+        callback as (Method(key as String, value as PropertyValueType) as ReturnType)
     ) as Array<ReturnType> {
         try {
             return parseCSVStringRaw(
@@ -2260,7 +2260,7 @@ class Settings {
         key as String,
         value as PropertyValueType,
         defaultValue as Array<ReturnType>,
-        callback as (Method(key as String, value as String) as ReturnType)
+        callback as (Method(key as String, value as PropertyValueType) as ReturnType)
     ) as Array<ReturnType> {
         try {
             if (value == null) {
