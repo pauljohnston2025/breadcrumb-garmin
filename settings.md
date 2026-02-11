@@ -68,9 +68,12 @@ Configure which screen is displayed for the datafield.
 1 - Elevation - An elevation chart showing current distance traveled, current elevation and the route/track profile.  
 ![](images/elevation.png)  
 2 - Map Move - Should only be used if maps are enabled, allows panning around the map at a set zoom.  
-![](images/settings/mapmove.png)  
+![](images/settings/mapmove.png)    
 3 - Debug - A debug screen that may be removed in future releases. Shows the current state of the app.  
-![](images/settings/debug.png)
+![](images/settings/debug.png)  
+4 - map move zoom (similar to map move page, but only allows zooming in and out (larger hitbox area)
+5 - map move up/down (similar to map move page, but only allows moving up and down (larger hitbox area)
+6 - map move left/right (similar to map move page, but only allows moving left and right (larger hitbox area)
 
 
 ### Display Lat/Long

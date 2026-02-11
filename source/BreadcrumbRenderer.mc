@@ -1757,19 +1757,25 @@ class BreadcrumbRenderer {
         }
 
         // clear routes
-        dc.drawText(
-            clearRouteX,
-            clearRouteY,
-            Graphics.FONT_XTINY,
-            "C",
-            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-        );
+        if (settings.mode == MODE_NORMAL || settings.mode == MODE_ELEVATION) {
+            dc.drawText(
+                clearRouteX,
+                clearRouteY,
+                Graphics.FONT_XTINY,
+                "C",
+                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+            );
+        }
 
         if (settings.mode == MODE_ELEVATION) {
             return;
         }
 
-        if (settings.mode != MODE_MAP_MOVE) {
+        // make this a const
+        var halfLineLength = 10;
+        var lineFromEdge = 10;
+
+        if (settings.mode == MODE_NORMAL) {
             // do not allow disabling maps from mapmove mode
             var mapletter = "Y";
             if (!settings.mapEnabled) {
@@ -1782,11 +1788,20 @@ class BreadcrumbRenderer {
                 mapletter,
                 Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
             );
+        } else if (settings.mode == MODE_MAP_MOVE) {
+            // minus at the bottom right
+            if (!_cachedValues.scaleCanDec) {
+                // no smoking
+                drawNoSmokingSign(dc, mapEnabledX, mapEnabledY);
+            } else {
+                dc.drawLine(
+                    mapEnabledX - halfLineLength,
+                    mapEnabledY,
+                    mapEnabledX + halfLineLength,
+                    mapEnabledY
+                );
+            }
         }
-
-        // make this a const
-        var halfLineLength = 10;
-        var lineFromEdge = 10;
 
         if (_cachedValues.fixedPosition != null || _cachedValues.scale != null) {
             // crosshair
@@ -1898,6 +1913,25 @@ class BreadcrumbRenderer {
                 dc.drawLine(xHalfPhysical, tipY, xLeft, yChevronPoint); // Left chevron line
                 dc.drawLine(xHalfPhysical, tipY, xRight, yChevronPoint); // Right chevron line
                 dc.drawLine(xHalfPhysical, tipY, xHalfPhysical, tipY - ARROW_SIZE); // Shaft
+            }
+
+            // plus at the top left of screen
+            if (!_cachedValues.scaleCanInc) {
+                // no smoking
+                drawNoSmokingSign(dc, clearRouteX, clearRouteY);
+            } else {
+                dc.drawLine(
+                    clearRouteX - halfLineLength,
+                    clearRouteY,
+                    clearRouteX + halfLineLength,
+                    clearRouteY
+                );
+                dc.drawLine(
+                    clearRouteX,
+                    clearRouteY - halfLineLength,
+                    clearRouteX,
+                    clearRouteY + halfLineLength
+                );
             }
             return;
         }
@@ -2047,10 +2081,6 @@ class BreadcrumbRenderer {
     }
 
     function incScale() as Void {
-        if (settings.mode != MODE_NORMAL) {
-            return;
-        }
-
         if (_cachedValues.scale == null) {
             _cachedValues.setScale(_cachedValues.currentScale);
         }
@@ -2066,10 +2096,6 @@ class BreadcrumbRenderer {
     }
 
     function decScale() as Void {
-        if (settings.mode != MODE_NORMAL) {
-            return;
-        }
-
         if (_cachedValues.scale == null) {
             _cachedValues.setScale(_cachedValues.currentScale);
         }
@@ -2093,11 +2119,7 @@ class BreadcrumbRenderer {
     function handleClearRoute(x as Number, y as Number) as Boolean {
         var xHalfPhysical = _cachedValues.xHalfPhysical; // local lookup faster
 
-        if (
-            settings.mode != MODE_NORMAL &&
-            settings.mode != MODE_ELEVATION &&
-            settings.mode != MODE_MAP_MOVE
-        ) {
+        if (settings.mode != MODE_NORMAL && settings.mode != MODE_ELEVATION) {
             return false; // debug and map move do not clear routes
         }
 

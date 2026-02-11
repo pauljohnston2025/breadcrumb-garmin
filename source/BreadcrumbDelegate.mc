@@ -84,38 +84,41 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
             renderer.returnToUser();
             return true;
         }
-        //  else if (
-        //     y > renderer.mapEnabledY - halfHitboxSize &&
-        //     y < renderer.mapEnabledY + halfHitboxSize &&
-        //     x > renderer.mapEnabledX - halfHitboxSize &&
-        //     x < renderer.mapEnabledX + halfHitboxSize
-        // ) {
-        //     // botom right
-        //     // map enable/disable now handled above
-        //     // if (settings.mode == MODE_NORMAL) {
-        //     //     settings.toggleMapEnabled();
-        //     //     return true;
-        //     // }
 
-        //     return false;
-        // }
-        // todo update these to use inHitbox ?
-        else if (y < hitboxSize) {
+        if (inHitbox(x, y, renderer.clearRouteX, renderer.clearRouteY, halfHitboxSize)) {
+            // top left
+            if (settings.mode == MODE_MAP_MOVE) {
+                renderer.incScale();
+                return true;
+            }
+        }
+
+        if (inHitbox(x, y, renderer.mapEnabledX, renderer.mapEnabledY, halfHitboxSize)) {
+            // bottom right
+            if (settings.mode == MODE_MAP_MOVE) {
+                renderer.decScale();
+                return true;
+            }
+        }
+
+        if (y < hitboxSize) {
+            // top of screen
             if (settings.mode == MODE_MAP_MOVE) {
                 cachedValues.moveFixedPositionUp();
                 return true;
+            } else if (settings.mode == MODE_NORMAL) {
+                renderer.incScale();
+                return true;
             }
-            // top of screen
-            renderer.incScale();
-            return true;
         } else if (y > cachedValues.physicalScreenHeight - hitboxSize) {
             // bottom of screen
             if (settings.mode == MODE_MAP_MOVE) {
                 cachedValues.moveFixedPositionDown();
                 return true;
+            } else if (settings.mode == MODE_NORMAL) {
+                renderer.decScale();
+                return true;
             }
-            renderer.decScale();
-            return true;
         } else if (x > cachedValues.physicalScreenWidth - hitboxSize) {
             // right of screen
             if (settings.mode == MODE_MAP_MOVE) {
@@ -130,9 +133,10 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
             if (settings.mode == MODE_MAP_MOVE) {
                 cachedValues.moveFixedPositionLeft();
                 return true;
+            } else if (settings.mode == MODE_NORMAL) {
+                settings.nextZoomAtPaceMode();
+                return true;
             }
-            settings.nextZoomAtPaceMode();
-            return true;
         }
 
         return false;
