@@ -659,55 +659,6 @@ class BreadcrumbRenderer {
         }
     }
 
-    (:noShowPoints)
-    function renderTrackPointsUnrotated(
-        dc as Dc,
-        breadcrumb as BreadcrumbTrack,
-        colour as Graphics.ColorType
-    ) as Void {
-        unsupported(dc, "show points");
-    }
-
-    (:showPoints)
-    function renderTrackPointsUnrotated(
-        dc as Dc,
-        breadcrumb as BreadcrumbTrack,
-        colour as Graphics.ColorType
-    ) as Void {
-        var centerPosition = _cachedValues.centerPosition; // local lookup faster
-        var rotateAroundScreenXOffsetFactoredIn = _cachedValues.rotateAroundScreenXOffsetFactoredIn; // local lookup faster
-        var rotateAroundScreenYOffsetFactoredIn = _cachedValues.rotateAroundScreenYOffsetFactoredIn; // local lookup faster
-
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            // its very cofusing seeing the routes disappear when scrolling
-            // and it makes sense to want to sroll around the route too
-            return;
-        }
-
-        dc.setColor(colour, Graphics.COLOR_BLACK);
-
-        var size = breadcrumb.coordinates.size();
-        var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
-
-        for (var i = 0; i < size; i += ARRAY_POINT_SIZE) {
-            var nextX = coordinatesRaw[i];
-            var nextY = coordinatesRaw[i + 1];
-            var x = rotateAroundScreenXOffsetFactoredIn + (nextX - centerPosition.x);
-            var y = rotateAroundScreenYOffsetFactoredIn - (nextY - centerPosition.y);
-
-            dc.fillCircle(x, y, 5);
-            // if ((i / ARRAY_POINT_SIZE) < 20 && breadcrumb.storageIndex != TRACK_ID) {
-            //     dc.drawText(
-            //         x,
-            //         y,
-            //         Graphics.FONT_XTINY,
-            //         "" + i / ARRAY_POINT_SIZE,
-            //         Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-            //     );
-            // }
-        }
-    }
-
     (:showTurnAlertPoints)
     function getTurnAlertDistancePx() as Float {
         var currentSpeedPPS = 1f; // assume a slow walk if we cannot get the current speed
@@ -1334,61 +1285,6 @@ class BreadcrumbRenderer {
         var total = _distanceAccumulator + distance;
         // Monkey C doesn't support % for Floats. Manual remainder: total - (step * floor(total/step))
         _distanceAccumulator = total - stepSize * (total / stepSize).toNumber();
-    }
-
-    (:noUnbufferedRotations)
-    function renderTrackPoints(
-        dc as Dc,
-        breadcrumb as BreadcrumbTrack,
-        colour as Graphics.ColorType
-    ) as Void {}
-
-    (:unbufferedRotations,:noShowPoints)
-    function renderTrackPoints(
-        dc as Dc,
-        breadcrumb as BreadcrumbTrack,
-        colour as Graphics.ColorType
-    ) as Void {
-        unsupported(dc, "show points");
-    }
-
-    (:unbufferedRotations,:showPoints)
-    function renderTrackPoints(
-        dc as Dc,
-        breadcrumb as BreadcrumbTrack,
-        colour as Graphics.ColorType
-    ) as Void {
-        var centerPosition = _cachedValues.centerPosition; // local lookup faster
-        var rotateCos = _cachedValues.rotateCos; // local lookup faster
-        var rotateSin = _cachedValues.rotateSin; // local lookup faster
-        var rotateAroundScreenXOffsetFactoredIn = _cachedValues.rotateAroundScreenXOffsetFactoredIn; // local lookup faster
-        var rotateAroundScreenYOffsetFactoredIn = _cachedValues.rotateAroundScreenYOffsetFactoredIn; // local lookup faster
-
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            return;
-        }
-
-        dc.setColor(colour, Graphics.COLOR_BLACK);
-
-        var size = breadcrumb.coordinates.size();
-        var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
-        for (var i = 0; i < size; i += ARRAY_POINT_SIZE) {
-            var nextX = coordinatesRaw[i];
-            var nextY = coordinatesRaw[i + 1];
-
-            var nextXScaledAtCenter = nextX - centerPosition.x;
-            var nextYScaledAtCenter = nextY - centerPosition.y;
-
-            var x =
-                rotateAroundScreenXOffsetFactoredIn +
-                rotateCos * nextXScaledAtCenter -
-                rotateSin * nextYScaledAtCenter;
-            var y =
-                rotateAroundScreenYOffsetFactoredIn -
-                (rotateSin * nextXScaledAtCenter + rotateCos * nextYScaledAtCenter);
-
-            dc.fillCircle(x, y, 5);
-        }
     }
 
     (:noUnbufferedRotations)

@@ -135,12 +135,10 @@
 
     <string id="httpErrorTileTTLSTitle">Http Error Tile TTL (s)</string>
     <string id="errorTileTTLSTitle">Error Tile TTL (s)</string>
-    <string id="showPointsTitle">Show Points</string>
     <string id="drawLineToClosestTrackTitle">Draw Line To Closest Track</string>
     <string id="showTileBordersTitle">Show Tile Borders</string>
     <string id="showErrorTileMessagesTitle">Show Error Tile Messages</string>
     <string id="tileErrorColourTitle">Tile Error Colour</string>
-    <string id="includeDebugPageInOnScreenUiTitle">Include Debug Page In On Screen Ui</string>
 
     <string id="turnAlertTimeSTitle">Turn Alert Time (s)</string>
     <string id="minTurnAlertDistanceMTitle">Min Turn Alert Distance (m)</string>

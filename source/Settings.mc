@@ -549,12 +549,10 @@ class Settings {
     var trackWidth as Number = 4;
 
     // bunch of debug settings
-    var showPoints as Boolean = false;
     var drawLineToClosestTrack as Boolean = false;
     var showTileBorders as Boolean = false;
     var showErrorTileMessages as Boolean = false;
     var tileErrorColour as Number = Graphics.COLOR_BLACK;
-    var includeDebugPageInOnScreenUi as Boolean = false;
     var drawHitBoxes as Boolean = false;
     var showDirectionPoints as Boolean = false;
     var showDirectionPointTextUnderIndex as Number = 0;
@@ -1453,11 +1451,6 @@ class Settings {
     }
 
     (:settingsView)
-    function setShowPoints(value as Boolean) as Void {
-        showPoints = value;
-        setValue("showPoints", showPoints);
-    }
-    (:settingsView)
     function setDrawLineToClosestTrack(value as Boolean) as Void {
         drawLineToClosestTrack = value;
         setValue("drawLineToClosestTrack", drawLineToClosestTrack);
@@ -1473,12 +1466,6 @@ class Settings {
         setValue("showErrorTileMessages", showErrorTileMessages);
         getApp()._breadcrumbContext.tileCache.clearValuesWithoutStorage(); // remove the errored tiles from cache and redraw
     }
-    (:settingsView)
-    function setIncludeDebugPageInOnScreenUi(value as Boolean) as Void {
-        includeDebugPageInOnScreenUi = value;
-        setValue("includeDebugPageInOnScreenUi", includeDebugPageInOnScreenUi);
-    }
-
     (:settingsView)
     function setDrawHitBoxes(value as Boolean) as Void {
         drawHitBoxes = value;
@@ -1944,11 +1931,6 @@ class Settings {
         setValue("drawLineToClosestPoint", drawLineToClosestPoint);
     }
     (:settingsView)
-    function toggleShowPoints() as Void {
-        showPoints = !showPoints;
-        setValue("showPoints", showPoints);
-    }
-    (:settingsView)
     function toggleDrawLineToClosestTrack() as Void {
         drawLineToClosestTrack = !drawLineToClosestTrack;
         setValue("drawLineToClosestTrack", drawLineToClosestTrack);
@@ -1963,11 +1945,6 @@ class Settings {
         showErrorTileMessages = !showErrorTileMessages;
         setValue("showErrorTileMessages", showErrorTileMessages);
         getApp()._breadcrumbContext.tileCache.clearValuesWithoutStorage(); // remove the errored tiles from cache and redraw
-    }
-    (:settingsView)
-    function toggleIncludeDebugPageInOnScreenUi() as Void {
-        includeDebugPageInOnScreenUi = !includeDebugPageInOnScreenUi;
-        setValue("includeDebugPageInOnScreenUi", includeDebugPageInOnScreenUi);
     }
     (:settingsView)
     function toggleDrawHitBoxes() as Void {
@@ -2523,11 +2500,9 @@ class Settings {
         cacheTilesInStorage = defaultSettings.cacheTilesInStorage;
         storageMapTilesOnly = defaultSettings.storageMapTilesOnly;
         drawLineToClosestPoint = defaultSettings.drawLineToClosestPoint;
-        showPoints = defaultSettings.showPoints;
         drawLineToClosestTrack = defaultSettings.drawLineToClosestTrack;
         showTileBorders = defaultSettings.showTileBorders;
         showErrorTileMessages = defaultSettings.showErrorTileMessages;
-        includeDebugPageInOnScreenUi = defaultSettings.includeDebugPageInOnScreenUi;
         drawHitBoxes = defaultSettings.drawHitBoxes;
         showDirectionPoints = defaultSettings.showDirectionPoints;
         displayLatLong = defaultSettings.displayLatLong;
@@ -2624,11 +2599,9 @@ class Settings {
                 "cacheTilesInStorage" => cacheTilesInStorage,
                 "storageMapTilesOnly" => storageMapTilesOnly,
                 "drawLineToClosestPoint" => drawLineToClosestPoint,
-                "showPoints" => showPoints,
                 "drawLineToClosestTrack" => drawLineToClosestTrack,
                 "showTileBorders" => showTileBorders,
                 "showErrorTileMessages" => showErrorTileMessages,
-                "includeDebugPageInOnScreenUi" => includeDebugPageInOnScreenUi,
                 "drawHitBoxes" => drawHitBoxes,
                 "showDirectionPoints" => showDirectionPoints,
                 "displayLatLong" => displayLatLong,
@@ -2789,14 +2762,9 @@ class Settings {
         cacheTilesInStorage = parseBool("cacheTilesInStorage", cacheTilesInStorage);
         storageMapTilesOnly = parseBool("storageMapTilesOnly", storageMapTilesOnly);
         drawLineToClosestPoint = parseBool("drawLineToClosestPoint", drawLineToClosestPoint);
-        showPoints = parseBool("showPoints", showPoints);
         drawLineToClosestTrack = parseBool("drawLineToClosestTrack", drawLineToClosestTrack);
         showTileBorders = parseBool("showTileBorders", showTileBorders);
         showErrorTileMessages = parseBool("showErrorTileMessages", showErrorTileMessages);
-        includeDebugPageInOnScreenUi = parseBool(
-            "includeDebugPageInOnScreenUi",
-            includeDebugPageInOnScreenUi
-        );
         drawHitBoxes = parseBool("drawHitBoxes", drawHitBoxes);
         showDirectionPoints = parseBool("showDirectionPoints", showDirectionPoints);
         displayLatLong = parseBool("displayLatLong", displayLatLong);

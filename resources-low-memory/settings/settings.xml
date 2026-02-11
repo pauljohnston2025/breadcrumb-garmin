@@ -348,10 +348,6 @@
     <!-- </group> -->
     
     <!-- <group id="debugSettings" title="@Strings.debugSettingsTitle"> -->
-        <setting propertyKey="@Properties.showPoints" title="@Strings.showPointsTitle">
-            <settingConfig type="boolean"/>
-        </setting>
-
         <setting propertyKey="@Properties.drawLineToClosestTrack" title="@Strings.drawLineToClosestTrackTitle">
             <settingConfig type="boolean"/>
         </setting>
@@ -366,10 +362,6 @@
 
         <setting propertyKey="@Properties.tileErrorColour" title="@Strings.tileErrorColourTitle" prompt="@Strings.colourPrompt">
             <settingConfig type="alphaNumeric"/>
-        </setting>
-
-        <setting propertyKey="@Properties.includeDebugPageInOnScreenUi" title="@Strings.includeDebugPageInOnScreenUiTitle">
-            <settingConfig type="boolean"/>
         </setting>
 
         <setting propertyKey="@Properties.drawHitBoxes" title="@Strings.drawHitBoxesTitle">

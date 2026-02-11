@@ -776,12 +776,10 @@ class SettingsColours extends WatchUi.Menu2 {
 class SettingsDebug extends WatchUi.Menu2 {
     function initialize() {
         Menu2.initialize({:title=>Rez.Strings.debugSettingsTitle});
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.showPointsTitle, null, :settingsDebugShowPoints, false, {}));
         addItem(new WatchUi.ToggleMenuItem(Rez.Strings.drawLineToClosestTrackTitle, null, :settingsDebugDrawLineToClosestTrack, false, {}));
         addItem(new WatchUi.ToggleMenuItem(Rez.Strings.showTileBordersTitle, null, :settingsDebugShowTileBorders, false, {}));
         addItem(new WatchUi.ToggleMenuItem(Rez.Strings.showErrorTileMessagesTitle, null, :settingsDebugShowErrorTileMessages, false, {}));
         addItem(new WatchUi.IconMenuItem(Rez.Strings.tileErrorColourTitle, null, :settingsDebugTileErrorColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.includeDebugPageInOnScreenUiTitle, null, :settingsDebugIncludeDebugPageInOnScreenUi, false, {}));
         addItem(new WatchUi.ToggleMenuItem(Rez.Strings.drawHitBoxesTitle, null, :settingsDebugDrawHitBoxes, false, {}));
         addItem(new WatchUi.ToggleMenuItem(Rez.Strings.showDirectionPointsTitle, null, :settingsDebugShowDirectionPoints, false, {}));
         addItem(new WatchUi.MenuItem(Rez.Strings.showDirectionPointTextUnderIndexTitle, null, :settingsDebugShowDirectionPointTextUnderIndex, {}));
@@ -791,15 +789,9 @@ class SettingsDebug extends WatchUi.Menu2 {
     function rerender() as Void {
         var settings = getApp()._breadcrumbContext.settings;
         safeSetIcon(me, :settingsDebugTileErrorColour, new ColourIcon(settings.tileErrorColour));
-        safeSetToggle(me, :settingsDebugShowPoints, settings.showPoints);
         safeSetToggle(me, :settingsDebugDrawLineToClosestTrack, settings.drawLineToClosestTrack);
         safeSetToggle(me, :settingsDebugShowTileBorders, settings.showTileBorders);
         safeSetToggle(me, :settingsDebugShowErrorTileMessages, settings.showErrorTileMessages);
-        safeSetToggle(
-            me,
-            :settingsDebugIncludeDebugPageInOnScreenUi,
-            settings.includeDebugPageInOnScreenUi
-        );
         safeSetToggle(me, :settingsDebugDrawHitBoxes, settings.drawHitBoxes);
         safeSetToggle(me, :settingsDebugShowDirectionPoints, settings.showDirectionPoints);
         safeSetSubLabel(
@@ -2202,9 +2194,6 @@ class SettingsDebugDelegate extends WatchUi.Menu2InputDelegate {
                     false
                 )
             );
-        } else if (itemId == :settingsDebugShowPoints) {
-            settings.toggleShowPoints();
-            view.rerender();
         } else if (itemId == :settingsDebugDrawLineToClosestTrack) {
             settings.toggleDrawLineToClosestTrack();
             view.rerender();
@@ -2213,9 +2202,6 @@ class SettingsDebugDelegate extends WatchUi.Menu2InputDelegate {
             view.rerender();
         } else if (itemId == :settingsDebugShowErrorTileMessages) {
             settings.toggleShowErrorTileMessages();
-            view.rerender();
-        } else if (itemId == :settingsDebugIncludeDebugPageInOnScreenUi) {
-            settings.toggleIncludeDebugPageInOnScreenUi();
             view.rerender();
         } else if (itemId == :settingsDebugDrawHitBoxes) {
             settings.toggleDrawHitBoxes();

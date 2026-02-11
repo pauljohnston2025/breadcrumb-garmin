@@ -811,9 +811,6 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                 settings.routeTexture(route.storageIndex),
                 settings.routeWidth(route.storageIndex)
             );
-            if (settings.showPoints) {
-                renderer.renderTrackPoints(dc, route, Graphics.COLOR_ORANGE);
-            }
             if (settings.drawCheverons) {
                 renderer.renderTrackCheverons(dc, route, routeColour);
             }
@@ -830,9 +827,6 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             settings.trackTexture,
             settings.trackWidth
         );
-        if (settings.showPoints) {
-            renderer.renderTrackPoints(dc, track, Graphics.COLOR_ORANGE);
-        }
         renderOffTrackPoint(dc);
     }
 
@@ -862,9 +856,6 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                 settings.routeTexture(route.storageIndex),
                 settings.routeWidth(route.storageIndex)
             );
-            if (settings.showPoints) {
-                renderer.renderTrackPointsUnrotated(dc, route, Graphics.COLOR_ORANGE);
-            }
             if (settings.drawCheverons) {
                 renderer.renderTrackCheveronsUnrotated(dc, route, routeColour);
             }
@@ -881,10 +872,7 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             settings.trackTexture,
             settings.trackWidth
         );
-        if (settings.showPoints) {
-            renderer.renderTrackPointsUnrotated(dc, track, Graphics.COLOR_ORANGE);
-        }
-
+        
         renderOffTrackPointUnrotated(dc);
     }
 

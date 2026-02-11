@@ -53,12 +53,10 @@
 	<property id="storageMapTilesOnly" type="boolean">false</property>
 	<property id="httpErrorTileTTLS" type="number">60</property>
 	<property id="errorTileTTLS" type="number">20</property>
-	<property id="showPoints" type="boolean">false</property>
 	<property id="drawLineToClosestTrack" type="boolean">false</property>
 	<property id="showTileBorders" type="boolean">false</property>
 	<property id="showErrorTileMessages" type="boolean">false</property>
 	<property id="tileErrorColour" type="string">00000000</property>
-	<property id="includeDebugPageInOnScreenUi" type="boolean">false</property>
 	<property id="useDrawBitmap" type="boolean">false</property>
 	<property id="offTrackWrongDirection" type="boolean">false</property>
 	<property id="drawCheverons" type="boolean">false</property>

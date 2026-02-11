@@ -43,18 +43,35 @@ Please note: The nested garmin settings have a strange behaviour of the app is n
 
 # General
 
+### Mode Display Order
+
+Changes the order that modes are displayed in, modes can be removed entirely by omitting them from the list. CSV integer list of [display modes](#display-mode)
+
+eg. 
+
+0,1,2 - Each button press of the 'next mode' will go Track/Route -> Elevation -> Map Move -> <loop back to start>
+
+1,3,2 - Elevation -> Debug -> Map Move -> <loop back to start>
+
+1 - Just show the Elevation page, nothing else
+
+Numbers MUST not appear twice in the list also numbers that are not in the modes list below MUST not be included.
+
+
+
 ### Display Mode
 
 Configure which screen is displayed for the datafield.
 
-Track/Route - Current track, and any loaded routes, will be shown  
+0 - Track/Route - Current track, and any loaded routes, will be shown  
 ![](images/track-full.png)  
-Elevation - An elevation chart showing current distance traveled, current elevation and the route/track profile.  
+1 - Elevation - An elevation chart showing current distance traveled, current elevation and the route/track profile.  
 ![](images/elevation.png)  
-Map Move - Should only be used if maps are enabled, allows panning around the map at a set zoom.  
+2 - Map Move - Should only be used if maps are enabled, allows panning around the map at a set zoom.  
 ![](images/settings/mapmove.png)  
-Debug - A debug screen that may be removed in future releases. Shows the current state of the app.  
+3 - Debug - A debug screen that may be removed in future releases. Shows the current state of the app.  
 ![](images/settings/debug.png)
+
 
 ### Display Lat/Long
 
@@ -682,7 +699,7 @@ Note: Not all debug settings will work on all release builds, a message will be 
 
 ### Show Points
 
-Shows points at each latitude/longitude on the routes and track.
+*REMOVED* use [Track Style](#track-style) instead
 
 ![](images/settings/debug-points.png)
 ![](images/settings/debug-points-zoomed.png)
@@ -725,7 +742,7 @@ The colour to show in the background of errored tiles.
 
 ### Include Debug Page In On Screen Ui
 
-Include the debug page when navigating between pages in the on screen ui.
+*REMOVED* use [Mode Display Order](#mode-display-order) instead
 
 ### Draw Hit Boxes
 
