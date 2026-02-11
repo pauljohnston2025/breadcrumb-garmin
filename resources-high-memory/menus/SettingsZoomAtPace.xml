@@ -1,5 +1,0 @@
-<menu2 id="SettingsZoomAtPace" title="@Strings.zoomAtPaceTitle" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <menu-item id="settingsZoomAtPaceMode" label="@Strings.zoomAtPaceModeTitle"/>
-    <menu-item id="settingsZoomAtPaceUserMeters" label="@Strings.metersAroundUser"/>
-    <menu-item id="settingsZoomAtPaceMPS" label="@Strings.zoomAtPaceSpeedMPS"/>
-</menu2>

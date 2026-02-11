@@ -1,3 +1,0 @@
-<menu2 id="SettingsMapDisabled" title="@Strings.mapsettingsTitle" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <toggle-menu-item id="settingsMapEnabled" label="@Strings.mapEnabledTitle"/>
-</menu2>
