@@ -10,10 +10,13 @@ typedef Renderable as interface {
     function rerender() as Void;
 };
 
-
 (:settingsView)
 function startPicker(
-    picker as SettingsFloatPicker or SettingsColourPicker or SettingsNumberPicker or SettingsColourPickerTransparency or TextEditorPicker
+    picker as
+        SettingsFloatPicker or
+            SettingsNumberPicker or
+            SettingsColourPickerTransparency or
+            TextEditorPicker
 ) as Void {
     WatchUi.pushView(
         new $.NumberPickerView(picker),
@@ -277,7 +280,11 @@ class SettingsGeneral extends Rez.Menus.SettingsGeneral {
     function rerender() as Void {
         var settings = getApp()._breadcrumbContext.settings;
 
-        safeSetSubLabel(me, :settingsGeneralModeDisplayOrder, Settings.encodeCSV(settings.modeDisplayOrder));
+        safeSetSubLabel(
+            me,
+            :settingsGeneralModeDisplayOrder,
+            Settings.encodeCSV(settings.modeDisplayOrder)
+        );
         safeSetSubLabel(me, :settingsGeneralMode, getModeString(settings.mode));
         safeSetSubLabel(me, :settingsGeneralModeUiMode, getUiModeString(settings.uiMode));
         safeSetSubLabel(
@@ -754,7 +761,7 @@ class SettingsRoute extends Rez.Menus.SettingsRoute {
     function routeColour() as Number {
         return settings.routeColour(routeId);
     }
-    
+
     function routeColour2() as Number {
         return settings.routeColour2(routeId);
     }
@@ -762,7 +769,7 @@ class SettingsRoute extends Rez.Menus.SettingsRoute {
     function setColour(value as Number) as Void {
         settings.setRouteColour(routeId, value);
     }
-    
+
     function setColour2(value as Number) as Void {
         settings.setRouteColour2(routeId, value);
     }
@@ -1184,7 +1191,7 @@ class SettingsGeneralDelegate extends WatchUi.Menu2InputDelegate {
                     view
                 )
             );
-        }else if (itemId == :settingsGeneralMode) {
+        } else if (itemId == :settingsGeneralMode) {
             WatchUi.pushView(
                 new EnumMenu(
                     Rez.Strings.modeTitle,
@@ -1462,11 +1469,7 @@ class SettingsRouteDelegate extends WatchUi.Menu2InputDelegate {
         var itemId = item.getId();
         if (itemId == :settingsRouteName) {
             startPicker(
-                new TextEditorPicker(
-                    view.method(:setName),
-                    settings.routeName(view.routeId),
-                    view
-                )
+                new TextEditorPicker(view.method(:setName), settings.routeName(view.routeId), view)
             );
         } else if (itemId == :settingsRouteEnabled) {
             if (view.routeEnabled()) {
@@ -1484,11 +1487,21 @@ class SettingsRouteDelegate extends WatchUi.Menu2InputDelegate {
             view.rerender();
         } else if (itemId == :settingsRouteColour) {
             startPicker(
-                new SettingsColourPicker(view.method(:setColour), view.routeColour(), view)
+                new SettingsColourPickerTransparency(
+                    view.method(:setColour),
+                    view.routeColour(),
+                    view,
+                    false
+                )
             );
         } else if (itemId == :settingsRouteColour2) {
             startPicker(
-                new SettingsColourPickerTransparency(view.method(:setColour2), view.routeColour2(), view, true)
+                new SettingsColourPickerTransparency(
+                    view.method(:setColour2),
+                    view.routeColour2(),
+                    view,
+                    true
+                )
             );
         } else if (itemId == :settingsRouteDelete) {
             var dialog = new WatchUi.Confirmation(
@@ -1679,20 +1692,10 @@ class SettingsTileServerDelegate extends WatchUi.Menu2InputDelegate {
                 WatchUi.SLIDE_IMMEDIATE
             );
         } else if (itemId == :settingsTileUrl) {
-            startPicker(
-                new TextEditorPicker(
-                    settings.method(:setTileUrl),
-                    settings.tileUrl,
-                    view
-                )
-            );
+            startPicker(new TextEditorPicker(settings.method(:setTileUrl), settings.tileUrl, view));
         } else if (itemId == :settingsAuthToken) {
             startPicker(
-                new TextEditorPicker(
-                    settings.method(:setAuthToken),
-                    settings.authToken,
-                    view
-                )
+                new TextEditorPicker(settings.method(:setAuthToken), settings.authToken, view)
             );
         } else if (itemId == :settingsMapTileSize) {
             startPicker(
@@ -1999,13 +2002,14 @@ class SettingsColoursDelegate extends WatchUi.Menu2InputDelegate {
         var itemId = item.getId();
         if (itemId == :settingsColoursTrackColour) {
             startPicker(
-                new SettingsColourPicker(
+                new SettingsColourPickerTransparency(
                     settings.method(:setTrackColour),
                     settings.trackColour,
-                    view
+                    view,
+                    false
                 )
             );
-        }else if (itemId == :settingsColoursTrackColour2) {
+        } else if (itemId == :settingsColoursTrackColour2) {
             startPicker(
                 new SettingsColourPickerTransparency(
                     settings.method(:setTrackColour2),
@@ -2016,42 +2020,56 @@ class SettingsColoursDelegate extends WatchUi.Menu2InputDelegate {
             );
         } else if (itemId == :settingsColoursDefaultRouteColour) {
             startPicker(
-                new SettingsColourPicker(
+                new SettingsColourPickerTransparency(
                     settings.method(:setDefaultRouteColour),
                     settings.defaultRouteColour,
-                    view
+                    view,
+                    false
                 )
             );
         } else if (itemId == :settingsColoursElevationColour) {
             startPicker(
-                new SettingsColourPicker(
+                new SettingsColourPickerTransparency(
                     settings.method(:setElevationColour),
                     settings.elevationColour,
-                    view
+                    view,
+                    false
                 )
             );
         } else if (itemId == :settingsColoursUserColour) {
             startPicker(
-                new SettingsColourPicker(settings.method(:setUserColour), settings.userColour, view)
+                new SettingsColourPickerTransparency(
+                    settings.method(:setUserColour),
+                    settings.userColour,
+                    view,
+                    false
+                )
             );
         } else if (itemId == :settingsColoursNormalModeColour) {
             startPicker(
-                new SettingsColourPicker(
+                new SettingsColourPickerTransparency(
                     settings.method(:setNormalModeColour),
                     settings.normalModeColour,
-                    view
+                    view,
+                    false
                 )
             );
         } else if (itemId == :settingsColoursUiColour) {
             startPicker(
-                new SettingsColourPicker(settings.method(:setUiColour), settings.uiColour, view)
+                new SettingsColourPickerTransparency(
+                    settings.method(:setUiColour),
+                    settings.uiColour,
+                    view,
+                    false
+                )
             );
         } else if (itemId == :settingsColoursDebugColour) {
             startPicker(
-                new SettingsColourPicker(
+                new SettingsColourPickerTransparency(
                     settings.method(:setDebugColour),
                     settings.debugColour,
-                    view
+                    view,
+                    false
                 )
             );
         }
@@ -2070,10 +2088,11 @@ class SettingsDebugDelegate extends WatchUi.Menu2InputDelegate {
         var itemId = item.getId();
         if (itemId == :settingsDebugTileErrorColour) {
             startPicker(
-                new SettingsColourPicker(
+                new SettingsColourPickerTransparency(
                     settings.method(:setTileErrorColour),
                     settings.tileErrorColour,
-                    view
+                    view,
+                    false
                 )
             );
         } else if (itemId == :settingsDebugShowPoints) {

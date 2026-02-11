@@ -553,16 +553,6 @@ class SettingsColourPickerTransparency extends NumberPicker {
     }
 }
 
-class SettingsColourPicker extends SettingsColourPickerTransparency {
-    function initialize(
-        callback as (Method(value as Number) as Void),
-        defaultVal as Number,
-        parent as Renderable
-    ) {
-        SettingsColourPickerTransparency.initialize(callback, defaultVal, parent, false);
-    }
-}
-
 (:settingsView)
 class RerenderIgnoredView extends WatchUi.View {
     function initialize() {
