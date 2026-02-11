@@ -943,7 +943,8 @@ class SettingsRoutes extends WatchUi.Menu2 {
             )
         );
 
-        for (var i = 0; i < settings.routeMax(); ++i) {
+        // don't use route max, sometimes it gets out of sync, we want to pull in all the routes so we can remove them
+        for (var i = 0; i < settings.routes.size(); ++i) {
             var routeIndex = settings.getRouteIndexById(i);
             if (routeIndex == null) {
                 // do not show routes that are not in the settings array
