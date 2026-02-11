@@ -571,6 +571,10 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     // in some other cases onUpdate is called interleaved with onCompute once a second each (think this might be when its the active screen but not currently renderring)
     // so we need to do all or heavy scaling code in compute, and make onUpdate just handle drawing, and possibly rotation (pre storing rotation could be slow/hard)
     function onUpdate(dc as Dc) as Void {
+        // we are no longer viewing the settings if we are being asked to render the main view
+        // we ned this here because settings can be closed a few ways (onBack, or after a timeout)
+        // onUpdate is not called unless we are rendering the view (so this will not work if they are on a different datascreen), but we do not really need to run tasks if we are not rendering the view
+        allowTaskComputes = true;
         // dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_RED);
         // dc.clear();
 

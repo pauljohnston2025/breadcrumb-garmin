@@ -94,7 +94,8 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() as [Views] or [Views, InputDelegates] {
-        // the initial view is called again when the settings close
+        // the initial view is called again when the settings close (sometimes)
+        // we also catch this in the 'onUpdate' function in the main view
         _view.allowTaskComputes = true;
         // to open settings to test the simulator has it in an obvious place
         // Settings -> Trigger App Settings (right down the bottom - almost off the screen)
