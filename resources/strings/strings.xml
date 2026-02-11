@@ -124,6 +124,9 @@
     <string id="routesEnabled">Enable Routes</string>
     <string id="mapMove">(2) Map Move</string>
     <string id="debug">(3) Debug</string>
+    <string id="mapMoveZoom">(4) Zoom</string>
+    <string id="mapMoveUD">(5) Up/Down</string>
+    <string id="mapMoveLR">(6) Left/Right</string>
     <string id="clearRoutes">Clear All Routes</string>
 
     <string id="mapChoice">Map Choice</string>

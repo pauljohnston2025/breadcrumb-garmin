@@ -12,6 +12,9 @@
             <listEntry value="1">@Strings.elevationMode</listEntry>
             <listEntry value="2">@Strings.mapMove</listEntry>
             <listEntry value="3">@Strings.debug</listEntry>
+            <listEntry value="4">@Strings.mapMoveZoom</listEntry>
+            <listEntry value="5">@Strings.mapMoveUD</listEntry>
+            <listEntry value="6">@Strings.mapMoveLR</listEntry>
         </settingConfig>
     </setting>
 

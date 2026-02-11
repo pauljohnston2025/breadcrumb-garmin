@@ -238,6 +238,12 @@ function getModeString(mode as Number) as ResourceId or String {
             return Rez.Strings.mapMove;
         case MODE_DEBUG:
             return Rez.Strings.debug;
+        case MODE_MAP_MOVE_ZOOM:
+            return Rez.Strings.mapMoveZoom;
+        case MODE_MAP_MOVE_UP_DOWN:
+            return Rez.Strings.mapMoveUD;
+        case MODE_MAP_MOVE_LEFT_RIGHT:
+            return Rez.Strings.mapMoveLR;
         default:
             return "";
     }

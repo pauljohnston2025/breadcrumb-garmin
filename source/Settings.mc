@@ -2011,6 +2011,17 @@ class Settings {
     function nextMode() as Void {
         // logT("mode cycled");
         mode = getNextMode();
+
+        // try 5 times to get a good mode, if we can't bail out, better than an infinite while loop
+        // helps if users do something like 1,2,3,40,5,6 it will ship over the bad '40' mode
+        for (var i = 0; i < 5; ++i) {
+            if (mode < MODE_MAX) {
+                // not the best validation check, but modes are continuous for now
+                // if we ever have gaps we will need to check for those too
+                break;
+            }
+            mode = getNextMode();
+        }
         setMode(mode);
     }
 

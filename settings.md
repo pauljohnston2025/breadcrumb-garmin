@@ -116,6 +116,9 @@ Display Mode - See [Display Mode](#display-mode)
 - E - Elevation
 - M - Map Move
 - D - Debug
+- Z - Map move zoom
+- V - Map move up/down
+- H - Map move left/right
 
 Map Enabled - See [Map Enabled](#map-enabled)
 

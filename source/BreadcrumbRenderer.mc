@@ -1741,6 +1741,15 @@ class BreadcrumbRenderer {
             case MODE_DEBUG:
                 modeLetter = "D";
                 break;
+            case MODE_MAP_MOVE_ZOOM:
+                modeLetter = "Z";
+                break;
+            case MODE_MAP_MOVE_UP_DOWN:
+                modeLetter = "V";
+                break;
+            case MODE_MAP_MOVE_LEFT_RIGHT:
+                modeLetter = "H";
+                break;
         }
 
         dc.drawText(
@@ -1756,6 +1765,10 @@ class BreadcrumbRenderer {
             return;
         }
 
+        // make this a const
+        var halfLineLength = 10;
+        var lineFromEdge = 10;
+
         // clear routes
         if (settings.mode == MODE_NORMAL || settings.mode == MODE_ELEVATION) {
             dc.drawText(
@@ -1770,10 +1783,6 @@ class BreadcrumbRenderer {
         if (settings.mode == MODE_ELEVATION) {
             return;
         }
-
-        // make this a const
-        var halfLineLength = 10;
-        var lineFromEdge = 10;
 
         if (settings.mode == MODE_NORMAL) {
             // do not allow disabling maps from mapmove mode
@@ -1871,9 +1880,9 @@ class BreadcrumbRenderer {
             }
         }
 
-        if (settings.mode == MODE_MAP_MOVE) {
+        var halfArrowSize = ARROW_SIZE / 2.0f;
+        if (settings.mode == MODE_MAP_MOVE || settings.mode == MODE_MAP_MOVE_LEFT_RIGHT) {
             dc.setPenWidth(ARROW_PEN_WIDTH);
-            var halfArrowSize = ARROW_SIZE / 2.0f;
 
             // --- Draw LEFT and RIGHT Arrows ---
             // Shared Y coordinates for the horizontal arrow chevrons
@@ -1893,7 +1902,9 @@ class BreadcrumbRenderer {
             dc.drawLine(tipX, yHalfPhysical, xChevronPoint, yTop); // Upper chevron line
             dc.drawLine(tipX, yHalfPhysical, xChevronPoint, yBottom); // Lower chevron line
             dc.drawLine(tipX, yHalfPhysical, tipX - ARROW_SIZE, yHalfPhysical); // Shaft
+        }
 
+        if (settings.mode == MODE_MAP_MOVE || settings.mode == MODE_MAP_MOVE_UP_DOWN) {
             // --- Draw UP and DOWN Arrows ---
             // Shared X coordinates for the vertical arrow chevrons
             var xLeft = xHalfPhysical - halfArrowSize;
@@ -1914,7 +1925,9 @@ class BreadcrumbRenderer {
                 dc.drawLine(xHalfPhysical, tipY, xRight, yChevronPoint); // Right chevron line
                 dc.drawLine(xHalfPhysical, tipY, xHalfPhysical, tipY - ARROW_SIZE); // Shaft
             }
+        }
 
+        if (settings.mode == MODE_MAP_MOVE) {
             // plus at the top left of screen
             if (!_cachedValues.scaleCanInc) {
                 // no smoking
@@ -1933,74 +1946,77 @@ class BreadcrumbRenderer {
                     clearRouteY + halfLineLength
                 );
             }
-            return;
         }
 
-        // plus at the top of screen
-        if (!_cachedValues.scaleCanInc) {
-            // no smoking
-            drawNoSmokingSign(dc, xHalfPhysical, NO_SMOKING_RADIUS);
-        } else {
-            dc.drawLine(
-                xHalfPhysical - halfLineLength,
-                lineFromEdge,
-                xHalfPhysical + halfLineLength,
-                lineFromEdge
-            );
-            dc.drawLine(
-                xHalfPhysical,
-                lineFromEdge - halfLineLength,
-                xHalfPhysical,
-                lineFromEdge + halfLineLength
-            );
-        }
-
-        if (settings.getAttribution() == null || !settings.mapEnabled) {
-            // minus at the bottom
-            if (!_cachedValues.scaleCanDec) {
+        if (settings.mode == MODE_NORMAL || settings.mode == MODE_MAP_MOVE_ZOOM) {
+            // plus at the top of screen
+            if (!_cachedValues.scaleCanInc) {
                 // no smoking
-                drawNoSmokingSign(dc, xHalfPhysical, physicalScreenHeight - NO_SMOKING_RADIUS);
+                drawNoSmokingSign(dc, xHalfPhysical, NO_SMOKING_RADIUS);
             } else {
                 dc.drawLine(
                     xHalfPhysical - halfLineLength,
-                    physicalScreenHeight - lineFromEdge,
+                    lineFromEdge,
                     xHalfPhysical + halfLineLength,
-                    physicalScreenHeight - lineFromEdge
+                    lineFromEdge
                 );
+                dc.drawLine(
+                    xHalfPhysical,
+                    lineFromEdge - halfLineLength,
+                    xHalfPhysical,
+                    lineFromEdge + halfLineLength
+                );
+            }
+
+            if (settings.getAttribution() == null || !settings.mapEnabled) {
+                // minus at the bottom
+                if (!_cachedValues.scaleCanDec) {
+                    // no smoking
+                    drawNoSmokingSign(dc, xHalfPhysical, physicalScreenHeight - NO_SMOKING_RADIUS);
+                } else {
+                    dc.drawLine(
+                        xHalfPhysical - halfLineLength,
+                        physicalScreenHeight - lineFromEdge,
+                        xHalfPhysical + halfLineLength,
+                        physicalScreenHeight - lineFromEdge
+                    );
+                }
             }
         }
 
-        // M - default, moving is zoomed view, stopped if full view
-        // S - stopped is zoomed view, moving is entire view
-        var fvText = "M";
-        // dirty hack, should pass the bool in another way
-        // ui should be its own class, as should states
-        if (settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_STOPPED) {
-            // zoom view
-            fvText = "S";
-        }
-        if (settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_NEVER_ZOOM) {
-            // zoom view
-            fvText = "N";
-        }
-        if (settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_ALWAYS_ZOOM) {
-            // zoom view
-            fvText = "A";
-        }
-        if (settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_SHOW_ROUTES_WITHOUT_TRACK) {
-            // zoom view
-            fvText = "R";
-        }
-        dc.drawText(
-            halfHitboxSize,
-            yHalfPhysical,
-            Graphics.FONT_XTINY,
-            fvText,
-            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-        );
+        if (settings.mode == MODE_NORMAL) {
+            // M - default, moving is zoomed view, stopped if full view
+            // S - stopped is zoomed view, moving is entire view
+            var fvText = "M";
+            // dirty hack, should pass the bool in another way
+            // ui should be its own class, as should states
+            if (settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_STOPPED) {
+                // zoom view
+                fvText = "S";
+            }
+            if (settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_NEVER_ZOOM) {
+                // zoom view
+                fvText = "N";
+            }
+            if (settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_ALWAYS_ZOOM) {
+                // zoom view
+                fvText = "A";
+            }
+            if (settings.zoomAtPaceMode == ZOOM_AT_PACE_MODE_SHOW_ROUTES_WITHOUT_TRACK) {
+                // zoom view
+                fvText = "R";
+            }
+            dc.drawText(
+                halfHitboxSize,
+                yHalfPhysical,
+                Graphics.FONT_XTINY,
+                fvText,
+                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+            );
 
-        if (settings.mapEnabled) {
-            renderTileCacheButton(dc);
+            if (settings.mapEnabled) {
+                renderTileCacheButton(dc);
+            }
         }
     }
 
@@ -2288,9 +2304,6 @@ class BreadcrumbRenderer {
     }
 
     function returnToUser() as Void {
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            return;
-        }
         _cachedValues.returnToUser();
     }
 

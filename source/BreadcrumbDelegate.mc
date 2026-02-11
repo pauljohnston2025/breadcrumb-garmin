@@ -71,9 +71,12 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
             return true;
         }
 
-        if (settings.mode == MODE_DEBUG) {
+        if (settings.mode == MODE_DEBUG || settings.mode == MODE_ELEVATION) {
             return false;
         }
+
+        var xHalfPhysical = cachedValues.xHalfPhysical; // local lookup faster
+        var yHalfPhysical = cachedValues.yHalfPhysical; // local lookup faster
 
         if (inHitbox(x, y, renderer.returnToUserX, renderer.returnToUserY, halfHitboxSize)) {
             // return to users location
@@ -82,6 +85,39 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
             // there is a chance the user already had a custom scale set (by pressing the +/- zoom  buttons on the track page)
             // but we will just clear it when they click 'go back to user', and it will now be whatever is in the 'zoom at pace' settings
             renderer.returnToUser();
+            return true;
+        }
+
+        if (settings.mode == MODE_MAP_MOVE_ZOOM) {
+            if (y < yHalfPhysical) {
+                // anywhere top half of screen other than the mode button checked above
+                renderer.incScale();
+                return true;
+            }
+
+            renderer.decScale();
+            return true;
+        }
+        
+        if (settings.mode == MODE_MAP_MOVE_UP_DOWN) {
+            if (y < yHalfPhysical) {
+                // anywhere top half of screen other than the mode button checked above
+                cachedValues.moveFixedPositionUp();
+                return true;
+            }
+
+            cachedValues.moveFixedPositionDown();
+            return true;
+        }
+        
+         if (settings.mode == MODE_MAP_MOVE_LEFT_RIGHT) {
+            if (x < xHalfPhysical) {
+                // anywhere left half of screen other than the mode button checked above
+                cachedValues.moveFixedPositionLeft();
+                return true;
+            }
+
+            cachedValues.moveFixedPositionRight();
             return true;
         }
 
