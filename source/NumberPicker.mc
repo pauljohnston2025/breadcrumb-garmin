@@ -87,8 +87,7 @@ class PositionPickerGeneric {
     function drawText(dc as Dc) as Void;
 
     function confirm() as Void {
-        var position = choicePositions[currentSelected];
-        onTap(position[0].toNumber(), position[1].toNumber());
+        performAction(currentSelected);
     }
 
     function previousSelection() as Void {
@@ -158,10 +157,7 @@ class SingleLetterPicker extends PositionPickerGeneric {
         self.charset = charset;
         self.onReading = onReading;
 
-        var stringArr = [] as Array<String>;
-        for (var i = 0; i < charset.length(); ++i) {
-            stringArr.add(charset.substring(i, i + 1) as String);
-        }
+        var stringArr = stringToStringArray(charset);
 
         PositionPickerGeneric.initialize(stringArr as Array<String>);
     }
@@ -388,6 +384,14 @@ class TextEditorPicker extends PositionPickerGeneric {
     }
 }
 
+function stringToStringArray(charset as String) as Array<String> {
+    var stringArr = [] as Array<String>;
+    for (var i = 0; i < charset.length(); ++i) {
+        stringArr.add(charset.substring(i, i + 1) as String);
+    }
+    return stringArr;
+}
+
 (:settingsView)
 class NumberPicker extends PositionPickerGeneric {
     private var _charset as String;
@@ -407,11 +411,7 @@ class NumberPicker extends PositionPickerGeneric {
             :locY => WatchUi.LAYOUT_VALIGN_CENTER,
         });
 
-        var stringArr = ["OK"] as Array<String>;
-        for (var i = 0; i < charset.length(); ++i) {
-            stringArr.add(charset.substring(i, i + 1) as String);
-        }
-
+        var stringArr = (["OK"] as Array<String>).addAll(stringToStringArray(charset));
         PositionPickerGeneric.initialize(stringArr as Array<String>);
     }
 
