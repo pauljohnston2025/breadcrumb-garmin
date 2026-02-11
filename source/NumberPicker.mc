@@ -172,6 +172,7 @@ class SingleLetterPicker extends PositionPickerGeneric {
 enum /*TextEditor*/ {
     TEXT_EDITOR_OK,
     TEXT_EDITOR_DEL,
+    TEXT_EDITOR_SPACE,
     TEXT_EDITOR_LEFT,
     TEXT_EDITOR_RIGHT,
 
@@ -211,6 +212,7 @@ class TextEditorPicker extends PositionPickerGeneric {
         PositionPickerGeneric.initialize([
             "OK",
             "del",
+            "spc",
             "<<",
             ">>",
             "a-m",
@@ -342,6 +344,10 @@ class TextEditorPicker extends PositionPickerGeneric {
             return true;
         } else if (tapIndex == TEXT_EDITOR_DEL) {
             return deleteChar();
+        } else if (tapIndex == TEXT_EDITOR_SPACE) {
+            addLetter(" ");
+            forceRefresh();
+            return true;
         } else if (tapIndex == TEXT_EDITOR_LEFT) {
             if (cursorIndex > 0) {
                 cursorIndex--;
@@ -483,7 +489,7 @@ class SettingsFloatPicker extends NumberPicker {
         defaultVal as Float,
         parent as Renderable
     ) {
-        NumberPicker.initialize("0123456789.", 10);
+        NumberPicker.initialize("-0123456789.", 10);
         self.defaultVal = defaultVal;
         self.callback = callback;
         self.parent = parent;
