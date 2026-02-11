@@ -219,6 +219,7 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     var FULL_RENDER_INTERVAL_S as Number = 5;
     var imageAlert as Alert? = null;
     var imageAlertShowAt as Number = 0;
+    var allowTaskComputes as Boolean = true;
 
     // Set the label of the data field here.
     function initialize(breadcrumbContext as BreadcrumbContext) {
@@ -350,8 +351,9 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
         // }
 
         // make sure tile seed or anything else does not stop our computes completely
+        // block any tasks until we return from setting view (settings view adds more memory, so we ned to do the least memeory intensive tasks)
         var weReallyNeedACompute = _computeCounter > 3 * settings.recalculateIntervalS;
-        if (!weReallyNeedACompute) {
+        if (!weReallyNeedACompute && allowTaskComputes) {
             // store rotations and speed every time
             var rescaleOccurred = _cachedValues.onActivityInfo(info);
             if (rescaleOccurred) {

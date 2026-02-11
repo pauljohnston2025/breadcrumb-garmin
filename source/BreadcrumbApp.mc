@@ -94,6 +94,8 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() as [Views] or [Views, InputDelegates] {
+        // the initial view is called again when the settings close
+        _view.allowTaskComputes = true;
         // to open settings to test the simulator has it in an obvious place
         // Settings -> Trigger App Settings (right down the bottom - almost off the screen)
         // then to go back you need to Settings -> Time Out App Settings
@@ -102,11 +104,15 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
 
     (:noSettingsView)
     function getSettingsView() as [Views] or [Views, InputDelegates] or Null {
+        _view.allowTaskComputes = false;
+        _breadcrumbContext.tileCache.clearValuesWithoutStorage(); // try and use the least amount of memory whilst settings is open
         return [new $.Rez.Menus.SettingsMapAttribution(), new $.SettingsMapAttributionDelegate()];
     }
 
     (:settingsView)
     function getSettingsView() as [Views] or [Views, InputDelegates] or Null {
+        _view.allowTaskComputes = false;
+        _breadcrumbContext.tileCache.clearValuesWithoutStorage(); // try and use the least amount of memory whilst settings is open
         var settings = new $.SettingsMain();
         return [settings, new $.SettingsMainDelegate(settings)];
     }
