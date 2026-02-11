@@ -1995,8 +1995,8 @@ class Settings {
     function getNextMode() as Number {
         // does not handle dupes, but thats the user error if they do that
         if (modeDisplayOrder.size() < 1) {
-            // no modes to display, jsut use mode 0 overy time
-            return MODE_NORMAL;
+            // they want to stay locked to the current mode thats picked
+            return mode;
         }
 
         var curentModeIndex = modeDisplayOrder.indexOf(mode);
@@ -2015,7 +2015,7 @@ class Settings {
         // try 5 times to get a good mode, if we can't bail out, better than an infinite while loop
         // helps if users do something like 1,2,3,40,5,6 it will ship over the bad '40' mode
         for (var i = 0; i < 5; ++i) {
-            if (mode < MODE_MAX) {
+            if (mode >=0 && mode < MODE_MAX) {
                 // not the best validation check, but modes are continuous for now
                 // if we ever have gaps we will need to check for those too
                 break;

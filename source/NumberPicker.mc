@@ -302,7 +302,7 @@ class TextEditorPicker extends PositionPickerGeneric {
         dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(1);
         var lineX = startX + leftWidth + 1;
-        var cursorHeight = maxN(leftHeight, rightHeight) + 4;
+        var cursorHeight = maxN(50, maxN(leftHeight, rightHeight) + 4); // maybe just hard code to 50? we need to handle when no characters on the screen
         var halfCursorHeight = cursorHeight / 2;
         dc.drawLine(
             lineX,

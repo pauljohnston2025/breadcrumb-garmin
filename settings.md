@@ -45,7 +45,9 @@ Please note: The nested garmin settings have a strange behaviour of the app is n
 
 ### Mode Display Order
 
-Changes the order that modes are displayed in, modes can be removed entirely by omitting them from the list. CSV integer list of [display modes](#display-mode)
+Changes the order that modes are displayed in, modes can be removed entirely by omitting them from the list. CSV integer list of [display modes](#display-mode).  
+An empty list forces the mode to not change when pressing the 'next mode' button. This can be useful for locking the display to a user selected mode.  
+Note: Even with this setting, users can manually select a mode to display that is not in this list, when the 'next mode' is pressed we will return to cycling through modes, and may never return to the mode that was manually selected if it is not in the list.  
 
 eg. 
 
@@ -54,6 +56,8 @@ eg.
 1,3,2 - Elevation -> Debug -> Map Move -> <loop back to start>
 
 1 - Just show the Elevation page, nothing else
+
+<empty list> - Stay on whatever page the user manually selected (disables the 'next mode' button)
 
 Numbers MUST not appear twice in the list also numbers that are not in the modes list below MUST not be included.
 
