@@ -274,9 +274,13 @@ class TextEditorPicker extends PositionPickerGeneric {
         var centerY = dc.getHeight() / 2;
 
         // 1. Calculate widths so we know how to offset from center
-        var leftWidth = dc.getTextWidthInPixels(leftTextPart, font);
-        var rightWidth = dc.getTextWidthInPixels(rightTextPart, font);
-        var cursorWidth = dc.getTextWidthInPixels("|", font);
+        var leftDims = dc.getTextDimensions(leftTextPart, font);
+        var leftWidth = leftDims[0];
+        var leftHeight = leftDims[1];
+        var rightDims = dc.getTextDimensions(rightTextPart, font);
+        var rightWidth = rightDims[0];
+        var rightHeight = rightDims[1];
+        var cursorWidth = 3;
 
         // The total width of the visible text block
         var totalWidth = leftWidth + cursorWidth + rightWidth;
@@ -294,12 +298,15 @@ class TextEditorPicker extends PositionPickerGeneric {
 
         // 3. Draw Cursor (Let's make it a distinct color like Red or Yellow)
         dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(
-            startX + leftWidth,
-            centerY,
-            font,
-            "|",
-            Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER
+        dc.setPenWidth(1);
+        var lineX = startX + leftWidth + 1;
+        var cursorHeight = maxN(leftHeight, rightHeight) + 4;
+        var halfCursorHeight = cursorHeight / 2;
+        dc.drawLine(
+            lineX,
+            centerY + halfCursorHeight,
+            lineX,
+            centerY - halfCursorHeight,
         );
 
         // 4. Draw Right Part
