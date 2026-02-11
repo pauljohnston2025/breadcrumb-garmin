@@ -299,7 +299,6 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             }
             try {
                 if (Attention has :vibrate) {
-                    System.println("" + Time.now().value() + " " + "showing vibrate");
                     var vibeData = [
                         new Attention.VibeProfile(100, 500),
                         new Attention.VibeProfile(0, 150),

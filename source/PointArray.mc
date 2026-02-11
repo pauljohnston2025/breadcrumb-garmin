@@ -257,10 +257,6 @@ class PointArray {
         //     return false;
         // }
 
-        System.println(
-            "" + Time.now().value() + " restrictPointsReumannWitkam starting: " + currentPoints
-        );
-
         // --- STAGE 1: Single-Pass Linear Simplification ---
         // Tolerance: how many meters can a point deviate from a straight line
         // before we consider it a 'corner'. 1.0 - 2.0 is usually safe for GPS.
@@ -361,9 +357,6 @@ class PointArray {
         writeIdx++;
 
         resize(writeIdx * ARRAY_POINT_SIZE);
-        System.println(
-            "" + Time.now().value() + " restrictPointsReumannWitkam ended: " + pointSize()
-        );
         logD("restrictPointsReumannWitkam occurred");
         return true;
     }
@@ -383,8 +376,6 @@ class PointArray {
         if (currentPoints <= 1) {
             return false; // we don't have any points, user must have set maxPoints really low (0 or negative)
         }
-
-        System.println("" + Time.now().value() + " restrictPointsDecimation starting");
 
         // Always preserve the last point
         var lastPoint = lastPoint();
@@ -417,7 +408,6 @@ class PointArray {
             add(lastPoint);
         }
 
-        System.println("" + Time.now().value() + " restrictPointsDecimation ended");
         logD("restrictPointsDecimation occurred");
         return true;
     }
