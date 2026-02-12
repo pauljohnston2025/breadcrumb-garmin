@@ -47,6 +47,10 @@ class BreadcrumbContext {
                 continue;
             }
 
+            if (settings.routeReversed(route.storageIndex)) {
+                route.reverse();
+            }
+
             if (currentScale != 0f) {
                 // make sure we are in the correct scale
                 route.rescale(currentScale);

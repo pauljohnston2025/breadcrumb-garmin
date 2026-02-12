@@ -113,7 +113,9 @@ class BreadcrumbTrack {
         lastClosePointIndex = null;
         _lastDistanceToNextPoint = null;
         lastClosePoint = null; // we want to recalculate off track, since the cheveron direction will change
-        writeToDisk(ROUTE_KEY); // write ourselves back to storage in reverse, so next time we load (on app restart) it is correct
+        // cannot save route to storage unless we scale it back to real world coordinates
+        // otherwise on reload it will be scaled all sorts of wonky
+        // writeToDisk(ROUTE_KEY); 
     }
 
     function settingsChanged() as Void {
