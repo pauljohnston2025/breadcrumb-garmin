@@ -468,7 +468,7 @@ class BreadcrumbTrack {
         return [true, addPointRaw(newPoint, stabilityCheckDistance)];
     }
 
-    function pointFromActivityInfo(activityInfo as Activity.Info) as RectangularPoint? {
+    static function pointFromActivityInfo(activityInfo as Activity.Info) as RectangularPoint? {
         var loc = activityInfo.currentLocation;
         if (loc == null) {
             return null;

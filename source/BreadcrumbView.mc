@@ -389,6 +389,13 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
 
         // slow down the calls to onActivityInfo as its a heavy operation checking
         // the distance we don't really need data much faster than this anyway
+        var newPoint = BreadcrumbTrack.pointFromActivityInfo(info);
+        if (newPoint == null) {
+            return;
+        }
+
+        _cachedValues.handleHeadingPoint(newPoint.clone()); // prevent scale in place from below
+
         if (_computeCounter < settings.recalculateIntervalS) {
             return;
         }
@@ -405,42 +412,39 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             settings.setMapEnabled(false);
         }
 
-        var newPoint = _breadcrumbContext.track.pointFromActivityInfo(info);
-        if (newPoint != null) {
-            if (_cachedValues.currentScale != 0f) {
-                newPoint.rescaleInPlace(_cachedValues.currentScale);
+        if (_cachedValues.currentScale != 0f) {
+            newPoint.rescaleInPlace(_cachedValues.currentScale);
+        }
+        var trackAddRes = _breadcrumbContext.track.onActivityInfo(newPoint);
+        var pointAdded = trackAddRes[0];
+        var complexOperationHappened = trackAddRes[1];
+        if (pointAdded && !complexOperationHappened) {
+            // todo: PERF only update this if the new point added changed the bounding box
+            // its pretty good atm though, only recalculates once every few seconds, and only
+            // if a point is added
+            _cachedValues.updateScaleCenterAndMap();
+            var epoch = Time.now().value();
+            if (epoch - settings.offTrackCheckIntervalS < lastOffTrackAlertChecked) {
+                return;
             }
-            var trackAddRes = _breadcrumbContext.track.onActivityInfo(newPoint);
-            var pointAdded = trackAddRes[0];
-            var complexOperationHappened = trackAddRes[1];
-            if (pointAdded && !complexOperationHappened) {
-                // todo: PERF only update this if the new point added changed the bounding box
-                // its pretty good atm though, only recalculates once every few seconds, and only
-                // if a point is added
-                _cachedValues.updateScaleCenterAndMap();
-                var epoch = Time.now().value();
-                if (epoch - settings.offTrackCheckIntervalS < lastOffTrackAlertChecked) {
-                    return;
+
+            // Do not check again for this long, prevents the expensive off track calculation running constantly whilst we are on track.
+            lastOffTrackAlertChecked = epoch;
+
+            var lastPoint = _breadcrumbContext.track.lastPoint();
+            if (lastPoint != null) {
+                if (
+                    settings.enableOffTrackAlerts ||
+                    settings.drawLineToClosestPoint ||
+                    settings.drawLineToClosestTrack ||
+                    settings.offTrackWrongDirection ||
+                    settings.drawCheverons
+                ) {
+                    handleOffTrackAlerts(epoch, lastPoint);
                 }
 
-                // Do not check again for this long, prevents the expensive off track calculation running constantly whilst we are on track.
-                lastOffTrackAlertChecked = epoch;
-
-                var lastPoint = _breadcrumbContext.track.lastPoint();
-                if (lastPoint != null) {
-                    if (
-                        settings.enableOffTrackAlerts ||
-                        settings.drawLineToClosestPoint ||
-                        settings.drawLineToClosestTrack ||
-                        settings.offTrackWrongDirection ||
-                        settings.drawCheverons
-                    ) {
-                        handleOffTrackAlerts(epoch, lastPoint);
-                    }
-
-                    if (settings.turnAlertTimeS >= 0 || settings.minTurnAlertDistanceM >= 0) {
-                        handleDirections(lastPoint);
-                    }
+                if (settings.turnAlertTimeS >= 0 || settings.minTurnAlertDistanceM >= 0) {
+                    handleDirections(lastPoint);
                 }
             }
         }
@@ -875,7 +879,7 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             settings.trackTexture,
             settings.trackWidth
         );
-        
+
         renderOffTrackPointUnrotated(dc);
     }
 

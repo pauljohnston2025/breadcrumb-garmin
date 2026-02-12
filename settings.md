@@ -225,7 +225,7 @@ Be careful about making the track/route too wide, it leads to more pixels needin
 
 ### Use Track As Heading Speed 
 
-If the user travels above this speed (in m/s) we will use the last few track points to get a bearing (for screen rotations) instead of the devices magnetic compass. This is mostly helpful for when running or any activity where your wrist is likely to be moving around alot, since it is hard to hold your wrist still enough to see the direction of travel. It also stops any delay when first looking at the watch, since it may have rendered when your wrist was not angled straight ahead.
+If the user travels above this speed (in m/s) we will use 2 last recorded points to get a bearing (for screen rotations) instead of the devices magnetic compass. This is mostly helpful for when running or any activity where your wrist is likely to be moving around alot, since it is hard to hold your wrist still enough to see the direction of travel. It also stops any delay when glancing at the watch during the run, since it may have rendered when your wrist was not angled straight ahead.
 
 0 - Always use track  
 large number (eg. 1000) - Never use track  
@@ -234,9 +234,6 @@ large number (eg. 1000) - Never use track
 This method of calculating the heading may result in slow updates to the heading angle, due to it needing a few points after a turn in order to know the turn has happened. This is most noticeable directly after exiting a corner, it may take a second or 2 for the heading to update.
 
 For best results:  
-
-[Compute Interval](#compute-interval) should be set to 1 (or a smaller number) in order to log as many track points as possible. Higher values of compute interval will result in delayed angle changes to the heading when turning corners.  
-[Min Track Point Distance (m)](#min-track-point-distance-m) should be set to 0 so all points are stored, which will result in smoother corner transitions.
 
 If setting `Use Track As Heading Speed ` to 0 the heading will not update when stationary. This is because the gps will ping around on your current location, and would result in constant changes to the heading if we kept updating it based on the last track points. 
 
