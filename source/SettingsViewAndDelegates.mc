@@ -613,6 +613,7 @@ class SettingsMapStorage extends WatchUi.Menu2 {
 
     function rerender() as Void {
         var settings = getApp()._breadcrumbContext.settings;
+        var cachedValues = getApp()._breadcrumbContext.cachedValues;
         safeSetToggle(me, :settingsMapStorageCacheTilesInStorage, settings.cacheTilesInStorage);
         safeSetToggle(me, :settingsMapStorageStorageMapTilesOnly, settings.storageMapTilesOnly);
         safeSetSubLabel(
@@ -641,6 +642,7 @@ class SettingsMapStorage extends WatchUi.Menu2 {
             "/" +
             settings.storageTileCacheSize;
         safeSetSubLabel(me, :settingsMapStorageCacheCurrentArea, cacheSize);
+        safeSetSubLabel(me, :settingsMapStorageCancelCacheDownload, cachedValues.seeding() ? "Seeding" : "");
     }
 }
 
@@ -1129,12 +1131,15 @@ class ClearCachedTilesDelegate extends WatchUi.ConfirmationDelegate {
 
 (:settingsView)
 class StartCachedTilesDelegate extends WatchUi.ConfirmationDelegate {
-    function initialize() {
+    var view as SettingsMapStorage;
+    function initialize(view as SettingsMapStorage) {
         WatchUi.ConfirmationDelegate.initialize();
+        me.view = view;
     }
     function onResponse(response as Confirm) as Boolean {
         if (response == WatchUi.CONFIRM_YES) {
             getApp()._breadcrumbContext.cachedValues.startCacheCurrentMapArea();
+            view.rerender();
         }
 
         return true; // we always handle it
@@ -1889,10 +1894,10 @@ class SettingsMapStorageDelegate extends WatchUi.Menu2InputDelegate {
             var dialog = new WatchUi.Confirmation(
                 WatchUi.loadResource(Rez.Strings.startTileCache1) as String
             );
-            WatchUi.pushView(dialog, new StartCachedTilesDelegate(), WatchUi.SLIDE_IMMEDIATE);
+            WatchUi.pushView(dialog, new StartCachedTilesDelegate(view), WatchUi.SLIDE_IMMEDIATE);
         } else if (itemId == :settingsMapStorageCancelCacheDownload) {
             getApp()._breadcrumbContext.cachedValues.cancelCacheCurrentMapArea();
-            WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+            view.rerender();
         } else if (itemId == :settingsMapStorageClearCachedTiles) {
             var dialog = new WatchUi.Confirmation(
                 WatchUi.loadResource(Rez.Strings.clearCachedTiles) as String
