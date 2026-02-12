@@ -809,17 +809,20 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                 continue;
             }
             var routeColour = settings.routeColour(route.storageIndex);
+            var routeStyle = settings.routeStyle(route.storageIndex);
+            var routeTexture = settings.routeTexture(route.storageIndex);
+            var routeWidth = settings.routeWidth(route.storageIndex);
             renderer.renderTrack(
                 dc,
                 route,
                 routeColour,
                 true,
-                settings.routeStyle(route.storageIndex),
-                settings.routeTexture(route.storageIndex),
-                settings.routeWidth(route.storageIndex)
+                routeStyle,
+                routeTexture,
+                routeWidth
             );
             if (settings.drawCheverons) {
-                renderer.renderTrackCheverons(dc, route, routeColour);
+                renderer.renderTrackCheverons(dc, route, routeColour, routeStyle, routeTexture, routeWidth);
             }
             if (settings.showDirectionPoints || settings.showDirectionPointTextUnderIndex > 0) {
                 renderer.renderTrackDirectionPoints(dc, route, Graphics.COLOR_PURPLE);
@@ -854,17 +857,20 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                 continue;
             }
             var routeColour = settings.routeColour(route.storageIndex);
+            var routeStyle = settings.routeStyle(route.storageIndex);
+            var routeTexture = settings.routeTexture(route.storageIndex);
+            var routeWidth = settings.routeWidth(route.storageIndex);
             renderer.renderTrackUnrotated(
                 dc,
                 route,
                 routeColour,
                 true,
-                settings.routeStyle(route.storageIndex),
-                settings.routeTexture(route.storageIndex),
-                settings.routeWidth(route.storageIndex)
+                routeStyle,
+                routeTexture,
+                routeWidth
             );
             if (settings.drawCheverons) {
-                renderer.renderTrackCheveronsUnrotated(dc, route, routeColour);
+                renderer.renderTrackCheveronsUnrotated(dc, route, routeColour, routeStyle, routeTexture, routeWidth);
             }
             if (settings.showDirectionPoints || settings.showDirectionPointTextUnderIndex > 0) {
                 renderer.renderTrackDirectionPointsUnrotated(dc, route, Graphics.COLOR_PURPLE);

@@ -432,12 +432,6 @@ class BreadcrumbRenderer {
         offTrackPoint as RectangularPoint,
         colour as Number
     ) as Void {
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            // its very confusing seeing the routes disappear when scrolling
-            // and it makes sense to want to sroll around the route too
-            return;
-        }
-
         var centerPosition = _cachedValues.centerPosition; // local lookup faster
         var rotateCos = _cachedValues.rotateCos; // local lookup faster
         var rotateSin = _cachedValues.rotateSin; // local lookup faster
@@ -480,12 +474,6 @@ class BreadcrumbRenderer {
         offTrackPoint as RectangularPoint,
         colour as Number
     ) as Void {
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            // its very confusing seeing the routes disappear when scrolling
-            // and it makes sense to want to sroll around the route too
-            return;
-        }
-
         var centerPosition = _cachedValues.centerPosition; // local lookup faster
         var rotateAroundScreenXOffsetFactoredIn = _cachedValues.rotateAroundScreenXOffsetFactoredIn; // local lookup faster
         var rotateAroundScreenYOffsetFactoredIn = _cachedValues.rotateAroundScreenYOffsetFactoredIn; // local lookup faster
@@ -613,21 +601,7 @@ class BreadcrumbRenderer {
             return;
         }
 
-        dc.setColor(colour, Graphics.COLOR_BLACK);
-        dc.setPenWidth(width);
-        if (
-            style == TRACK_STYLE_BOXES ||
-            style == TRACK_STYLE_BOXES_INTERPOLATED ||
-            style == TRACK_STYLE_POINTS_OUTLINE ||
-            style == TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED
-        ) {
-            dc.setPenWidth(2); // to only change once, not every renderLine call
-        }
-        var halfWidth = width / 2;
-        if (texture != -1) {
-            dc.setStroke(texture);
-        }
-        _distanceAccumulator = 0.0f; // without this the track shifts around, might actually be a nice setting/look we could make the track move in the direction of travel, and it would look like an animation
+        var halfWidth = prepareRenderLines(dc, colour, style, texture, width);
 
         var size = breadcrumb.coordinates.size();
         var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
@@ -700,12 +674,6 @@ class BreadcrumbRenderer {
         var rotateAroundScreenYOffsetFactoredIn = _cachedValues.rotateAroundScreenYOffsetFactoredIn; // local lookup faster
         var distance = getTurnAlertDistancePx();
 
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            // its very confusing seeing the routes disappear when scrolling
-            // and it makes sense to want to scroll around the route too
-            return;
-        }
-
         dc.setColor(colour, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(2);
 
@@ -743,6 +711,10 @@ class BreadcrumbRenderer {
 
     function drawCheveron(
         dc as Dc,
+        style as Number,
+        texture as Graphics.BitmapTexture or Number,
+        width as Number,
+        halfWidth as Number,
         lastX as Float,
         lastY as Float,
         nextX as Float,
@@ -753,37 +725,72 @@ class BreadcrumbRenderer {
 
         var segmentAngle = Math.atan2(dy, dx);
 
-        // Calculate angles for the two arms (pointing backward from the tip)
-        // Base direction for arms is opposite to segment direction
-        var baseArmAngle = segmentAngle + Math.PI;
+        var targetSpan = width;
+        var activeArmLength = targetSpan / Math.sin(CHEVRON_SPREAD_RADIANS);
 
+        // Safety check: ensure it's at least as long as your minimum constant
+        if (activeArmLength < CHEVRON_ARM_LENGTH) {
+            activeArmLength = CHEVRON_ARM_LENGTH;
+        }
+
+        var baseArmAngle = segmentAngle + Math.PI;
         var angleArm1 = baseArmAngle - CHEVRON_SPREAD_RADIANS;
         var angleArm2 = baseArmAngle + CHEVRON_SPREAD_RADIANS;
 
-        // Calculate endpoints of the chevron arms
-        var arm1EndX = lastX + CHEVRON_ARM_LENGTH * Math.cos(angleArm1);
-        var arm1EndY = lastY + CHEVRON_ARM_LENGTH * Math.sin(angleArm1);
-
-        var arm2EndX = lastX + CHEVRON_ARM_LENGTH * Math.cos(angleArm2);
-        var arm2EndY = lastY + CHEVRON_ARM_LENGTH * Math.sin(angleArm2);
+        // Endpoints
+        var arm1EndX = lastX + activeArmLength * Math.cos(angleArm1);
+        var arm1EndY = lastY + activeArmLength * Math.sin(angleArm1);
+        var arm2EndX = lastX + activeArmLength * Math.cos(angleArm2);
+        var arm2EndY = lastY + activeArmLength * Math.sin(angleArm2);
 
         // Draw the chevron
-        dc.drawLine(lastX, lastY, arm1EndX, arm1EndY);
-        dc.drawLine(lastX, lastY, arm2EndX, arm2EndY);
+        renderLineChecked(dc, style, texture, width, halfWidth, lastX, lastY, arm1EndX, arm1EndY);
+        renderLineChecked(dc, style, texture, width, halfWidth, lastX, lastY, arm2EndX, arm2EndY);
+    }
+
+    function prepareRenderLines(
+        dc as Dc,
+        colour as Graphics.ColorType,
+        style as Number,
+        texture as Graphics.BitmapTexture or Number,
+        width as Number
+    ) as Number {
+        dc.setColor(colour, Graphics.COLOR_BLACK);
+        dc.setPenWidth(width);
+        if (
+            style == TRACK_STYLE_BOXES ||
+            style == TRACK_STYLE_BOXES_INTERPOLATED ||
+            style == TRACK_STYLE_POINTS_OUTLINE ||
+            style == TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED
+        ) {
+            dc.setPenWidth(2); // to only change once, not every renderLine call
+        }
+        var halfWidth = width / 2;
+        if (texture != -1) {
+            dc.setStroke(texture);
+        }
+        _distanceAccumulator = 0.0f; // without this the track shifts around, might actually be a nice setting/look we could make the track move in the direction of travel, and it would look like an animation
+        return halfWidth;
     }
 
     (:noUnbufferedRotations)
     function renderTrackCheverons(
         dc as Dc,
         breadcrumb as BreadcrumbTrack,
-        colour as Graphics.ColorType
+        colour as Graphics.ColorType,
+        style as Number,
+        texture as Graphics.BitmapTexture or Number,
+        width as Number
     ) as Void {}
 
     (:unbufferedRotations)
     function renderTrackCheverons(
         dc as Dc,
         breadcrumb as BreadcrumbTrack,
-        colour as Graphics.ColorType
+        colour as Graphics.ColorType,
+        style as Number,
+        texture as Graphics.BitmapTexture or Number,
+        width as Number
     ) as Void {
         var lastClosePointIndex = breadcrumb.lastClosePointIndex;
         if (lastClosePointIndex == null) {
@@ -798,14 +805,7 @@ class BreadcrumbRenderer {
         var rotateCos = _cachedValues.rotateCos; // local lookup faster
         var rotateSin = _cachedValues.rotateSin; // local lookup faster
 
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            // its very confusing seeing the routes disappear when scrolling
-            // and it makes sense to want to scroll around the route too
-            return;
-        }
-
-        dc.setColor(colour, Graphics.COLOR_BLACK);
-        dc.setPenWidth(4);
+        var halfWidth = prepareRenderLines(dc, colour, style, texture, width);
 
         var size = breadcrumb.coordinates.size();
         var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
@@ -844,7 +844,17 @@ class BreadcrumbRenderer {
                     rotateAroundScreenYOffsetFactoredIn -
                     (rotateSin * nextXScaledAtCenter + rotateCos * nextYScaledAtCenter);
 
-                drawCheveron(dc, lastXRotated, lastYRotated, nextXRotated, nextYRotated);
+                drawCheveron(
+                    dc,
+                    style,
+                    texture,
+                    width,
+                    halfWidth,
+                    lastXRotated,
+                    lastYRotated,
+                    nextXRotated,
+                    nextYRotated
+                );
 
                 lastXRotated = nextXRotated;
                 lastYRotated = nextYRotated;
@@ -856,7 +866,10 @@ class BreadcrumbRenderer {
     function renderTrackCheveronsUnrotated(
         dc as Dc,
         breadcrumb as BreadcrumbTrack,
-        colour as Graphics.ColorType
+        colour as Graphics.ColorType,
+        style as Number,
+        texture as Graphics.BitmapTexture or Number,
+        width as Number
     ) as Void {
         var lastClosePointIndex = breadcrumb.lastClosePointIndex;
         if (lastClosePointIndex == null) {
@@ -869,14 +882,7 @@ class BreadcrumbRenderer {
         var rotateAroundScreenXOffsetFactoredIn = _cachedValues.rotateAroundScreenXOffsetFactoredIn; // local lookup faster
         var rotateAroundScreenYOffsetFactoredIn = _cachedValues.rotateAroundScreenYOffsetFactoredIn; // local lookup faster
 
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            // its very cofusing seeing the routes disappear when scrolling
-            // and it makes sense to want to sroll around the route too
-            return;
-        }
-
-        dc.setColor(colour, Graphics.COLOR_BLACK);
-        dc.setPenWidth(4);
+        var halfWidth = prepareRenderLines(dc, colour, style, texture, width);
 
         var size = breadcrumb.coordinates.size();
         var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
@@ -903,7 +909,7 @@ class BreadcrumbRenderer {
                     rotateAroundScreenYOffsetFactoredIn -
                     (coordinatesRaw[i + 1] - centerPosition.y);
 
-                drawCheveron(dc, lastX, lastY, nextX, nextY);
+                drawCheveron(dc, style, texture, width, halfWidth, lastX, lastY, nextX, nextY);
 
                 lastX = nextX;
                 lastY = nextY;
@@ -1018,27 +1024,7 @@ class BreadcrumbRenderer {
         var rotateAroundScreenXOffsetFactoredIn = _cachedValues.rotateAroundScreenXOffsetFactoredIn; // local lookup faster
         var rotateAroundScreenYOffsetFactoredIn = _cachedValues.rotateAroundScreenYOffsetFactoredIn; // local lookup faster
 
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            // its very cofusing seeing the routes disappear when scrolling
-            // and it makes sense to want to sroll around the route too
-            return;
-        }
-
-        dc.setColor(colour, Graphics.COLOR_BLACK);
-        dc.setPenWidth(width);
-        if (
-            style == TRACK_STYLE_BOXES ||
-            style == TRACK_STYLE_BOXES_INTERPOLATED ||
-            style == TRACK_STYLE_POINTS_OUTLINE ||
-            style == TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED
-        ) {
-            dc.setPenWidth(2); // to only change once, not every renderLine call
-        }
-        var halfWidth = width / 2;
-        if (texture != -1) {
-            dc.setStroke(texture);
-        }
-        _distanceAccumulator = 0.0f; // without this the track shifts around, might actually be a nice setting/look we could make the track move in the direction of travel, and it would look like an animation
+        var halfWidth = prepareRenderLines(dc, colour, style, texture, width);
 
         var size = breadcrumb.coordinates.size();
         var coordinatesRaw = breadcrumb.coordinates._internalArrayBuffer;
@@ -1315,12 +1301,6 @@ class BreadcrumbRenderer {
         var rotateAroundScreenXOffsetFactoredIn = _cachedValues.rotateAroundScreenXOffsetFactoredIn; // local lookup faster
         var rotateAroundScreenYOffsetFactoredIn = _cachedValues.rotateAroundScreenYOffsetFactoredIn; // local lookup faster
         var distance = getTurnAlertDistancePx();
-
-        if (settings.mode != MODE_NORMAL && settings.mode != MODE_MAP_MOVE) {
-            // its very confusing seeing the routes disappear when scrolling
-            // and it makes sense to want to scroll around the route too
-            return;
-        }
 
         dc.setColor(colour, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(2);
@@ -2690,21 +2670,7 @@ class BreadcrumbRenderer {
             width = 1;
         }
 
-        dc.setColor(colour, Graphics.COLOR_BLACK);
-        dc.setPenWidth(width);
-        if (
-            style == TRACK_STYLE_BOXES ||
-            style == TRACK_STYLE_BOXES_INTERPOLATED ||
-            style == TRACK_STYLE_POINTS_OUTLINE ||
-            style == TRACK_STYLE_POINTS_OUTLINE_INTERPOLATED
-        ) {
-            dc.setPenWidth(2); // to only change once, not every renderLine call
-        }
-        var halfWidth = width / 2;
-        if (texture != -1) {
-            dc.setStroke(texture);
-        }
-        _distanceAccumulator = 0.0f; // without this the track shifts around, might actually be a nice setting/look we could make the track move in the direction of travel, and it would look like an animation
+        var halfWidth = prepareRenderLines(dc, colour, style, texture, width);
 
         var coordinatesRaw = track.coordinates._internalArrayBuffer;
         var prevPointX = coordinatesRaw[0];
