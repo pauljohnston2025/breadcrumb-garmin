@@ -13,6 +13,27 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
 
     // see BreadcrumbDataFieldView if touch stops working
     function onTap(evt as WatchUi.ClickEvent) as Boolean {
+        if(onTapInner(evt))
+        {
+            try {
+                if (Attention has :vibrate) {
+                    // quick little buzz to let them know the screen tap has been acknowledged (haptic feedback)
+                    // might need to make this a setting to disable it?
+                    var vibeData = [
+                        new Attention.VibeProfile(50, 100),
+                    ];
+                    // this is not documented that it throws, but got bit by the backlight, so protecting it too in order to always show our alerts
+                    Attention.vibrate(vibeData);
+                }
+            } catch (e) {
+                logE("failed to vibrate: " + e.getErrorMessage());
+            }
+            return false;
+        }
+
+        return true;
+    }
+    function onTapInner(evt as WatchUi.ClickEvent) as Boolean {
         if (getApp()._view.imageAlert != null) {
             // any touch cancels the alert
             getApp()._view.imageAlert = null;
