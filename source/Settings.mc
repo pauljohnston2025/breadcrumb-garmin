@@ -2474,103 +2474,20 @@ class Settings {
         return defaultValue;
     }
 
-    function resetDefaults() as Void {
+    (:settingsView)
+    function resetDefaultsFromMenu() as Void {
+        // calling resetDefaults puts teh new values into our current state
+        // we need to load
+        // then we need to load them all back
+        resetDefaultsInStorage();
+        onSettingsChanged(); // reload anything that has changed
+    }
+
+    function resetDefaultsInStorage() as Void {
         logT("Resetting settings to default values");
-        // clear the flag first thing in case of crash we do not want to try clearing over and over
-        setValue("resetDefaults", false);
-
-        // note: this pulls the defaults from whatever we have at the top of the file these may differ from the defaults in properties.xml
+        // resetDefaults flag is cleared by the asDict method
         var defaultSettings = new Settings();
-        tileSize = defaultSettings.tileSize;
-        httpErrorTileTTLS = defaultSettings.httpErrorTileTTLS;
-        turnAlertTimeS = defaultSettings.turnAlertTimeS;
-        minTurnAlertDistanceM = defaultSettings.minTurnAlertDistanceM;
-        modeDisplayOrder = defaultSettings.modeDisplayOrder;
-        maxTrackPoints = defaultSettings.maxTrackPoints;
-        trackStyle = defaultSettings.trackStyle;
-        trackWidth = defaultSettings.trackWidth;
-        showDirectionPointTextUnderIndex = defaultSettings.showDirectionPointTextUnderIndex;
-        errorTileTTLS = defaultSettings.errorTileTTLS;
-        fullTileSize = defaultSettings.fullTileSize;
-        scaledTileSize = defaultSettings.scaledTileSize;
-        packingFormat = defaultSettings.packingFormat;
-        useDrawBitmap = defaultSettings.useDrawBitmap;
-        tileLayerMax = defaultSettings.tileLayerMax;
-        tileLayerMin = defaultSettings.tileLayerMin;
-        tileCacheSize = defaultSettings.tileCacheSize;
-        storageTileCacheSize = defaultSettings.storageTileCacheSize;
-        storageTileCachePageCount = defaultSettings.storageTileCachePageCount;
-        storageSeedBoundingBox = defaultSettings.storageSeedBoundingBox;
-        storageSeedRouteDistanceM = defaultSettings.storageSeedRouteDistanceM;
-        centerUserOffsetY = defaultSettings.centerUserOffsetY;
-        mapMoveScreenSize = defaultSettings.mapMoveScreenSize;
-        tileCachePadding = defaultSettings.tileCachePadding;
-        recalculateIntervalS = defaultSettings.recalculateIntervalS;
-        mode = defaultSettings.mode;
-        mapEnabled = defaultSettings.mapEnabled;
-        cacheTilesInStorage = defaultSettings.cacheTilesInStorage;
-        storageMapTilesOnly = defaultSettings.storageMapTilesOnly;
-        drawLineToClosestPoint = defaultSettings.drawLineToClosestPoint;
-        drawLineToClosestTrack = defaultSettings.drawLineToClosestTrack;
-        showTileBorders = defaultSettings.showTileBorders;
-        showErrorTileMessages = defaultSettings.showErrorTileMessages;
-        drawHitBoxes = defaultSettings.drawHitBoxes;
-        showDirectionPoints = defaultSettings.showDirectionPoints;
-        displayLatLong = defaultSettings.displayLatLong;
-        _scaleRestrictedToTileLayers = defaultSettings.scaleRestrictedToTileLayers();
-        trackColour = defaultSettings.trackColour;
-        trackColour2 = defaultSettings.trackColour2;
-        defaultRouteColour = defaultSettings.defaultRouteColour;
-        tileErrorColour = defaultSettings.tileErrorColour;
-        elevationColour = defaultSettings.elevationColour;
-        userColour = defaultSettings.userColour;
-        maxPendingWebRequests = defaultSettings.maxPendingWebRequests;
-        metersAroundUser = defaultSettings.metersAroundUser;
-        zoomAtPaceMode = defaultSettings.zoomAtPaceMode;
-        zoomAtPaceSpeedMPS = defaultSettings.zoomAtPaceSpeedMPS;
-        useTrackAsHeadingSpeedMPS = defaultSettings.useTrackAsHeadingSpeedMPS;
-        topDataType = defaultSettings.topDataType;
-        bottomDataType = defaultSettings.bottomDataType;
-        minTrackPointDistanceM = defaultSettings.minTrackPointDistanceM;
-        trackPointReductionMethod = defaultSettings.trackPointReductionMethod;
-        dataFieldTextSize = defaultSettings.dataFieldTextSize;
-        uiMode = defaultSettings.uiMode;
-        elevationMode = defaultSettings.elevationMode;
-        alertType = defaultSettings.alertType;
-        renderMode = defaultSettings.renderMode;
-        fixedLatitude = defaultSettings.fixedLatitude;
-        fixedLongitude = defaultSettings.fixedLongitude;
-        tileUrl = defaultSettings.tileUrl;
-        authToken = defaultSettings.authToken;
-        mapChoice = defaultSettings.mapChoice;
-        routes = defaultSettings.routes;
-        routesEnabled = defaultSettings.routesEnabled;
-        displayRouteNames = defaultSettings.displayRouteNames;
-        disableMapsFailureCount = defaultSettings.disableMapsFailureCount;
-        enableOffTrackAlerts = defaultSettings.enableOffTrackAlerts;
-        offTrackWrongDirection = defaultSettings.offTrackWrongDirection;
-        drawCheverons = defaultSettings.drawCheverons;
-        offTrackAlertsDistanceM = defaultSettings.offTrackAlertsDistanceM;
-        offTrackAlertsMaxReportIntervalS = defaultSettings.offTrackAlertsMaxReportIntervalS;
-        offTrackCheckIntervalS = defaultSettings.offTrackCheckIntervalS;
-        _routeMax = defaultSettings.routeMax();
-        normalModeColour = defaultSettings.normalModeColour;
-        uiColour = defaultSettings.uiColour;
-        debugColour = defaultSettings.debugColour;
-
-        // raw write the settings to disk
-        var dict = asDict();
-        saveSettings(dict);
-
-        // purge storage, all routes and caches
-        Application.Storage.clearValues();
-        clearTileCache();
-        clearPendingWebRequests();
-        clearTileCacheStats();
-        clearWebStats();
-        purgeRoutesFromContext();
-        updateCachedValues();
-        updateViewSettings();
+        saveSettings(defaultSettings.asDict());
     }
 
     function asDict() as Dictionary<String, PropertyValueType> {
@@ -2860,12 +2777,12 @@ class Settings {
         var haveDoneFirstLoadSetup = Application.Properties.getValue("haveDoneFirstLoadSetup");
         if (haveDoneFirstLoadSetup instanceof Boolean && !haveDoneFirstLoadSetup) {
             setValue("haveDoneFirstLoadSetup", true);
-            resetDefaults(); // pulls from our defaults
+            resetDefaultsInStorage(); // puts the default values into storage
         }
 
         var resetDefaults = Application.Properties.getValue("resetDefaults") as Boolean;
         if (resetDefaults) {
-            resetDefaults();
+            resetDefaultsInStorage(); // puts the default values into storage
             return;
         }
 

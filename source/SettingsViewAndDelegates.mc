@@ -1067,7 +1067,7 @@ class ResetSettingsDelegate extends WatchUi.ConfirmationDelegate {
     }
     function onResponse(response as Confirm) as Boolean {
         if (response == WatchUi.CONFIRM_YES) {
-            getApp()._breadcrumbContext.settings.resetDefaults();
+            getApp()._breadcrumbContext.settings.resetDefaultsFromMenu();
         }
 
         return true; // we always handle it
