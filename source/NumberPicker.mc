@@ -308,7 +308,7 @@ class TextEditorPicker extends PositionPickerGeneric {
             lineX,
             centerY + halfCursorHeight,
             lineX,
-            centerY - halfCursorHeight,
+            centerY - halfCursorHeight
         );
 
         // 4. Draw Right Part

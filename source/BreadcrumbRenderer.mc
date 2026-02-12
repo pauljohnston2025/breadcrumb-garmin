@@ -738,10 +738,10 @@ class BreadcrumbRenderer {
         var angleArm2 = baseArmAngle + CHEVRON_SPREAD_RADIANS;
 
         // Endpoints
-        var arm1EndX = lastX + activeArmLength * Math.cos(angleArm1);
-        var arm1EndY = lastY + activeArmLength * Math.sin(angleArm1);
-        var arm2EndX = lastX + activeArmLength * Math.cos(angleArm2);
-        var arm2EndY = lastY + activeArmLength * Math.sin(angleArm2);
+        var arm1EndX = (lastX + activeArmLength * Math.cos(angleArm1)).toFloat();
+        var arm1EndY = (lastY + activeArmLength * Math.sin(angleArm1)).toFloat();
+        var arm2EndX = (lastX + activeArmLength * Math.cos(angleArm2)).toFloat();
+        var arm2EndY = (lastY + activeArmLength * Math.sin(angleArm2)).toFloat();
 
         // Draw the chevron
         renderLineChecked(dc, style, texture, width, halfWidth, lastX, lastY, arm1EndX, arm1EndY);

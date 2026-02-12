@@ -41,7 +41,7 @@ class BreadcrumbContext {
             if (route == null) {
                 continue;
             }
-            settings.ensureRouteId(route.storageIndex); // may not actually add the route if we are over route max
+            settings.ensureRouteIdNoSideEffect(route.storageIndex); // may not actually add the route if we are over route max
             if (settings.getRouteIndexById(route.storageIndex) == null) {
                 clearRouteId(route.storageIndex); // clear it from storage, it was meant to get purged when we changed the settings
                 continue;
@@ -60,7 +60,7 @@ class BreadcrumbContext {
 
             if (settings.routeName(route.storageIndex).equals("")) {
                 // settings label takes precedence over our internal one until the setting route entry removed
-                settings.setRouteName(route.storageIndex, route.name);
+                settings.setRouteNameNoSideEffect(route.storageIndex, route.name);
             }
         }
 

@@ -1626,14 +1626,19 @@ class Settings {
 
     // see oddity with route name and route loading new in context.newRoute
     function setRouteName(routeId as Number, value as String) as Void {
-        ensureRouteId(routeId);
+        setRouteNameNoSideEffect(routeId, value);
+        setValueSideEffect();
+    }
+
+    function setRouteNameNoSideEffect(routeId as Number, value as String) as Void {
+        ensureRouteIdNoSideEffect(routeId);
         var routeIndex = getRouteIndexById(routeId);
         if (routeIndex == null) {
             return;
         }
 
         routes[routeIndex]["name"] = value;
-        saveRoutes();
+        saveRoutesNoSideEffect();
     }
 
     function setRouteStyle(routeId as Number, value as Number) as Void {
@@ -1701,6 +1706,11 @@ class Settings {
     }
 
     function ensureRouteId(routeId as Number) as Void {
+        ensureRouteIdNoSideEffect(routeId);
+        setValueSideEffect();
+    }
+
+    function ensureRouteIdNoSideEffect(routeId as Number) as Void {
         var routeIndex = getRouteIndexById(routeId);
         if (routeIndex != null) {
             return;
@@ -1721,7 +1731,7 @@ class Settings {
             "width" => routeWidth(routeId),
         });
         routeTextures.add(-1);
-        saveRoutes();
+        saveRoutesNoSideEffect();
     }
 
     function getRouteIndexById(routeId as Number) as Number? {
@@ -2015,7 +2025,7 @@ class Settings {
         // try 5 times to get a good mode, if we can't bail out, better than an infinite while loop
         // helps if users do something like 1,2,3,40,5,6 it will ship over the bad '40' mode
         for (var i = 0; i < 5; ++i) {
-            if (mode >=0 && mode < MODE_MAX) {
+            if (mode >= 0 && mode < MODE_MAX) {
                 // not the best validation check, but modes are continuous for now
                 // if we ever have gaps we will need to check for those too
                 break;
@@ -2455,14 +2465,14 @@ class Settings {
                 for (var j = 0; j < expectedKeys.size(); ++j) {
                     var thisKey = expectedKeys[j];
                     var thisParser = parsers[j];
-                    if (!entry.hasKey(thisKey)) {
-                        return defaultValue;
+                    // back compat, if the keys are missing we need to default them
+                    // old companion app will send route entries without the new keys
+                    var keysValue = null;
+                    if (entry.hasKey(thisKey)) {
+                        keysValue = entry[thisKey];
                     }
 
-                    entryOut[thisKey] = thisParser.invoke(
-                        key + "." + i + "." + thisKey,
-                        entry[thisKey]
-                    );
+                    entryOut[thisKey] = thisParser.invoke(key + "." + i + "." + thisKey, keysValue);
                 }
                 result.add(entryOut);
             }
