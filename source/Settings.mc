@@ -466,6 +466,9 @@ class Settings {
 
     var trackColour as Number = Graphics.COLOR_GREEN;
     var trackColour2 as Number = Graphics.COLOR_TRANSPARENT;
+    const DEFAULT_ROUTE_COLOUR_2 = Graphics.COLOR_TRANSPARENT;
+    const DEFAULT_ROUTE_STYLE = TRACK_STYLE_LINE;
+    const DEFAULT_ROUTE_WIDTH = 4;
     var defaultRouteColour as Number = Graphics.COLOR_BLUE;
     var elevationColour as Number = Graphics.COLOR_ORANGE;
     var userColour as Number = Graphics.COLOR_ORANGE;
@@ -1500,31 +1503,29 @@ class Settings {
     }
 
     function routeColour(routeId as Number) as Number {
-        var routeIndex = getRouteIndexById(routeId);
-        if (routeIndex == null) {
-            return defaultRouteColour;
-        }
-
-        return routes[routeIndex]["colour"] as Number;
+        return routeProp(routeId, "colour", defaultRouteColour) as Number;
     }
 
     function routeColour2(routeId as Number) as Number {
-        var routeIndex = getRouteIndexById(routeId);
-        if (routeIndex == null) {
-            return Graphics.COLOR_TRANSPARENT;
-        }
-
-        return routes[routeIndex]["colour2"] as Number;
+        return routeProp(routeId, "colour2", DEFAULT_ROUTE_COLOUR_2) as Number;
     }
 
     // see oddity with route name and route loading new in context.newRoute
     function routeName(routeId as Number) as String {
+        return routeProp(routeId, "name", "") as String;
+    }
+
+    function routeProp(
+        routeId as Number,
+        key as String,
+        defaultVal as Number or String or Boolean
+    ) as Number or String or Boolean {
         var routeIndex = getRouteIndexById(routeId);
         if (routeIndex == null) {
-            return "";
+            return defaultVal;
         }
 
-        return routes[routeIndex]["name"] as String;
+        return routes[routeIndex][key] as Number or String or Boolean;
     }
 
     (:storage)
@@ -1556,19 +1557,11 @@ class Settings {
     }
 
     function routeReversed(routeId as Number) as Boolean {
-        var routeIndex = getRouteIndexById(routeId);
-        if (routeIndex == null) {
-            return false;
-        }
-        return routes[routeIndex]["reversed"] as Boolean;
+        return routeProp(routeId, "reversed", false) as Boolean;
     }
 
     function routeStyle(routeId as Number) as Number {
-        var routeIndex = getRouteIndexById(routeId);
-        if (routeIndex == null) {
-            return TRACK_STYLE_LINE;
-        }
-        return routes[routeIndex]["style"] as Number;
+        return routeProp(routeId, "style", DEFAULT_ROUTE_STYLE) as Number;
     }
 
     function routeTexture(routeId as Number) as Graphics.BitmapTexture or Number {
@@ -1581,15 +1574,28 @@ class Settings {
     }
 
     function routeWidth(routeId as Number) as Number {
-        var routeIndex = getRouteIndexById(routeId);
-        if (routeIndex == null) {
-            return 4;
-        }
-        return routes[routeIndex]["width"] as Number;
+        return routeProp(routeId, "width", DEFAULT_ROUTE_WIDTH) as Number;
     }
 
-    function setRouteColour(routeId as Number, value as Number) as Void {
-        ensureRouteId(routeId);
+    function ensureDefaultRoute(routeId as Number, name as String) as Void {
+        var routeIndex = getRouteIndexById(routeId);
+        if (routeIndex != null) {
+            routes[routeIndex] = defaultRoute(routeId, name);
+            routeTextures[routeIndex] = -1;
+            saveRoutes();
+            return;
+        }
+
+        if (routes.size() >= _routeMax) {
+            return;
+        }
+
+        routes.add(defaultRoute(routeId, name));
+        routeTextures.add(-1);
+        saveRoutes();
+    }
+
+    function simpleRouteProp(routeId as Number, key as String, value as Number or Boolean) as Void {
         var routeIndex = getRouteIndexById(routeId);
         if (routeIndex == null) {
             return;
@@ -1597,31 +1603,15 @@ class Settings {
 
         routes[routeIndex]["colour"] = value;
         saveRoutes();
-        recomputeRouteTexture(
-            routeIndex,
-            routeStyle(routeId),
-            routeWidth(routeId),
-            value,
-            routeColour2(routeId)
-        );
+        recomputeRouteTexture(routeIndex);
+    }
+
+    function setRouteColour(routeId as Number, value as Number) as Void {
+        simpleRouteProp(routeId, "colour", value);
     }
 
     function setRouteColour2(routeId as Number, value as Number) as Void {
-        ensureRouteId(routeId);
-        var routeIndex = getRouteIndexById(routeId);
-        if (routeIndex == null) {
-            return;
-        }
-
-        routes[routeIndex]["colour2"] = value;
-        saveRoutes();
-        recomputeRouteTexture(
-            routeIndex,
-            routeStyle(routeId),
-            routeWidth(routeId),
-            routeColour(routeId),
-            value
-        );
+        simpleRouteProp(routeId, "colour2", value);
     }
 
     // see oddity with route name and route loading new in context.newRoute
@@ -1631,7 +1621,6 @@ class Settings {
     }
 
     function setRouteNameNoSideEffect(routeId as Number, value as String) as Void {
-        ensureRouteIdNoSideEffect(routeId);
         var routeIndex = getRouteIndexById(routeId);
         if (routeIndex == null) {
             return;
@@ -1642,55 +1631,18 @@ class Settings {
     }
 
     function setRouteStyle(routeId as Number, value as Number) as Void {
-        ensureRouteId(routeId);
-        var routeIndex = getRouteIndexById(routeId);
-        if (routeIndex == null) {
-            return;
-        }
-
-        routes[routeIndex]["style"] = value;
-        saveRoutes();
-        recomputeRouteTexture(
-            routeIndex,
-            value,
-            routeWidth(routeId),
-            routeColour(routeId),
-            routeColour2(routeId)
-        );
+        simpleRouteProp(routeId, "style", value);
     }
 
     function setRouteWidth(routeId as Number, value as Number) as Void {
-        ensureRouteId(routeId);
-        var routeIndex = getRouteIndexById(routeId);
-        if (routeIndex == null) {
-            return;
-        }
-
-        routes[routeIndex]["width"] = value;
-        saveRoutes();
-        recomputeRouteTexture(
-            routeIndex,
-            routeStyle(routeId),
-            value,
-            routeColour(routeId),
-            routeColour2(routeId)
-        );
+        simpleRouteProp(routeId, "width", value);
     }
 
     function setRouteEnabled(routeId as Number, value as Boolean) as Void {
-        ensureRouteId(routeId);
-        var routeIndex = getRouteIndexById(routeId);
-        if (routeIndex == null) {
-            return;
-        }
-
-        routes[routeIndex]["enabled"] = value;
-        saveRoutes();
-        updateViewSettings(); // routes enabled/disabled can effect off track alerts and other view renderring
+        simpleRouteProp(routeId, "enabled", value);
     }
 
     function setRouteReversed(routeId as Number, value as Boolean) as Void {
-        ensureRouteId(routeId);
         var routeIndex = getRouteIndexById(routeId);
         if (routeIndex == null) {
             return;
@@ -1720,18 +1672,22 @@ class Settings {
             return;
         }
 
-        routes.add({
-            "routeId" => routeId,
-            "name" => routeName(routeId),
-            "enabled" => true,
-            "colour" => routeColour(routeId),
-            "colour2" => routeColour2(routeId),
-            "reversed" => routeReversed(routeId),
-            "style" => routeStyle(routeId),
-            "width" => routeWidth(routeId),
-        });
+        routes.add(defaultRoute(routeId, ""));
         routeTextures.add(-1);
         saveRoutesNoSideEffect();
+    }
+
+    function defaultRoute(routeId as Number, name as String) as Dictionary {
+        return {
+            "routeId" => routeId,
+            "name" => name,
+            "enabled" => true,
+            "colour" => defaultRouteColour,
+            "colour2" => DEFAULT_ROUTE_COLOUR_2,
+            "reversed" => false,
+            "style" => DEFAULT_ROUTE_STYLE,
+            "width" => DEFAULT_ROUTE_WIDTH,
+        };
     }
 
     function getRouteIndexById(routeId as Number) as Number? {
@@ -1822,20 +1778,16 @@ class Settings {
         );
     }
 
-    function recomputeRouteTexture(
-        routeIndex as Number,
-        currentStyle as Number,
-        currentWidth as Number,
-        currentColour as Number,
-        currentColour2 as Number
-    ) as Void {
+    function recomputeRouteTexture(routeIndex as Number) as Void {
         padRouteTextures(routeIndex);
+        var route = routes[routeIndex];
+        var currentWidth = route["width"] as Number;
         routeTextures[routeIndex] = getTexture(
-            currentStyle,
+            route["style"] as Number,
             currentWidth,
             currentWidth / 2,
-            currentColour,
-            currentColour2
+            route["colour"] as Number,
+            route["colour2"] as Number
         );
     }
 
@@ -2620,13 +2572,7 @@ class Settings {
         recomputeTrackTexture();
         for (var i = 0; i < routes.size(); ++i) {
             var routeId = routes[i]["routeId"] as Number;
-            recomputeRouteTexture(
-                i,
-                routeStyle(routeId),
-                routeWidth(routeId),
-                routeColour(routeId),
-                routeColour2(routeId)
-            );
+            recomputeRouteTexture(i);
         }
     }
 
@@ -2893,13 +2839,7 @@ class Settings {
                     oldRouteEntry["colour"] != currentColour ||
                     oldRouteEntry["colour2"] != currentColour2
                 ) {
-                    recomputeRouteTexture(
-                        routeIndex,
-                        currentStyle,
-                        currentWidth,
-                        currentColour,
-                        currentColour2
-                    );
+                    recomputeRouteTexture(routeIndex);
                 }
 
                 continue;
