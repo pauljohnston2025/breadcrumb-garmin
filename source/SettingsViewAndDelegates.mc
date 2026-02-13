@@ -945,22 +945,17 @@ class SettingsRoutes extends WatchUi.Menu2 {
 
         // don't use route max, sometimes it gets out of sync, we want to pull in all the routes so we can remove them
         for (var i = 0; i < settings.routes.size(); ++i) {
-            var routeIndex = settings.getRouteIndexById(i);
-            if (routeIndex == null) {
-                // do not show routes that are not in the settings array
-                // but still show disabled routes that are in the array
-                continue;
-            }
-            var routeName = settings.routeName(i);
-            var enabledStr = settings.routeEnabled(i) ? "Enabled" : "Disabled";
-            var reversedStr = settings.routeReversed(i) ? "Reversed" : "Forward";
+            var routeId = settings.routes[i]["routeId"] as Number;
+            var routeName = settings.routeName(routeId);
+            var enabledStr = settings.routeEnabled(routeId) ? "Enabled" : "Disabled";
+            var reversedStr = settings.routeReversed(routeId) ? "Reversed" : "Forward";
             addItem(
                 // do not be tempted to switch this to a menuitem (IconMenuItem is supported since API 3.0.0, MenuItem only supports icons from API 3.4.0)
                 new IconMenuItem(
                     routeName.equals("") ? "<unlabeled>" : routeName,
                     enabledStr + " " + reversedStr,
-                    i,
-                    new ColourIcon(settings.routeColour(i)),
+                    routeId,
+                    new ColourIcon(settings.routeColour(routeId)),
                     {
                         // only get left or right, no center :(
                         :alignment => MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT,
@@ -974,11 +969,12 @@ class SettingsRoutes extends WatchUi.Menu2 {
         safeSetToggle(me, :settingsRoutesEnabled, settings.routesEnabled);
         safeSetToggle(me, :settingsDisplayRouteNames, settings.displayRouteNames);
         safeSetSubLabel(me, :settingsDisplayRouteMax, settings.routeMax().toString());
-        for (var i = 0; i < settings.routeMax(); ++i) {
-            var routeName = settings.routeName(i);
-            safeSetLabel(me, i, routeName.equals("") ? "<unlabeled>" : routeName);
-            safeSetIcon(me, i, new ColourIcon(settings.routeColour(i)));
-            safeSetSubLabel(me, i, settings.routeEnabled(i) ? "Enabled" : "Disabled");
+        for (var i = 0; i < settings.routes.size(); ++i) {
+            var routeId = settings.routes[i]["routeId"] as Number;
+            var routeName = settings.routeName(routeId);
+            safeSetLabel(me, routeId, routeName.equals("") ? "<unlabeled>" : routeName);
+            safeSetIcon(me, routeId, new ColourIcon(settings.routeColour(routeId)));
+            safeSetSubLabel(me, routeId, settings.routeEnabled(routeId) ? "Enabled" : "Disabled");
         }
     }
 }

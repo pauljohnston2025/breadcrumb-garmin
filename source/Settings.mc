@@ -1601,7 +1601,7 @@ class Settings {
             return;
         }
 
-        routes[routeIndex]["colour"] = value;
+        routes[routeIndex][key] = value;
         saveRoutes();
         recomputeRouteTexture(routeIndex);
     }
