@@ -13,25 +13,22 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
 
     // see BreadcrumbDataFieldView if touch stops working
     function onTap(evt as WatchUi.ClickEvent) as Boolean {
-        if(onTapInner(evt))
-        {
+        if (onTapInner(evt)) {
             try {
                 if (Attention has :vibrate) {
                     // quick little buzz to let them know the screen tap has been acknowledged (haptic feedback)
                     // might need to make this a setting to disable it?
-                    var vibeData = [
-                        new Attention.VibeProfile(50, 100),
-                    ];
+                    var vibeData = [new Attention.VibeProfile(50, 100)];
                     // this is not documented that it throws, but got bit by the backlight, so protecting it too in order to always show our alerts
                     Attention.vibrate(vibeData);
                 }
             } catch (e) {
                 logE("failed to vibrate: " + e.getErrorMessage());
             }
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
     function onTapInner(evt as WatchUi.ClickEvent) as Boolean {
         if (getApp()._view.imageAlert != null) {
@@ -119,7 +116,7 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
             renderer.decScale();
             return true;
         }
-        
+
         if (settings.mode == MODE_MAP_MOVE_UP_DOWN) {
             if (y < yHalfPhysical) {
                 // anywhere top half of screen other than the mode button checked above
@@ -130,8 +127,8 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
             cachedValues.moveFixedPositionDown();
             return true;
         }
-        
-         if (settings.mode == MODE_MAP_MOVE_LEFT_RIGHT) {
+
+        if (settings.mode == MODE_MAP_MOVE_LEFT_RIGHT) {
             if (x < xHalfPhysical) {
                 // anywhere left half of screen other than the mode button checked above
                 cachedValues.moveFixedPositionLeft();
