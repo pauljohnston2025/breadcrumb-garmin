@@ -36,26 +36,25 @@ class PositionPickerGeneric {
         numPoints as Number
     ) as Array<[Float, Float]> {
         var points = new [numPoints];
-
         var angleIncrement = (2 * Math.PI) / numPoints;
 
-        var x0 = (centerX + radius).toFloat();
-        var y0 = centerY.toFloat();
-        points[0] = [x0, y0];
-        var x = x0;
-        var y = y0;
+        // Shift the starting position to -90 degrees (Top of the screen)
+        var startAngleShift = -Math.PI / 2;
 
-        for (var i = 1; i < numPoints; i++) {
-            var angle = i * angleIncrement;
+        for (var i = 0; i < numPoints; i++) {
+            // Apply the shift to every point
+            var angle = i * angleIncrement + startAngleShift;
 
-            x = centerX + radius * Math.cos(angle).toFloat();
-            y = centerY + radius * Math.sin(angle).toFloat();
+            var x = centerX + radius * Math.cos(angle).toFloat();
+            var y = centerY + radius * Math.sin(angle).toFloat();
 
             points[i] = [x, y];
         }
 
-        // adjust the hitbox to be the max size between the points
-        halfHitboxSize = distance(x0, y0, x, y).toNumber() / 2;
+        if (numPoints > 1) {
+            halfHitboxSize =
+                distance(points[0][0] as Float, points[0][1]as Float, points[1][0]as Float, points[1][1]as Float).toNumber() / 2;
+        }
 
         return points as Array<[Float, Float]>;
     }
@@ -304,12 +303,7 @@ class TextEditorPicker extends PositionPickerGeneric {
         var lineX = startX + leftWidth + 1;
         var cursorHeight = maxN(50, maxN(leftHeight, rightHeight) + 4); // maybe just hard code to 50? we need to handle when no characters on the screen
         var halfCursorHeight = cursorHeight / 2;
-        dc.drawLine(
-            lineX,
-            centerY + halfCursorHeight,
-            lineX,
-            centerY - halfCursorHeight
-        );
+        dc.drawLine(lineX, centerY + halfCursorHeight, lineX, centerY - halfCursorHeight);
 
         // 4. Draw Right Part
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);

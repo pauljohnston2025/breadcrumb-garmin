@@ -126,19 +126,43 @@ function safeSetIcon(menu as WatchUi.Menu2, id as Object, value as WatchUi.Drawa
 (:settingsView)
 class SettingsMain extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.settingsTitle});
-        addItem(new WatchUi.MenuItem(Rez.Strings.generalSettingsTitle, null, :settingsMainGeneral, {}));
+        Menu2.initialize({ :title => Rez.Strings.settingsTitle });
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.generalSettingsTitle, null, :settingsMainGeneral, {})
+        );
         addItem(new WatchUi.MenuItem(Rez.Strings.trackSettingsTitle, null, :settingsMainTrack, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.dataFieldSettingsTitle, null, :settingsMainDataField, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.zoomAtPaceTitle, null, :settingsMainZoomAtPace, {}));
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.dataFieldSettingsTitle,
+                null,
+                :settingsMainDataField,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.zoomAtPaceTitle, null, :settingsMainZoomAtPace, {})
+        );
         addItem(new WatchUi.MenuItem(Rez.Strings.routesTitle, null, :settingsMainRoutes, {}));
         addItem(new WatchUi.MenuItem(Rez.Strings.mapsettingsTitle, null, :settingsMainMap, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.offTrackAlertsGroupTitle, null, :settingsMainAlerts, {}));
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.offTrackAlertsGroupTitle,
+                null,
+                :settingsMainAlerts,
+                {}
+            )
+        );
         addItem(new WatchUi.MenuItem(Rez.Strings.coloursTitle, null, :settingsMainColours, {}));
         addItem(new WatchUi.MenuItem(Rez.Strings.debugSettingsTitle, null, :settingsMainDebug, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.clearStorage, null, :settingsMainClearStorage, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.returnToUserTitle, null, :settingsMainReturnToUser, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.resetDefaults, null, :settingsMainResetDefaults, {}));
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.clearStorage, null, :settingsMainClearStorage, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.returnToUserTitle, null, :settingsMainReturnToUser, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.resetDefaults, null, :settingsMainResetDefaults, {})
+        );
         rerender();
     }
 
@@ -200,10 +224,21 @@ function getZoomAtPaceModeString(mode as Number) as ResourceId or String {
 (:settingsView)
 class SettingsZoomAtPace extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.zoomAtPaceTitle});
-        addItem(new WatchUi.MenuItem(Rez.Strings.zoomAtPaceModeTitle, null, :settingsZoomAtPaceMode, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.metersAroundUser, null, :settingsZoomAtPaceUserMeters, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.zoomAtPaceSpeedMPS, null, :settingsZoomAtPaceMPS, {}));
+        Menu2.initialize({ :title => Rez.Strings.zoomAtPaceTitle });
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.zoomAtPaceModeTitle, null, :settingsZoomAtPaceMode, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.metersAroundUser,
+                null,
+                :settingsZoomAtPaceUserMeters,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.zoomAtPaceSpeedMPS, null, :settingsZoomAtPaceMPS, {})
+        );
         rerender();
     }
 
@@ -294,16 +329,63 @@ function getRenderModeString(mode as Number) as ResourceId or String {
 (:settingsView)
 class SettingsGeneral extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.generalSettingsTitle});
-        addItem(new WatchUi.MenuItem(Rez.Strings.modeDisplayOrderTitle, null, :settingsGeneralModeDisplayOrder, {}));
+        Menu2.initialize({ :title => Rez.Strings.generalSettingsTitle });
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.modeDisplayOrderTitle,
+                null,
+                :settingsGeneralModeDisplayOrder,
+                {}
+            )
+        );
         addItem(new WatchUi.MenuItem(Rez.Strings.modeTitle, null, :settingsGeneralMode, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.uiModeTitle, null, :settingsGeneralModeUiMode, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.elevationModeTitle, null, :settingsGeneralModeElevationMode, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.recalculateIntervalSTitle, null, :settingsGeneralRecalculateIntervalS, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.renderModeTitle, null, :settingsGeneralRenderMode, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.centerUserOffsetYTitle, null, :settingsGeneralCenterUserOffsetY, {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.displayLatLongTitle, null, :settingsGeneralDisplayLatLong, false, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.mapMoveScreenSizeTitle, null, :settingsGeneralMapMoveScreenSize, {}));
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.uiModeTitle, null, :settingsGeneralModeUiMode, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.elevationModeTitle,
+                null,
+                :settingsGeneralModeElevationMode,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.recalculateIntervalSTitle,
+                null,
+                :settingsGeneralRecalculateIntervalS,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.renderModeTitle, null, :settingsGeneralRenderMode, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.centerUserOffsetYTitle,
+                null,
+                :settingsGeneralCenterUserOffsetY,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.displayLatLongTitle,
+                null,
+                :settingsGeneralDisplayLatLong,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.mapMoveScreenSizeTitle,
+                null,
+                :settingsGeneralMapMoveScreenSize,
+                {}
+            )
+        );
         rerender();
     }
 
@@ -357,13 +439,45 @@ function getTrackPointReductionMethodString(mode as Number) as ResourceId or Str
 (:settingsView)
 class SettingsTrack extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.trackSettingsTitle});
-        addItem(new WatchUi.MenuItem(Rez.Strings.maxTrackPointsTitle, null, :settingsTrackMaxTrackPoints, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.trackStyleTitle, null, :settingsTrackTrackStyle, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.trackWidthTitle, null, :settingsTrackTrackWidth, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.minTrackPointDistanceMTitle, null, :settingsTrackMinTrackPointDistanceM, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.trackPointReductionMethodTitle, null, :settingTrackTrackPointReductionMethod, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.useTrackAsHeadingSpeedMPSTitle, null, :settingsTrackUseTrackAsHeadingSpeedMPS, {}));
+        Menu2.initialize({ :title => Rez.Strings.trackSettingsTitle });
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.maxTrackPointsTitle,
+                null,
+                :settingsTrackMaxTrackPoints,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.trackStyleTitle, null, :settingsTrackTrackStyle, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.trackWidthTitle, null, :settingsTrackTrackWidth, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.minTrackPointDistanceMTitle,
+                null,
+                :settingsTrackMinTrackPointDistanceM,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.trackPointReductionMethodTitle,
+                null,
+                :settingTrackTrackPointReductionMethod,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.useTrackAsHeadingSpeedMPSTitle,
+                null,
+                :settingsTrackUseTrackAsHeadingSpeedMPS,
+                {}
+            )
+        );
         rerender();
     }
 
@@ -393,10 +507,31 @@ class SettingsTrack extends WatchUi.Menu2 {
 (:settingsView)
 class SettingsDataField extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.dataFieldSettingsTitle});
-        addItem(new WatchUi.MenuItem(Rez.Strings.topDataTypeTitle, null, :settingsDataFieldTopDataType, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.bottomDataTypeTitle, null, :settingsDataFieldBottomDataType, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.dataFieldTextSizeTitle, null, :settingsDataFieldTextSize, {}));
+        Menu2.initialize({ :title => Rez.Strings.dataFieldSettingsTitle });
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.topDataTypeTitle,
+                null,
+                :settingsDataFieldTopDataType,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.bottomDataTypeTitle,
+                null,
+                :settingsDataFieldBottomDataType,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.dataFieldTextSizeTitle,
+                null,
+                :settingsDataFieldTextSize,
+                {}
+            )
+        );
         rerender();
     }
 
@@ -435,21 +570,112 @@ function getPackingFormatString(mode as Number) as ResourceId or String {
 (:settingsView)
 class SettingsMap extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.mapsettingsTitle});
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.mapEnabledTitle, null, :settingsMapEnabled, false, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.tileServerSettingsTitle, null, :settingsMapTileServerSettings, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.mapStorageSettingsTitle, null, :settingsMapStorageSettings, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.tileCacheSizeTitle, null, :settingsMapTileCacheSize, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.tileCachePaddingTitle, null, :settingsMapTileCachePadding, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.maxPendingWebRequests, null, :settingsMapMaxPendingWebRequests, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.disableMapsFailureCountTitleShort, null, :settingsMapDisableMapsFailureCount, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.httpErrorTileTTLSTitle, null, :settingsMapHttpErrorTileTTLS, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.errorTileTTLSTitle, null, :settingsMapErrorTileTTLS, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.fixedLatitude, null, :settingsMapFixedLatitude, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.fixedLongitude, null, :settingsMapFixedLongitude, {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.scaleRestrictedToTileLayersTitle, null, :settingsMapScaleRestrictedToTileLayers, false, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.packingFormatTitle, null, :settingsMapPackingFormat, {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.useDrawBitmapTitle, null, :settingsMapUseDrawBitmap, false, {}));
+        Menu2.initialize({ :title => Rez.Strings.mapsettingsTitle });
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.mapEnabledTitle,
+                null,
+                :settingsMapEnabled,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.tileServerSettingsTitle,
+                null,
+                :settingsMapTileServerSettings,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.mapStorageSettingsTitle,
+                null,
+                :settingsMapStorageSettings,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.tileCacheSizeTitle,
+                null,
+                :settingsMapTileCacheSize,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.tileCachePaddingTitle,
+                null,
+                :settingsMapTileCachePadding,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.maxPendingWebRequests,
+                null,
+                :settingsMapMaxPendingWebRequests,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.disableMapsFailureCountTitleShort,
+                null,
+                :settingsMapDisableMapsFailureCount,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.httpErrorTileTTLSTitle,
+                null,
+                :settingsMapHttpErrorTileTTLS,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.errorTileTTLSTitle,
+                null,
+                :settingsMapErrorTileTTLS,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.fixedLatitude, null, :settingsMapFixedLatitude, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.fixedLongitude, null, :settingsMapFixedLongitude, {})
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.scaleRestrictedToTileLayersTitle,
+                null,
+                :settingsMapScaleRestrictedToTileLayers,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.packingFormatTitle,
+                null,
+                :settingsMapPackingFormat,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.useDrawBitmapTitle,
+                null,
+                :settingsMapUseDrawBitmap,
+                false,
+                {}
+            )
+        );
         addItem(new WatchUi.MenuItem(Rez.Strings.attribution, null, :settingsMapAttribution, {}));
         rerender();
     }
@@ -569,15 +795,28 @@ function getMapChoiceString(mapChoice as Number) as ResourceId {
 (:settingsView)
 class SettingsTileServer extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.tileServerSettingsTitle});
+        Menu2.initialize({ :title => Rez.Strings.tileServerSettingsTitle });
         addItem(new WatchUi.MenuItem(Rez.Strings.mapChoice, null, :settingsMapChoice, {}));
         addItem(new WatchUi.MenuItem(Rez.Strings.tileUrlTitle, null, :settingsTileUrl, {}));
         addItem(new WatchUi.MenuItem(Rez.Strings.authTokenTitle, null, :settingsAuthToken, {}));
         addItem(new WatchUi.MenuItem(Rez.Strings.layerTileSize, null, :settingsMapTileSize, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.scaledTileSizeTitle, null, :settingsMapScaledTileSize, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.tileLayerMaxTitle, null, :settingsMapTileLayerMax, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.tileLayerMinTitle, null, :settingsMapTileLayerMin, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.fullTileSizeTitle, null, :settingsMapFullTileSize, {}));
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.scaledTileSizeTitle,
+                null,
+                :settingsMapScaledTileSize,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.tileLayerMaxTitle, null, :settingsMapTileLayerMax, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.tileLayerMinTitle, null, :settingsMapTileLayerMin, {})
+        );
+        addItem(
+            new WatchUi.MenuItem(Rez.Strings.fullTileSizeTitle, null, :settingsMapFullTileSize, {})
+        );
         rerender();
     }
 
@@ -598,16 +837,82 @@ class SettingsTileServer extends WatchUi.Menu2 {
 (:settingsView)
 class SettingsMapStorage extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.mapStorageSettingsTitle});
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.cacheTilesInStorageTitle, null, :settingsMapStorageCacheTilesInStorage, false, {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.storageMapTilesOnlyTitle, null, :settingsMapStorageStorageMapTilesOnly, false, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.storageTileCacheSizeTitle, null, :settingsMapStorageStorageTileCacheSize, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.storageTileCachePageCountTitle, null, :settingsMapStorageStorageTileCachePageCount, {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.storageSeedBoundingBoxTitle, null, :settingsMapStorageStorageSeedBoundingBox, false, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.storageSeedRouteDistanceMTitle, null, :settingsMapStorageStorageSeedRouteDistanceM, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.cacheCurrentArea, null, :settingsMapStorageCacheCurrentArea, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.cancelCacheDownload, null, :settingsMapStorageCancelCacheDownload, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.clearCachedTiles, null, :settingsMapStorageClearCachedTiles, {}));
+        Menu2.initialize({ :title => Rez.Strings.mapStorageSettingsTitle });
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.cacheTilesInStorageTitle,
+                null,
+                :settingsMapStorageCacheTilesInStorage,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.storageMapTilesOnlyTitle,
+                null,
+                :settingsMapStorageStorageMapTilesOnly,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.storageTileCacheSizeTitle,
+                null,
+                :settingsMapStorageStorageTileCacheSize,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.storageTileCachePageCountTitle,
+                null,
+                :settingsMapStorageStorageTileCachePageCount,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.storageSeedBoundingBoxTitle,
+                null,
+                :settingsMapStorageStorageSeedBoundingBox,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.storageSeedRouteDistanceMTitle,
+                null,
+                :settingsMapStorageStorageSeedRouteDistanceM,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.cacheCurrentArea,
+                null,
+                :settingsMapStorageCacheCurrentArea,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.cancelCacheDownload,
+                null,
+                :settingsMapStorageCancelCacheDownload,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.clearCachedTiles,
+                null,
+                :settingsMapStorageClearCachedTiles,
+                {}
+            )
+        );
         rerender();
     }
 
@@ -642,28 +947,101 @@ class SettingsMapStorage extends WatchUi.Menu2 {
             "/" +
             settings.storageTileCacheSize;
         safeSetSubLabel(me, :settingsMapStorageCacheCurrentArea, cacheSize);
-        safeSetSubLabel(me, :settingsMapStorageCancelCacheDownload, cachedValues.seeding() ? "Seeding" : "");
+        safeSetSubLabel(
+            me,
+            :settingsMapStorageCancelCacheDownload,
+            cachedValues.seeding() ? "Seeding" : ""
+        );
     }
 }
 
-function alertsCommonMenu(menu as WatchUi.Menu2) as Void
-{
-    menu.addItem(new WatchUi.MenuItem(Rez.Strings.offTrackAlertsDistanceMTitle, null, :settingsAlertsOffTrackDistanceM, {}));
-    menu.addItem(new WatchUi.MenuItem(Rez.Strings.offTrackCheckIntervalSTitle, null, :settingsAlertsOffTrackCheckIntervalS, {}));
-    menu.addItem(new WatchUi.ToggleMenuItem(Rez.Strings.drawLineToClosestPointTitle, null, :settingsAlertsDrawLineToClosestPoint, false, {}));
-    menu.addItem(new WatchUi.ToggleMenuItem(Rez.Strings.drawCheveronsTitle, null, :settingsAlertsDrawCheverons, false, {}));
-    menu.addItem(new WatchUi.ToggleMenuItem(Rez.Strings.offTrackWrongDirectionTitle, null, :settingsAlertsOffTrackWrongDirection, false, {}));
-    menu.addItem(new WatchUi.ToggleMenuItem(Rez.Strings.enableOffTrackAlertsTitle, null, :settingsAlertsEnabled, false, {}));
-    menu.addItem(new WatchUi.MenuItem(Rez.Strings.turnAlertTimeSTitle, null, :settingsAlertsTurnAlertTimeS, {}));
-    menu.addItem(new WatchUi.MenuItem(Rez.Strings.minTurnAlertDistanceMTitle, null, :settingsAlertsMinTurnAlertDistanceM, {}));
-    menu.addItem(new WatchUi.MenuItem(Rez.Strings.alertTypeTitle, null, :settingsAlertsAlertType, {}));
+function alertsCommonMenu(menu as WatchUi.Menu2) as Void {
+    menu.addItem(
+        new WatchUi.MenuItem(
+            Rez.Strings.offTrackAlertsDistanceMTitle,
+            null,
+            :settingsAlertsOffTrackDistanceM,
+            {}
+        )
+    );
+    menu.addItem(
+        new WatchUi.MenuItem(
+            Rez.Strings.offTrackCheckIntervalSTitle,
+            null,
+            :settingsAlertsOffTrackCheckIntervalS,
+            {}
+        )
+    );
+    menu.addItem(
+        new WatchUi.ToggleMenuItem(
+            Rez.Strings.drawLineToClosestPointTitle,
+            null,
+            :settingsAlertsDrawLineToClosestPoint,
+            false,
+            {}
+        )
+    );
+    menu.addItem(
+        new WatchUi.ToggleMenuItem(
+            Rez.Strings.drawCheveronsTitle,
+            null,
+            :settingsAlertsDrawCheverons,
+            false,
+            {}
+        )
+    );
+    menu.addItem(
+        new WatchUi.ToggleMenuItem(
+            Rez.Strings.offTrackWrongDirectionTitle,
+            null,
+            :settingsAlertsOffTrackWrongDirection,
+            false,
+            {}
+        )
+    );
+    menu.addItem(
+        new WatchUi.ToggleMenuItem(
+            Rez.Strings.enableOffTrackAlertsTitle,
+            null,
+            :settingsAlertsEnabled,
+            false,
+            {}
+        )
+    );
+    menu.addItem(
+        new WatchUi.MenuItem(
+            Rez.Strings.turnAlertTimeSTitle,
+            null,
+            :settingsAlertsTurnAlertTimeS,
+            {}
+        )
+    );
+    menu.addItem(
+        new WatchUi.MenuItem(
+            Rez.Strings.minTurnAlertDistanceMTitle,
+            null,
+            :settingsAlertsMinTurnAlertDistanceM,
+            {}
+        )
+    );
+    menu.addItem(
+        new WatchUi.MenuItem(Rez.Strings.alertTypeTitle, null, :settingsAlertsAlertType, {})
+    );
 }
 
 (:settingsView)
 class SettingsMapDisabled extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.mapsettingsTitle});
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.mapEnabledTitle, null, :settingsMapEnabled, false, {}));
+        Menu2.initialize({ :title => Rez.Strings.mapsettingsTitle });
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.mapEnabledTitle,
+                null,
+                :settingsMapEnabled,
+                false,
+                {}
+            )
+        );
         rerender();
     }
 
@@ -675,7 +1053,7 @@ class SettingsMapDisabled extends WatchUi.Menu2 {
 (:settingsView)
 class SettingsAlerts extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.offTrackAlertsGroupTitle});
+        Menu2.initialize({ :title => Rez.Strings.offTrackAlertsGroupTitle });
         alertsCommonMenu(self);
         rerender();
     }
@@ -733,7 +1111,7 @@ function alertsCommon(menu as WatchUi.Menu2, settings as Settings) as Void {
 (:settingsView)
 class SettingsAlertsDisabled extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.offTrackAlertsGroupTitle});
+        Menu2.initialize({ :title => Rez.Strings.offTrackAlertsGroupTitle });
         alertsCommonMenu(self);
         rerender();
     }
@@ -747,15 +1125,79 @@ class SettingsAlertsDisabled extends WatchUi.Menu2 {
 (:settingsView)
 class SettingsColours extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.coloursTitle});
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.trackColourTitle, null, :settingsColoursTrackColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.trackColour2Title, null, :settingsColoursTrackColour2, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.defaultRouteColourTitle, null, :settingsColoursDefaultRouteColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.elevationColourTitle, null, :settingsColoursElevationColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.userColour, null, :settingsColoursUserColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.normalModeColour, null, :settingsColoursNormalModeColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.uiColour, null, :settingsColoursUiColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.debugColour, null, :settingsColoursDebugColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
+        Menu2.initialize({ :title => Rez.Strings.coloursTitle });
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.trackColourTitle,
+                null,
+                :settingsColoursTrackColour,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.trackColour2Title,
+                null,
+                :settingsColoursTrackColour2,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.defaultRouteColourTitle,
+                null,
+                :settingsColoursDefaultRouteColour,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.elevationColourTitle,
+                null,
+                :settingsColoursElevationColour,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.userColour,
+                null,
+                :settingsColoursUserColour,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.normalModeColour,
+                null,
+                :settingsColoursNormalModeColour,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.uiColour,
+                null,
+                :settingsColoursUiColour,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.debugColour,
+                null,
+                :settingsColoursDebugColour,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
         rerender();
     }
 
@@ -783,14 +1225,69 @@ class SettingsColours extends WatchUi.Menu2 {
 (:settingsView)
 class SettingsDebug extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({:title=>Rez.Strings.debugSettingsTitle});
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.drawLineToClosestTrackTitle, null, :settingsDebugDrawLineToClosestTrack, false, {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.showTileBordersTitle, null, :settingsDebugShowTileBorders, false, {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.showErrorTileMessagesTitle, null, :settingsDebugShowErrorTileMessages, false, {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.tileErrorColourTitle, null, :settingsDebugTileErrorColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.drawHitBoxesTitle, null, :settingsDebugDrawHitBoxes, false, {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.showDirectionPointsTitle, null, :settingsDebugShowDirectionPoints, false, {}));
-        addItem(new WatchUi.MenuItem(Rez.Strings.showDirectionPointTextUnderIndexTitle, null, :settingsDebugShowDirectionPointTextUnderIndex, {}));
+        Menu2.initialize({ :title => Rez.Strings.debugSettingsTitle });
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.drawLineToClosestTrackTitle,
+                null,
+                :settingsDebugDrawLineToClosestTrack,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.showTileBordersTitle,
+                null,
+                :settingsDebugShowTileBorders,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.showErrorTileMessagesTitle,
+                null,
+                :settingsDebugShowErrorTileMessages,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.tileErrorColourTitle,
+                null,
+                :settingsDebugTileErrorColour,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.drawHitBoxesTitle,
+                null,
+                :settingsDebugDrawHitBoxes,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.showDirectionPointsTitle,
+                null,
+                :settingsDebugShowDirectionPoints,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.MenuItem(
+                Rez.Strings.showDirectionPointTextUnderIndexTitle,
+                null,
+                :settingsDebugShowDirectionPointTextUnderIndex,
+                {}
+            )
+        );
         rerender();
     }
 
@@ -816,12 +1313,44 @@ class SettingsRoute extends WatchUi.Menu2 {
     var routeId as Number;
     var parent as SettingsRoutes;
     function initialize(settings as Settings, routeId as Number, parent as SettingsRoutes) {
-        Menu2.initialize({:title=>Rez.Strings.routesTitle});
+        Menu2.initialize({ :title => Rez.Strings.routesTitle });
         addItem(new WatchUi.MenuItem(Rez.Strings.routeName, null, :settingsRouteName, {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.routeEnabled, null, :settingsRouteEnabled, false, {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.routeColourTitle, null, :settingsRouteColour, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.IconMenuItem(Rez.Strings.routeColour2Title, null, :settingsRouteColour2, new ColourIcon(Graphics.COLOR_BLACK), {}));
-        addItem(new WatchUi.ToggleMenuItem(Rez.Strings.routeReversed, null, :settingsRouteReversed, false, {}));
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.routeEnabled,
+                null,
+                :settingsRouteEnabled,
+                false,
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.routeColourTitle,
+                null,
+                :settingsRouteColour,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.IconMenuItem(
+                Rez.Strings.routeColour2Title,
+                null,
+                :settingsRouteColour2,
+                new ColourIcon(Graphics.COLOR_BLACK),
+                {}
+            )
+        );
+        addItem(
+            new WatchUi.ToggleMenuItem(
+                Rez.Strings.routeReversed,
+                null,
+                :settingsRouteReversed,
+                false,
+                {}
+            )
+        );
         addItem(new WatchUi.MenuItem(Rez.Strings.routeStyleTitle, null, :settingsRouteStyle, {}));
         addItem(new WatchUi.MenuItem(Rez.Strings.routeWidthTitle, null, :settingsRouteWidth, {}));
         addItem(new WatchUi.MenuItem(Rez.Strings.routeDelete, null, :settingsRouteDelete, {}));
