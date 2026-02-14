@@ -157,3 +157,7 @@ etrextouch.excludeAnnotations = $(etrextouch.excludeAnnotations);rectangle;nosca
 etrextouch.resourcePath = $(etrextouch.resourcePath);resources-low-memory
 d2mach2.excludeAnnotations = $(d2mach2.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
 d2mach2.resourcePath = $(d2mach2.resourcePath);resources-low-memory
+gpsmaph1.excludeAnnotations = $(gpsmaph1.excludeAnnotations);round;noscaledbitmap;$(lowMemExcludes)
+gpsmaph1.resourcePath = $(gpsmaph1.resourcePath);resources-low-memory
+instinctcrossoveramoled.excludeAnnotations = $(instinctcrossoveramoled.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+instinctcrossoveramoled.resourcePath = $(instinctcrossoveramoled.resourcePath);resources-low-memory
