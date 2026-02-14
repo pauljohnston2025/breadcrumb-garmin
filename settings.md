@@ -656,7 +656,7 @@ How often, in seconds, an alert should fire. Alerts will continue firing until y
 Should be set to a valid hex code RRGGBB not all are required eg. FF00 will render as green
 
 Track Colour - The colour of the in progress track  
-Track Colour 2 - The secondary colour of the in progress track (only used in some track styles) 
+Track Colour 2 - The secondary colour of the in progress track (only used in some track styles)  
 Default Route Colour - The default colour of newly loaded routes
 Elevation Colour - The colour of the scale/numbers on the elevation page  
 User Colour - The colour of the user triangle (current user position)  
