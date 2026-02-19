@@ -39,7 +39,7 @@ The current mirrors are:
   * Supports more features on more devices (the app has larger memory limits than a datafield)
 * [BreadcrumbAppGlance](https://github.com/pauljohnston2025/breadcrumb-garmin-app-glance)
   * [Upstream mirror - BreadcrumbApp](https://github.com/pauljohnston2025/breadcrumb-garmin-app)
-  * [Garmin Store](https://apps.garmin.com/apps/54ea0621-918f-40ec-864e-d3fc7eb6ecbf)
+  * [Garmin Store](https://apps.garmin.com/apps/be3ca3aa-edef-4408-81d8-fe56011fafa6)
   * Type - App
   * Same as BreadcrumbApp but removed activity recording (this is so it can be opened from a glance view whilst recording using a garmin native activity)
 * [LWBreadcrumbDataField](https://github.com/pauljohnston2025/breadcrumb-garmin-light-weight)
