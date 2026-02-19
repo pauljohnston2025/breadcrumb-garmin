@@ -37,6 +37,11 @@ The current mirrors are:
     * Support for non-touch screen devices, as it can handle button press events
     * Touch screens can drag the map around to pan
   * Supports more features on more devices (the app has larger memory limits than a datafield)
+* [BreadcrumbAppGlance](https://github.com/pauljohnston2025/breadcrumb-garmin-app-glance)
+  * [Upstream mirror - BreadcrumbApp](https://github.com/pauljohnston2025/breadcrumb-garmin-app)
+  * [Garmin Store](https://apps.garmin.com/apps/)
+  * Type - App
+  * Same as BreadcrumbApp but removed activity recording (this is so it can be opened from a glance view whilst recording using a garmin native activity)
 * [LWBreadcrumbDataField](https://github.com/pauljohnston2025/breadcrumb-garmin-light-weight)
   * [Upstream mirror - BreadcrumbDataField](https://github.com/pauljohnston2025/breadcrumb-garmin)
   * [Garmin Store](https://apps.garmin.com/apps/3506adc5-7098-42ff-8c3f-601de1184aa5)
