@@ -96,6 +96,14 @@
             <listEntry value="10">@Strings.dataTypeDescent</listEntry>
             <listEntry value="11">@Strings.dataTypeAvgPace</listEntry>
             <listEntry value="12">@Strings.dataTypeCurPace</listEntry>
+            <listEntry value="13">@Strings.dataTypeWallClock</listEntry>
+            <listEntry value="14">@Strings.dataTypeCurLapTime</listEntry>
+            <listEntry value="15">@Strings.dataTypeCurLapPace</listEntry>
+            <listEntry value="16">@Strings.dataTypeLastLapTime</listEntry>
+            <listEntry value="17">@Strings.dataTypeLastLapPace</listEntry>
+            <listEntry value="18">@Strings.dataTypeGrade</listEntry>
+            <listEntry value="19">@Strings.dataTypeHeading</listEntry>
+            <listEntry value="20">@Strings.dataTypeGPSAccuracy</listEntry>
         </settingConfig>
     </setting>
 
@@ -114,6 +122,14 @@
             <listEntry value="10">@Strings.dataTypeDescent</listEntry>
             <listEntry value="11">@Strings.dataTypeAvgPace</listEntry>
             <listEntry value="12">@Strings.dataTypeCurPace</listEntry>
+            <listEntry value="13">@Strings.dataTypeWallClock</listEntry>
+            <listEntry value="14">@Strings.dataTypeCurLapTime</listEntry>
+            <listEntry value="15">@Strings.dataTypeCurLapPace</listEntry>
+            <listEntry value="16">@Strings.dataTypeLastLapTime</listEntry>
+            <listEntry value="17">@Strings.dataTypeLastLapPace</listEntry>
+            <listEntry value="18">@Strings.dataTypeGrade</listEntry>
+            <listEntry value="19">@Strings.dataTypeHeading</listEntry>
+            <listEntry value="20">@Strings.dataTypeGPSAccuracy</listEntry>
         </settingConfig>
     </setting>
 

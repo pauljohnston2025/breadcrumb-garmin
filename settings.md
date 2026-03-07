@@ -273,7 +273,14 @@ The currently supported fields are:
 * Total Descent - Total elevation loss
 * Avg Pace - Average pace
 * Pace - Current pace
-
+* Time of Day - Current wall clock time
+* Cur. Lap Time - Duration of the current lap
+* Cur. Lap Pace - Average pace of the current lap
+* Last Lap Time - Duration of the previous completed lap
+* Last Lap Pace - Average pace of the previous completed lap
+* Grade - Current incline or decline percentage
+* Heading - Current compass direction of travel
+* GPS Accuracy - Current strength of satellite signal
 
 ### Bottom Data Field Type
 

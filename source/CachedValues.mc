@@ -190,6 +190,21 @@ class CachedValues {
     (:storage)
     var seedingLastTileY as Number = 0;
 
+    var _lapStartTime as Number = 0;
+    var _lapStartDistance as Float = 0f;
+    var _lastLapDuration as Number = 0;
+    var _lastLapDistance as Float = 0f;
+
+    function onTimerLap() as Void {
+        var info = Activity.getActivityInfo();
+        if (info != null && info.elapsedTime != null && info.elapsedDistance != null) {
+            _lastLapDuration = info.elapsedTime - _lapStartTime;
+            _lastLapDistance = info.elapsedDistance - _lapStartDistance;
+            _lapStartTime = info.elapsedTime;
+            _lapStartDistance = info.elapsedDistance;
+        }
+    }
+
     function atMinTileLayer() as Boolean {
         return tileZ == _settings.tileLayerMin;
     }

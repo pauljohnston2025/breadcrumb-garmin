@@ -198,6 +198,22 @@ function getDataTypeString(type as Number) as ResourceId or String {
             return Rez.Strings.dataTypeAvgPace;
         case DATA_TYPE_CURRENT_PACE:
             return Rez.Strings.dataTypeCurPace;
+        case DATA_TYPE_WALL_CLOCK:
+            return Rez.Strings.dataTypeWallClock;
+        case DATA_TYPE_CURRENT_LAP_TIME:
+            return Rez.Strings.dataTypeCurLapTime;
+        case DATA_TYPE_CURRENT_LAP_PACE:
+            return Rez.Strings.dataTypeCurLapPace;
+        case DATA_TYPE_LAST_LAP_TIME:
+            return Rez.Strings.dataTypeLastLapTime;
+        case DATA_TYPE_LAST_LAP_PACE:
+            return Rez.Strings.dataTypeLastLapPace;
+        case DATA_TYPE_GRADE:
+            return Rez.Strings.dataTypeGrade;
+        case DATA_TYPE_HEADING:
+            return Rez.Strings.dataTypeHeading;
+        case DATA_TYPE_GPS_ACCURACY:
+            return Rez.Strings.dataTypeGPSAccuracy;
         default:
             return "";
     }

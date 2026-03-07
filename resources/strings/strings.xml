@@ -198,6 +198,14 @@
     <string id="dataTypeDescent">Total Descent</string>
     <string id="dataTypeAvgPace">Avg Pace</string>
     <string id="dataTypeCurPace">Pace</string>
+    <string id="dataTypeWallClock">Time of Day</string>
+    <string id="dataTypeCurLapTime">Cur. Lap Time</string>
+    <string id="dataTypeCurLapPace">Cur. Lap Pace</string>
+    <string id="dataTypeLastLapTime">Last Lap Time</string>
+    <string id="dataTypeLastLapPace">Last Lap Pace</string>
+    <string id="dataTypeGrade">Grade</string>
+    <string id="dataTypeHeading">Heading</string>
+    <string id="dataTypeGPSAccuracy">GPS Accuracy</string>
 
     <string id="dataFieldTextSizeTitle">Data Field Text Size</string>
     <string id="fontXTiny">Extra Tiny</string>
