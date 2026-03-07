@@ -247,15 +247,15 @@ class BreadcrumbRenderer {
             renderTextMetric(dc, y, timeStr);
         } else if (type == DATA_TYPE_CURRENT_LAP_TIME) {
             if (info.elapsedTime != null) {
-                var lapTime = info.elapsedTime - _cachedValues._lapStartTime;
+                var lapTime = (info.elapsedTime as Number) - _cachedValues._lapStartTime;
                 renderTimeMetric(dc, y, lapTime);
             } else {
                 renderTimeMetric(dc, y, null);
             }
         } else if (type == DATA_TYPE_CURRENT_LAP_PACE) {
             if (info.elapsedTime != null && info.elapsedDistance != null) {
-                var lapTime = info.elapsedTime - _cachedValues._lapStartTime;
-                var lapDist = info.elapsedDistance - _cachedValues._lapStartDistance;
+                var lapTime = (info.elapsedTime as Number) - _cachedValues._lapStartTime;
+                var lapDist = (info.elapsedDistance as Float) - _cachedValues._lapStartDistance;
 
                 // Avoid division by zero and ensure enough data for a meaningful pace
                 if (lapDist > 1.0f) {
@@ -272,14 +272,6 @@ class BreadcrumbRenderer {
             renderTimeMetric(dc, y, _cachedValues._lastLapDuration);
         } else if (type == DATA_TYPE_LAST_LAP_PACE) {
             if (_cachedValues._lastLapDistance > 0) {
-                // Calculate pace: (seconds) / (distance in km/mi)
-                // Note: convert ms to seconds
-                var pace =
-                    _cachedValues._lastLapDuration /
-                    1000.0f /
-                    (_cachedValues._lastLapDistance / 1000.0f); // this is seconds per km
-                // Actually, your renderPaceMetric expects speedMps (meters per second)
-                // So we use: _lastLapDistance / (_lastLapDuration / 1000.0f)
                 var speedMps =
                     _cachedValues._lastLapDistance / (_cachedValues._lastLapDuration / 1000.0f);
                 renderPaceMetric(dc, y, speedMps);
@@ -288,8 +280,8 @@ class BreadcrumbRenderer {
             }
         } else if (type == DATA_TYPE_GRADE) {
             if (info.altitude != null && info.elapsedDistance != null) {
-                var currentAlt = info.altitude.toFloat();
-                var currentDist = info.elapsedDistance.toFloat();
+                var currentAlt = info.altitude as Float;
+                var currentDist = info.elapsedDistance as Float;
 
                 // Only update the calculation if we have traveled 10 meters
                 // since the last calculation to smooth out noise
@@ -311,7 +303,7 @@ class BreadcrumbRenderer {
             }
         } else if (type == DATA_TYPE_HEADING) {
             if (info.currentHeading != null) {
-                var degrees = Math.toDegrees(info.currentHeading);
+                var degrees = Math.toDegrees(info.currentHeading as Float);
                 if (degrees < 0) {
                     degrees += 360;
                 }
@@ -334,7 +326,7 @@ class BreadcrumbRenderer {
             renderTextMetric(dc, y, label);
         } else if (type == DATA_TYPE_CURRENT_LAP_DISTANCE) {
             if (info.elapsedDistance != null) {
-                var lapDist = info.elapsedDistance - _cachedValues._lapStartDistance;
+                var lapDist = (info.elapsedDistance as Float) - _cachedValues._lapStartDistance;
                 renderDistanceMetric(dc, y, lapDist);
             } else {
                 renderDistanceMetric(dc, y, null);

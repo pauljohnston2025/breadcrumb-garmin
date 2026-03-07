@@ -35,7 +35,7 @@ class PositionPickerGeneric {
         radius as Number,
         numPoints as Number
     ) as Array<[Float, Float]> {
-        var points = new [numPoints];
+        var points = new [numPoints] as Array<[Float, Float]>;
         var angleIncrement = (2 * Math.PI) / numPoints;
 
         // Shift the starting position to -90 degrees (Top of the screen)
@@ -53,7 +53,7 @@ class PositionPickerGeneric {
 
         if (numPoints > 1) {
             halfHitboxSize =
-                distance(points[0][0] as Float, points[0][1]as Float, points[1][0]as Float, points[1][1]as Float).toNumber() / 2;
+                distance(points[0][0], points[0][1], points[1][0], points[1][1]).toNumber() / 2;
         }
 
         return points as Array<[Float, Float]>;

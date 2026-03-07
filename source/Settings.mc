@@ -2575,7 +2575,6 @@ class Settings {
         setMinTrackPointDistanceMSideEffect();
         recomputeTrackTexture();
         for (var i = 0; i < routes.size(); ++i) {
-            var routeId = routes[i]["routeId"] as Number;
             recomputeRouteTexture(i);
         }
     }
