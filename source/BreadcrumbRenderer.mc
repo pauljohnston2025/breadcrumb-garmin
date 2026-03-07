@@ -243,7 +243,20 @@ class BreadcrumbRenderer {
             renderPaceMetric(dc, y, info.currentSpeed);
         } else if (type == DATA_TYPE_WALL_CLOCK) {
             var clockTime = System.getClockTime();
-            var timeStr = Lang.format("$1$:$2$", [clockTime.hour, clockTime.min.format("%02d")]);
+            var hour = clockTime.hour;
+            var timeStr = "";
+            if (settings.is24Hour) {
+                // 24-hour format: 0-23
+                timeStr = Lang.format("$1$:$2$", [
+                    hour.format("%02d"),
+                    clockTime.min.format("%02d"),
+                ]);
+            } else {
+                // 12-hour format: 1-12
+                hour = hour % 12;
+                hour = hour == 0 ? 12 : hour; // Convert 0 to 12
+                timeStr = Lang.format("$1$:$2$", [hour, clockTime.min.format("%02d")]);
+            }
             renderTextMetric(dc, y, timeStr);
         } else if (type == DATA_TYPE_CURRENT_LAP_TIME) {
             if (info.elapsedTime != null) {
@@ -2276,7 +2289,10 @@ class BreadcrumbRenderer {
             return false; // something else is running, do not handle touch events
         }
 
-        if (!settings.mapEnabled || (!settings.storageMapTilesOnly && !settings.cacheTilesInStorage)) {
+        if (
+            !settings.mapEnabled ||
+            (!settings.storageMapTilesOnly && !settings.cacheTilesInStorage)
+        ) {
             // we do not allow storage tiles, and the "G" is hidden
             _startCacheTilesProgress = 0;
             return false; // maps are not enabled, we hide the start symbol in this case
