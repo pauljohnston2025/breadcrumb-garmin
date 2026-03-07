@@ -822,17 +822,14 @@ class Settings {
     // this is just to ry and limit it for users when they ar simply selecting a new map choice
     (:highMemory)
     function maxTileCacheSizeGuess() as Number {
-        var ROUTE_SIZE_BYTES = 7000; // a large route loaded onto the device
-        // var MAX_CACHE_SIZE_USER_PROTECT_BYTES = 80 /*tiles*/ *64*64 /*tile size*/ * BYTES_PER_PIXEL;
-        var availableMemBytes = System.getSystemStats().totalMemory - 116000; // magic number we saw in testing with 0 routes loaded
-        availableMemBytes -= ROUTE_SIZE_BYTES * routeMax();
-        var OVERHEAD_PER_BITMAP_BYTES = 650; // larger image tiles seem to work better (we want smaller tiles to be effected by this more)
-        // I pretty much want perfectSize to be ~20 for large image tiles (192*192) and ~90 for small buffered bitmap tiles (64*64)
-        // so adjust OVERHEAD_PER_BITMAP_BYTES accordingly
-        // all calcs done on venu2s, smaller memory watches will be smaller
-        var perfectSize =
-            availableMemBytes / (tileSize * tileSize * BYTES_PER_PIXEL + OVERHEAD_PER_BITMAP_BYTES);
-        return maxN(1, Math.floor(perfectSize * 0.85).toNumber()); // give ourselves a bit of a buffer
+        // this guess is off for large memeory devices, because the graphics memory pool is the limitation, and it has no relation to the standard app memory pool
+        // so hard coding guess instead
+        if (tileUrl.find(COMPANION_APP_TILE_URL_MATCH) != null) {
+            // companion app is normally 64*64, thats the largest tile they can have without OOM, so cap at a reasonable value
+            return 64;
+        }
+
+        return 10;
     }
 
     function maxStorageTileCacheSizeGuess() as Number {
