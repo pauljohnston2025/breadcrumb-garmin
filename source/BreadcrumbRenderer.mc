@@ -246,9 +246,12 @@ class BreadcrumbRenderer {
             var timeStr = Lang.format("$1$:$2$", [clockTime.hour, clockTime.min.format("%02d")]);
             renderTextMetric(dc, y, timeStr);
         } else if (type == DATA_TYPE_CURRENT_LAP_TIME) {
-            var lapTime =
-                (info.elapsedTime != null ? info.elapsedTime : 0) - _cachedValues._lapStartTime;
-            renderTimeMetric(dc, y, lapTime);
+            if (info.elapsedTime != null) {
+                var lapTime = info.elapsedTime - _cachedValues._lapStartTime;
+                renderTimeMetric(dc, y, lapTime);
+            } else {
+                renderTimeMetric(dc, y, null);
+            }
         } else if (type == DATA_TYPE_CURRENT_LAP_PACE) {
             if (info.elapsedTime != null && info.elapsedDistance != null) {
                 var lapTime = info.elapsedTime - _cachedValues._lapStartTime;
@@ -261,6 +264,8 @@ class BreadcrumbRenderer {
                 } else {
                     renderPaceMetric(dc, y, null);
                 }
+            } else {
+                renderPaceMetric(dc, y, null);
             }
         } else if (type == DATA_TYPE_LAST_LAP_TIME) {
             // Pass the duration to your existing render function
@@ -301,7 +306,8 @@ class BreadcrumbRenderer {
                 }
 
                 renderTextMetric(dc, y, _lastGrade.format("%.1f") + "%");
-                return;
+            } else {
+                renderTextMetric(dc, y, "---");
             }
         } else if (type == DATA_TYPE_HEADING) {
             if (info.currentHeading != null) {
@@ -327,8 +333,7 @@ class BreadcrumbRenderer {
             }
             renderTextMetric(dc, y, label);
         } else if (type == DATA_TYPE_CURRENT_LAP_DISTANCE) {
-            var info = Activity.getActivityInfo();
-            if (info != null && info.elapsedDistance != null) {
+            if (info.elapsedDistance != null) {
                 var lapDist = info.elapsedDistance - _cachedValues._lapStartDistance;
                 renderDistanceMetric(dc, y, lapDist);
             } else {
