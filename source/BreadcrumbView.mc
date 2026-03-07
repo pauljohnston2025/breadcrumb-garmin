@@ -272,11 +272,11 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
     function onTimerStart() as Void {
         _breadcrumbContext.track.onStartResume();
     }
-    
+
     function onTimerStop() as Void {
         _breadcrumbContext.track.onTimerStop();
     }
-    
+
     function onTimerLap() as Void {
         _cachedValues.onTimerLap();
     }
@@ -830,7 +830,14 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                 routeWidth
             );
             if (settings.drawCheverons) {
-                renderer.renderTrackCheverons(dc, route, routeColour, routeStyle, routeTexture, routeWidth);
+                renderer.renderTrackCheverons(
+                    dc,
+                    route,
+                    routeColour,
+                    routeStyle,
+                    routeTexture,
+                    routeWidth
+                );
             }
             if (settings.showDirectionPoints || settings.showDirectionPointTextUnderIndex > 0) {
                 renderer.renderTrackDirectionPoints(dc, route, Graphics.COLOR_PURPLE);
@@ -878,7 +885,14 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
                 routeWidth
             );
             if (settings.drawCheverons) {
-                renderer.renderTrackCheveronsUnrotated(dc, route, routeColour, routeStyle, routeTexture, routeWidth);
+                renderer.renderTrackCheveronsUnrotated(
+                    dc,
+                    route,
+                    routeColour,
+                    routeStyle,
+                    routeTexture,
+                    routeWidth
+                );
             }
             if (settings.showDirectionPoints || settings.showDirectionPointTextUnderIndex > 0) {
                 renderer.renderTrackDirectionPointsUnrotated(dc, route, Graphics.COLOR_PURPLE);
@@ -1028,7 +1042,7 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             Graphics.TEXT_JUSTIFY_CENTER
         );
         y += spacing;
-        var combined = "lastWebRes: " + _breadcrumbContext.webRequestHandler._lastResult;
+        var combined = "";
 
         if (settings.storageMapTilesOnly) {
             combined = "<storage only>";
@@ -1036,9 +1050,13 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
 
         combined +=
             "  tiles: " +
-            _breadcrumbContext.tileCache._internalCache.size() + "/" +  settings.tileCacheSize + 
+            _breadcrumbContext.tileCache._internalCache.size() +
+            "/" +
+            settings.tileCacheSize +
             " s: " +
-            _breadcrumbContext.tileCache._storageTileCache._totalTileCount + "/" +  settings.storageTileCacheSize;
+            _breadcrumbContext.tileCache._storageTileCache._totalTileCount +
+            "/" +
+            settings.storageTileCacheSize;
 
         dc.drawText(x, y, Graphics.FONT_XTINY, combined, Graphics.TEXT_JUSTIFY_CENTER);
         y += spacing;
@@ -1145,10 +1163,12 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
             x,
             y,
             Graphics.FONT_XTINY,
-            "webErr: " +
+            "web err: " +
                 _breadcrumbContext.webRequestHandler._errorCount +
-                " webOk: " +
-                _breadcrumbContext.webRequestHandler._successCount,
+                " ok: " +
+                _breadcrumbContext.webRequestHandler._successCount +
+                " res: " +
+                _breadcrumbContext.webRequestHandler._lastResult,
             Graphics.TEXT_JUSTIFY_CENTER
         );
         y += spacing;
