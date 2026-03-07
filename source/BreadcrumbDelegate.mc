@@ -103,8 +103,7 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
             // reset scale to user tracking mode (we auto set it when enterring move mode so we do not get weird zooms when we are panning)
             // there is a chance the user already had a custom scale set (by pressing the +/- zoom  buttons on the track page)
             // but we will just clear it when they click 'go back to user', and it will now be whatever is in the 'zoom at pace' settings
-            renderer.returnToUser();
-            return true;
+            return renderer.returnToUser();
         }
 
         if (settings.mode == MODE_MAP_MOVE_ZOOM) {

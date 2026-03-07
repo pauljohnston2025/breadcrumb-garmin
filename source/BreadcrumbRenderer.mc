@@ -2413,8 +2413,8 @@ class BreadcrumbRenderer {
         return [false, variable];
     }
 
-    function returnToUser() as Void {
-        _cachedValues.returnToUser();
+    function returnToUser() as Boolean {
+        return _cachedValues.returnToUser();
     }
 
     // todo move most of these into a ui class
