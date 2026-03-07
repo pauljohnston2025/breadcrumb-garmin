@@ -273,6 +273,10 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
         _breadcrumbContext.track.onStartResume();
     }
     
+    function onTimerStop() as Void {
+        _breadcrumbContext.track.onTimerStop();
+    }
+    
     function onTimerLap() as Void {
         _cachedValues.onTimerLap();
     }

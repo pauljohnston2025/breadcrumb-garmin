@@ -85,6 +85,7 @@ class BreadcrumbTrack {
     var seenStartupPoints as Number = 0;
     var possibleBadPointsAdded as Number = 0;
     var inRestartMode as Boolean = true;
+    var timerStopped as Boolean = true;
     var minDistanceMScaled as Float = 5f; // SCALED
     var maxDistanceMScaled as Float = STABILITY_MAX_DISTANCE_M.toFloat(); // SCALED
 
@@ -115,7 +116,7 @@ class BreadcrumbTrack {
         lastClosePoint = null; // we want to recalculate off track, since the cheveron direction will change
         // cannot save route to storage unless we scale it back to real world coordinates
         // otherwise on reload it will be scaled all sorts of wonky
-        // writeToDisk(ROUTE_KEY); 
+        // writeToDisk(ROUTE_KEY);
     }
 
     function settingsChanged() as Void {
@@ -414,6 +415,7 @@ class BreadcrumbTrack {
         elevationMin = FLOAT_MAX;
         elevationMax = FLOAT_MIN;
         _neverStarted = false;
+        timerStopped = false;
         onStartResume();
     }
 
@@ -427,6 +429,11 @@ class BreadcrumbTrack {
         seenStartupPoints = 0;
         possibleBadPointsAdded = 0;
         inRestartMode = true;
+        timerStopped = false;
+    }
+
+    function onTimerStop() as Void {
+        timerStopped = true;
     }
 
     function handlePointAddStartup(newPoint as RectangularPoint) as [Boolean, Boolean] {
@@ -1040,6 +1047,10 @@ class BreadcrumbTrack {
 
     // returns [if a new point was added to the track, if a complex operation occurred]
     function onActivityInfo(newScaledPoint as RectangularPoint) as [Boolean, Boolean] {
+        if (timerStopped) {
+            // we are paused, do not add points or fire any alert logic
+            return [false, false];
+        }
         // todo only call this when a point is added (some points are skipped on smaller distances)
         // _breadcrumbContext.mapRenderer.loadMapTilesForPosition(newPoint, _breadcrumbContext.breadcrumbRenderer._currentScale);
 
