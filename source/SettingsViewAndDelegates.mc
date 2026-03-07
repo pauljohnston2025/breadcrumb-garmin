@@ -214,6 +214,8 @@ function getDataTypeString(type as Number) as ResourceId or String {
             return Rez.Strings.dataTypeHeading;
         case DATA_TYPE_GPS_ACCURACY:
             return Rez.Strings.dataTypeGPSAccuracy;
+        case DATA_TYPE_CURRENT_LAP_DISTANCE:
+            return Rez.Strings.dataTypeCurLapDist;
         default:
             return "";
     }

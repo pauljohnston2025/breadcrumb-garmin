@@ -259,7 +259,7 @@ class BreadcrumbRenderer {
                     var speedMps = lapDist / (lapTime / 1000.0f);
                     renderPaceMetric(dc, y, speedMps);
                 } else {
-                    renderTextMetric(dc, y, "--:--");
+                    renderPaceMetric(dc, y, null);
                 }
             }
         } else if (type == DATA_TYPE_LAST_LAP_TIME) {
@@ -279,7 +279,7 @@ class BreadcrumbRenderer {
                     _cachedValues._lastLapDistance / (_cachedValues._lastLapDuration / 1000.0f);
                 renderPaceMetric(dc, y, speedMps);
             } else {
-                renderTextMetric(dc, y, "--:--");
+                renderPaceMetric(dc, y, null);
             }
         } else if (type == DATA_TYPE_GRADE) {
             if (info.altitude != null && info.elapsedDistance != null) {
@@ -326,6 +326,14 @@ class BreadcrumbRenderer {
                 label = "Good";
             }
             renderTextMetric(dc, y, label);
+        } else if (type == DATA_TYPE_CURRENT_LAP_DISTANCE) {
+            var info = Activity.getActivityInfo();
+            if (info != null && info.elapsedDistance != null) {
+                var lapDist = info.elapsedDistance - _cachedValues._lapStartDistance;
+                renderDistanceMetric(dc, y, lapDist);
+            } else {
+                renderDistanceMetric(dc, y, null);
+            }
         }
     }
 

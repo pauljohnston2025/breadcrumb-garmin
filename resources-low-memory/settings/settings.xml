@@ -104,6 +104,7 @@
             <listEntry value="18">@Strings.dataTypeGrade</listEntry>
             <listEntry value="19">@Strings.dataTypeHeading</listEntry>
             <listEntry value="20">@Strings.dataTypeGPSAccuracy</listEntry>
+            <listEntry value="21">@Strings.dataTypeCurLapDist</listEntry>
         </settingConfig>
     </setting>
 
@@ -130,6 +131,7 @@
             <listEntry value="18">@Strings.dataTypeGrade</listEntry>
             <listEntry value="19">@Strings.dataTypeHeading</listEntry>
             <listEntry value="20">@Strings.dataTypeGPSAccuracy</listEntry>
+            <listEntry value="21">@Strings.dataTypeCurLapDist</listEntry>
         </settingConfig>
     </setting>
 

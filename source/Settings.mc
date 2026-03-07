@@ -56,6 +56,7 @@ enum /*DataType*/ {
     DATA_TYPE_GRADE = 18,
     DATA_TYPE_HEADING = 19,
     DATA_TYPE_GPS_ACCURACY = 20,
+    DATA_TYPE_CURRENT_LAP_DISTANCE = 21,
 
     // other metrics that might be good
     // most of these are inbuilt garmin ones (so could easily be added to a second data screen)

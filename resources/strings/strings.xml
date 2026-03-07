@@ -206,6 +206,7 @@
     <string id="dataTypeGrade">Grade</string>
     <string id="dataTypeHeading">Heading</string>
     <string id="dataTypeGPSAccuracy">GPS Accuracy</string>
+    <string id="dataTypeCurLapDist">Cur. Lap Dist.</string>
 
     <string id="dataFieldTextSizeTitle">Data Field Text Size</string>
     <string id="fontXTiny">Extra Tiny</string>
