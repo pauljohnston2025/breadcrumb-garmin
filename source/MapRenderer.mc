@@ -67,7 +67,7 @@ class MapRenderer {
 
     (:noImageTiles)
     function renderMapUnrotated(dc as Dc) as Void {
-        if (!_settings.tileUrl.equals(COMPANION_APP_TILE_URL)) {
+        if (_settings.tileUrl.find(COMPANION_APP_TILE_URL_MATCH) == null) {
             if (!_settings.mapEnabled) {
                 return;
             }
@@ -93,7 +93,7 @@ class MapRenderer {
 
     (:noCompanionTiles)
     function renderMapUnrotated(dc as Dc) as Void {
-        if (_settings.tileUrl.equals(COMPANION_APP_TILE_URL)) {
+        if (_settings.tileUrl.find(COMPANION_APP_TILE_URL_MATCH) != null) {
             if (!_settings.mapEnabled) {
                 return;
             }

@@ -224,7 +224,7 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
                 // use to just be PROTOCOL_DROP_TILE_CACHE
                 logT("got tile cache changed req: " + rawData);
                 // they could be using a custom tile server that points to the companion app and has a custom max/min tile layer, we need to clear the cache in this case but not update the tile server settings
-                if (!_breadcrumbContext.settings.tileUrl.equals(COMPANION_APP_TILE_URL)) {
+                if (_breadcrumbContext.settings.tileUrl.find(COMPANION_APP_TILE_URL_MATCH) == null) {
                     logT("not using the companion app tile server");
                     return;
                 }

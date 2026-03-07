@@ -1248,7 +1248,7 @@ class TileCache {
     ) as Boolean {
         // logT("starting load tile: " + x + " " + y + " " + z);
 
-        if (!_settings.tileUrl.equals(COMPANION_APP_TILE_URL)) {
+        if (_settings.tileUrl.find(COMPANION_APP_TILE_URL_MATCH) == null) {
             return seedImageTile(tileKeyStr, x, y, z, onlySeedStorage);
         }
 
