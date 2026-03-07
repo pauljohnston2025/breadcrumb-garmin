@@ -2276,7 +2276,8 @@ class BreadcrumbRenderer {
             return false; // something else is running, do not handle touch events
         }
 
-        if (!settings.mapEnabled) {
+        if (!settings.mapEnabled || (!settings.storageMapTilesOnly && !settings.cacheTilesInStorage)) {
+            // we do not allow storage tiles, and the "G" is hidden
             _startCacheTilesProgress = 0;
             return false; // maps are not enabled, we hide the start symbol in this case
         }
