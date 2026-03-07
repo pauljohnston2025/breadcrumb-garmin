@@ -571,6 +571,8 @@ class Settings {
         System.getDeviceSettings().distanceUnits == System.UNIT_STATUTE;
     var elevationImperialUnits as Boolean =
         System.getDeviceSettings().elevationUnits == System.UNIT_STATUTE;
+    var paceImperialUnits as Boolean =
+        System.getDeviceSettings().paceUnits == System.UNIT_STATUTE;
     var trackTexture as Graphics.BitmapTexture or Number = -1; // -1 is to say use colour instead
     var routeTextures as Array<Graphics.BitmapTexture or Number> = []; // -1 is to say use colour instead
 

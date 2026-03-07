@@ -147,9 +147,9 @@
     <string id="minTurnAlertDistanceMTitle">Min Turn Alert Distance (m)</string>
     <string id="turnAlertPrompt">-1 to disable</string>
     <string id="maxTrackPointsTitle">Max Track Points</string>
-    <string id="trackWidthTitle">Track Width</string>
+    <string id="trackWidthTitle">Track Width (pixels)</string>
     <string id="trackStyleTitle">Track Style</string>
-    <string id="routeWidthTitle">Width</string>
+    <string id="routeWidthTitle">Width (pixels)</string>
     <string id="routeStyleTitle">Style</string>
     <string id="drawHitBoxesTitle">Draw Hit Boxes</string>
     <string id="showDirectionPointsTitle">Show Turn Points</string>
