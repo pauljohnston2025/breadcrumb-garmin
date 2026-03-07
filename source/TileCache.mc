@@ -792,8 +792,6 @@ class StorageTileCache {
         if (tileMeta == null || !(tileMeta instanceof Array) || tileMeta.size() < 3) {
             return null;
         }
-        tileMeta[0] = Time.now().value();
-        safeSetStorage(metaKeyStr, tileMeta);
 
         var epoch = Time.now().value();
         var expiresAt = tileMeta[2] as Number;
@@ -802,6 +800,9 @@ class StorageTileCache {
             // todo should we evict the tile now?
             return null;
         }
+
+        tileMeta[0] = epoch;
+        safeSetStorage(metaKeyStr, tileMeta);
 
         switch (tileMeta[1] as Number) {
             case STORAGE_TILE_TYPE_DICT: // fallthrough
