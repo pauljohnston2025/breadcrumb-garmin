@@ -853,7 +853,8 @@ class Settings {
         // these values will be updated by companion app when tile server changes, or the query below
         setTileLayerMaxWithoutSideEffect(8);
         setTileLayerMinWithoutSideEffect(0);
-        if (tileUrl.find(COMPANION_APP_TILE_URL_MATCH) == null) {
+        if (!tileUrl.equals(COMPANION_APP_TILE_URL)) {
+            // companion app map choice selection forces port 8080
             setTileUrlWithoutSideEffect(COMPANION_APP_TILE_URL);
         }
         if (fullTileSize != defaultSettings.fullTileSize) {
