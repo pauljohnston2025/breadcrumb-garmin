@@ -364,8 +364,8 @@ class BreadcrumbRenderer {
             } else {
                 renderDistanceMetric(dc, y, null);
             }
-        } else {
-            renderTextMetric(dc, y, "UNSUPPORTED");
+         } else {
+            renderTextMetric(dc, y, "INVALID");
         }
     }
 
