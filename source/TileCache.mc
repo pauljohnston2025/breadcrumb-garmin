@@ -1404,7 +1404,7 @@ class TileCache {
 
         tile.setExpiresAt(NO_EXPIRY); // be explicit that there is no expiry
 
-        if (_internalCache.size() == _settings.tileCacheSize) {
+        if (_internalCache.size() >= _settings.tileCacheSize) {
             evictLeastRecentlyUsedTile();
         }
 
@@ -1421,7 +1421,7 @@ class TileCache {
             return;
         }
 
-        if (_internalCache.size() == _settings.tileCacheSize) {
+        if (_internalCache.size() >= _settings.tileCacheSize) {
             evictLeastRecentlyUsedTile();
         }
 
@@ -1515,6 +1515,16 @@ class TileCache {
     }
 
     function evictLeastRecentlyUsedTile() as Void {
+        // 1. Clean up dead weak references from the error bitmap cache
+        var errorKeys = _errorBitmaps.keys();
+        for (var i = 0; i < errorKeys.size(); i++) {
+            var errorKey = errorKeys[i];
+            var weakRef = _errorBitmaps[errorKey];
+            if (weakRef == null || weakRef.get() == null) {
+                _errorBitmaps.remove(errorKey);
+            }
+        }
+
         // todo put older tiles into disk, and store what tiles are on disk (storage class)
         // it will be faster to load them from there than bluetooth
         var oldestTime = null;
