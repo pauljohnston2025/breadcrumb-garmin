@@ -362,7 +362,7 @@ class TileUpdateHandler {
     }
 
     function openTileServer() as Void {
-        // PROTOCOL_SEND_OPEN_APP will not work if the tile server is disabled :(
+        // PROTOCOL_SEND_OPEN_APP may not work if the tile server is disabled :(
         // also send a toast
         getApp()._breadcrumbContext.webRequestHandler.transmit(
             [PROTOCOL_SEND_OPEN_APP],
@@ -934,15 +934,10 @@ class Settings {
     }
 
     function companionChangedToMaxMin(minLayer as Number, maxLayer as Number) as Void {
-        // we need to to force the url to be companion app
-        // update to be custom (since companion app url will override tile layers)
-        // This does mean when the users selects companion app on the watch settings it might not match the currently
-        // configured tile server max/min on the companion app
-        // assert(tileUrl.equals(COMPANION_APP_TILE_URL));
-
         // if the users goes custom and has the companion app url, we still do not update the tiles layers
         // this is because they may be artificially capping the tileLayerMax property eg. a tile server on the phone that has 20 layers, but the user only wants
         // 15 layers on the watch in order to be able to run offline tiles and store them all.
+        // it does mean the user can configured tilelayerMax = 20 but the tile server on the phone is configured to 15, they will get lots of 404 errors, but they are in custom mode
         if (mapChoice != 1) {
             // we are no longer on the companion app, abort
             return;
@@ -966,7 +961,7 @@ class Settings {
         ++mapChoiceVersion;
 
         if (value == 0) {
-            // custom - leave everything alone
+            // custom - leave everything alone (including the tile layer min and max)
             return;
         } else if (value == 1) {
             // companion app
@@ -1002,8 +997,7 @@ class Settings {
 
         // prompts user to open the app
         if (tileUrl.find(COMPANION_APP_TILE_URL_MATCH) != null && !storageMapTilesOnly) {
-            // we could also send a toast, but the transmit allows us to open the app easier on the phone
-            // even though the phone side is a bit of a hack (ConnectIQMessageReceiver cannot parse the data), it's still better than having to manualy open the app.
+            // The transmit allows us to open the app easier on the phone
             transmit([PROTOCOL_SEND_OPEN_APP], {}, getApp()._commStatus);
         }
     }
@@ -1430,8 +1424,7 @@ class Settings {
 
         // prompts user to open the app
         if (tileUrl.find(COMPANION_APP_TILE_URL_MATCH) != null && !storageMapTilesOnly) {
-            // we could also send a toast, but the transmit allows us to open the app easier on the phone
-            // even though the phone side is a bit of a hack (ConnectIQMessageReceiver cannot parse the data), it's still better than having to manualy open the app.
+            // The transmit allows us to open the app easier on the phone
             transmit([PROTOCOL_SEND_OPEN_APP], {}, getApp()._commStatus);
         }
     }
@@ -2904,6 +2897,8 @@ class Settings {
         }
 
         if (oldMapChoice != mapChoice) {
+            // calling this calls into many methods that fire tileServerPropChanged(), or tileUrlChanged()
+            // thats why we check it after any of the tile props, we do not want to call the above methods twice
             updateMapChoiceChange(mapChoice);
         }
 
