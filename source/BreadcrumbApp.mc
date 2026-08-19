@@ -232,6 +232,7 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
                 // maybe we should go into a backoff period? or just allow manual purge from phone app for if something goes wrong
                 // currently tiles have no expiry
                 _breadcrumbContext.tileCache._storageTileCache.clearValues();
+                _breadcrumbContext.tileCache.nukePalette(); // force the pallet to be re-loaded from the next tile parsed
                 _breadcrumbContext.settings.clearTileCache();
                 _breadcrumbContext.settings.clearPendingWebRequests();
 

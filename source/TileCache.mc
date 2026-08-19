@@ -807,7 +807,7 @@ class StorageTileCache {
         switch (tileMeta[1] as Number) {
             case STORAGE_TILE_TYPE_DICT: // fallthrough
             // bitmap has to just load as a single image (we cannot slice it because we cannot store buffered bitmaps, only the original bitmap), it could be over the 32Kb limit, but we have no other choice
-            case STORAGE_TILE_TYPE_BITMAP: 
+            case STORAGE_TILE_TYPE_BITMAP:
                 // no need to check type of the getValue call, handling code checks it
                 return [
                     200,
@@ -1149,11 +1149,15 @@ class TileCache {
         // do we maybe want to store multiple palettes and just load the correct one form storage by id?
         // then we never need to nuke the palettes unless they change, and storage tiles could use whatever they wanted
         loadPalette(id, data);
-        safeSetStorage("paletteId", id as Application.PropertyValueType); // can store null, this is fine (clear out any old palette)
+        safeSetStorage("paletteId", _paletteId as Application.PropertyValueType); // can store null, this is fine (clear out any old palette)
         safeSetStorage("palette", _palette as Application.PropertyValueType); // can store null, this is fine (clear out any old palette)
     }
 
     function loadPalette(id as Number?, data as Array?) as Void {
+        // clear it out first in case it fails
+        _paletteId = null;
+        _palette = null;
+
         if (!(data instanceof Array)) {
             logE("colour palette wrong type: " + data);
             return;
@@ -1199,8 +1203,16 @@ class TileCache {
         _errorBitmaps = ({}) as Dictionary<String, WeakReference<Graphics.BufferedBitmap> >;
         _tileCacheVersion++;
 
-        // clear the pallet and it's storage, we need to load it again
-        // this could be a problem if storage tiles are saying use a pallet that we do not have
+        // clear the pallet and it's storage, to free up some memory
+        // if we need to load the pallet from storage again we will on the next tile parse
+        _paletteId = null;
+        _palette = null;
+    }
+
+    public function nukePalette() as Void {
+        // do not call this from clearValuesWithoutStorage as we nuke the tile cache when opening settings view to try and save memory
+        // its also called when some setting are changed, but we cannot clear the tile palette out of storage if we are are in "storage tile only"
+        // mode and do not have a ble connection
         _paletteId = null;
         _palette = null;
         safeSetStorage("paletteId", null);
@@ -1555,6 +1567,11 @@ class TileCache {
 
     (:companionTiles)
     function loadPalletFromWeb() as Void {
+        if (!System.getDeviceSettings().phoneConnected) {
+            logD("phone not connected, not loading tile palette");
+            return;
+        }
+        
         // if we are still null after a load, we need to lad the palette from the tile server on the phone
         logD("loading TilePalette from web");
         var jsonTileHandler = new JsonPelletLoadHandler(me);
@@ -1586,6 +1603,8 @@ class TileCache {
                 Storage.getValue("palette") as Array?
             );
             if (_paletteId == null || _palette == null) {
+                // The first tile load after a seed will have to fetch the colour palette
+                // so we must start the web request here, it may also be a bad palette id that we have saved, so we also need to start the web request below
                 loadPalletFromWeb();
                 return null;
             }
@@ -1594,15 +1613,25 @@ class TileCache {
         // this is safe, the above code sets it if its null
         var paletteArr = _palette as Array<Number>;
 
+        // we need to use whatever palette we have available if we are in "storage only" mode and cant make a web request
+        // If we are in "storage only" mode the tiles and paletteId are static, so they will never change.
+        // They should all be the same because we nuke the palette and storage tiles when we get PROTOCOL_COMPANION_APP_TILE_SERVER_CHANGED
+        // when we are in storage only mode we never want to start the fetch for the tile server, as the phone likely is not connected and it would result in a web error anyway.
         if (paletteId != _paletteId) {
             logE("wrong pallet loaded, current: " + _paletteId + " target: " + paletteId);
-            _paletteId = null;
-            _palette = null;
+
+            // do not clear palette from storage, we only do that when we detect PROTOCOL_COMPANION_APP_TILE_SERVER_CHANGED has changed, since we want to be able
+            // no point clearing the local copies of pallette either, as it will just load them from storage on the next parse
             // clear the storage
-            safeSetStorage("paletteId", null);
-            safeSetStorage("palette", null);
             loadPalletFromWeb();
-            return null;
+
+            if (!_settings.storageMapTilesOnly) {
+                // if we are using storage only push on and try and load from the palette we have, otherwise return as we should have the correct palette
+                // we also attempt to start the fetch for the new palette if we can
+                // we could just always push on, but the tile cache would not update the rendered tile until its removed, a loaded tile is deemed to have been loaded using the correct palette
+                // so if we think we should have access to load the tile then do so
+                return null;
+            }
         }
         // logT("tile data " + arr);
         var tileSize = _settings.tileSize;
