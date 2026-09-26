@@ -210,7 +210,7 @@ class WebRequestHandleWrapper {
             }
             webHandler._lastResult = responseCode == 200 && data == null ? null : responseCode;
         } catch (e) {
-            logE("failed to handle web request: " + e.getErrorMessage());
+            logE("failed to handle web request: " + (e as Exception).getErrorMessage());
             ++$.globalExceptionCounter;
         } finally {
             // got some stack overflows, as handle can be called inline if it knows it will fail (eg. BLE_CONNECTION_UNAVAILABLE)
@@ -252,7 +252,7 @@ class ConnectionListenerWrapper extends Communications.ConnectionListener {
         try {
             handler.onComplete();
         } catch (e) {
-            logE("failed onComplete: " + e.getErrorMessage());
+            logE("failed onComplete: " + (e as Exception).getErrorMessage());
             ++$.globalExceptionCounter;
         } finally {
             decOutstanding();
@@ -263,7 +263,7 @@ class ConnectionListenerWrapper extends Communications.ConnectionListener {
         try {
             handler.onError();
         } catch (e) {
-            logE("failed onError: " + e.getErrorMessage());
+            logE("failed onError: " + (e as Exception).getErrorMessage());
             ++$.globalExceptionCounter;
         } finally {
             decOutstanding();
@@ -286,7 +286,7 @@ class WebRequestHandler {
     // using 2 arrays so we get FIFO
     // also dictionary seemed to make the code 2X slower, think because we had to serch all the keys for a string several times
     var pendingTransmit as
-    Array<[Application.PersistableType, Dictionary?, Communications.ConnectionListener]> = [];
+    Array<[Communications.TransmitType, Dictionary?, Communications.ConnectionListener]> = [];
     var pending as Array<WebRequest> = [];
     var pendingHashes as Array<String> = [];
     var outstandingHashes as Array<String> = [];
@@ -308,7 +308,7 @@ class WebRequestHandler {
     // Communications.transmit can fail if web requests are pending, 'Communications transmit queue full'
     // so we will have to queue it up to the web server as 'high priority', or just have a transmit queue that is always high priority
     function transmit(
-        content as Application.PersistableType,
+        content as Communications.TransmitType,
         options as Dictionary?,
         listener as Communications.ConnectionListener
     ) as Void {

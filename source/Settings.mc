@@ -705,7 +705,7 @@ class Settings {
         }
     }
 
-    function setValue(key as String, value as PropertyValueType) as Void {
+    function setValue(key as String, value as Application.Properties.ValueType) as Void {
         Application.Properties.setValue(key, value);
         setValueSideEffect();
     }
@@ -1721,8 +1721,8 @@ class Settings {
         saveRoutes();
     }
 
-    function routesToSave() as Array<Dictionary<String, PropertyValueType> > {
-        var toSave = [] as Array<Dictionary<String, PropertyValueType> >;
+    function routesToSave() as Array<Dictionary<String, Application.Properties.ValueType> > {
+        var toSave = [] as Array<Dictionary<String, Application.Properties.ValueType> >;
         for (var i = 0; i < routes.size(); ++i) {
             var entry = routes[i];
             var toAdd =
@@ -1735,7 +1735,7 @@ class Settings {
                     "reversed" => entry["reversed"] as Boolean,
                     "style" => entry["style"] as Number,
                     "width" => entry["width"] as Number,
-                }) as Dictionary<String, PropertyValueType>;
+                }) as Dictionary<String, Application.Properties.ValueType>;
             toSave.add(toAdd);
         }
         return toSave;
@@ -1748,9 +1748,9 @@ class Settings {
 
     function saveRoutesNoSideEffect() as Void {
         var toSave = routesToSave();
-        // note toSave is Array<Dictionary<String, PropertyValueType>>
-        // but the compiler only allows "Array<PropertyValueType>" even though the array of dicts seems to work on sim and real watch
-        safeSetStorage("routes", toSave as Array<PropertyValueType>);
+        // note toSave is Array<Dictionary<String, Application.Storage.ValueType>>
+        // but the compiler only allows "Array<Application.Storage.ValueType>" even though the array of dicts seems to work on sim and real watch
+        safeSetStorage("routes", toSave as Array<Application.Storage.ValueType>);
     }
 
     (:settingsView)
@@ -2010,7 +2010,7 @@ class Settings {
     }
 
     function transmit(
-        content as Application.PersistableType,
+        content as Communications.TransmitType,
         options as Dictionary?,
         listener as Communications.ConnectionListener
     ) as Void {
@@ -2090,7 +2090,7 @@ class Settings {
 
     static function parseColourRaw(
         key as String,
-        colourString as PropertyValueType,
+        colourString as Application.Properties.ValueType?,
         defaultValue as Number,
         allowTransparent as Boolean
     ) as Number {
@@ -2139,7 +2139,7 @@ class Settings {
 
     static function parseNumberRaw(
         key as String,
-        value as PropertyValueType,
+        value as Application.Properties.ValueType?,
         defaultValue as Number
     ) as Number {
         try {
@@ -2190,7 +2190,7 @@ class Settings {
     function parseCSVString(
         key as String,
         defaultValue as Array<ReturnType>,
-        callback as (Method(key as String, value as PropertyValueType) as ReturnType)
+        callback as (Method(key as String, value as Application.Properties.ValueType?) as ReturnType)
     ) as Array<ReturnType> {
         try {
             return parseCSVStringRaw(
@@ -2207,9 +2207,9 @@ class Settings {
 
     function parseCSVStringRaw(
         key as String,
-        value as PropertyValueType,
+        value as Application.Properties.ValueType?,
         defaultValue as Array<ReturnType>,
-        callback as (Method(key as String, value as PropertyValueType) as ReturnType)
+        callback as (Method(key as String, value as Application.Properties.ValueType?) as ReturnType)
     ) as Array<ReturnType> {
         try {
             if (value == null) {
@@ -2258,7 +2258,7 @@ class Settings {
 
     function parseBoolRaw(
         key as String,
-        value as PropertyValueType,
+        value as Application.Properties.ValueType?,
         defaultValue as Boolean
     ) as Boolean {
         try {
@@ -2298,7 +2298,7 @@ class Settings {
 
     static function parseFloatRaw(
         key as String,
-        value as PropertyValueType,
+        value as Application.Properties.ValueType?,
         defaultValue as Float
     ) as Float {
         try {
@@ -2339,7 +2339,7 @@ class Settings {
 
     function parseStringRaw(
         key as String,
-        value as PropertyValueType,
+        value as Application.Properties.ValueType?,
         defaultValue as String
     ) as String {
         try {
@@ -2369,7 +2369,7 @@ class Settings {
 
     function parseOptionalFloatRaw(
         key as String,
-        value as PropertyValueType,
+        value as Application.Properties.ValueType?,
         defaultValue as Float?
     ) as Float? {
         try {
@@ -2451,7 +2451,7 @@ class Settings {
         saveSettings(defaultSettings.asDict());
     }
 
-    function asDict() as Dictionary<String, PropertyValueType> {
+    function asDict() as Dictionary<String, Application.Properties.ValueType> {
         // all these return values should be identical to the storage value
         // eg. nulls are exposed as 0
         // colours are strings
@@ -2535,11 +2535,11 @@ class Settings {
                 "uiColour" => uiColour.format("%X"),
                 "debugColour" => debugColour.format("%X"),
                 "resetDefaults" => false,
-            }) as Dictionary<String, PropertyValueType>
+            }) as Dictionary<String, Application.Properties.ValueType>
         );
     }
 
-    function saveSettings(settings as Dictionary<String, PropertyValueType>) as Void {
+    function saveSettings(settings as Dictionary<String, Application.Properties.ValueType>) as Void {
         // should we sanitize this as its untrusted? makes it significantly more annoying to do
         var keys = settings.keys();
         for (var i = 0; i < keys.size(); ++i) {
@@ -2549,15 +2549,17 @@ class Settings {
             // we do reload which sanitizes, but they could break garmins settings page with unexpected types
             try {
                 if (key.equals("routes")) {
+                    // note toSave is Array<Dictionary<String, Application.Storage.ValueType>>
+                    // but the compiler only allows "Array<Application.Storage.ValueType>" even though the array of dicts seems to work on sim and real watch
                     Application.Storage.setValue(
                         key,
-                        value as Dictionary<PropertyKeyType, PropertyValueType>
+                        value as Array<Application.Storage.ValueType>
                     );
                 } else {
-                    Application.Properties.setValue(key, value as PropertyValueType);
+                    Application.Properties.setValue(key, value as Application.Properties.ValueType);
                 }
             } catch (e) {
-                logE("failed property save: " + e.getErrorMessage() + " " + key + ":" + value);
+                logE("failed property save: " + (e as Exception).getErrorMessage() + " " + key + ":" + value);
                 ++$.globalExceptionCounter;
             }
         }
@@ -2756,19 +2758,19 @@ class Settings {
         // cachedValues.setScale(1.96); // really close
     }
 
-    function emptyString(key as String, value as PropertyValueType) as String {
+    function emptyString(key as String, value as Application.Properties.ValueType?) as String {
         return parseStringRaw(key, value, "");
     }
 
-    function defaultNumberParser(key as String, value as PropertyValueType) as Number {
+    function defaultNumberParser(key as String, value as Application.Properties.ValueType?) as Number {
         return parseNumberRaw(key, value, 0);
     }
 
-    function defaultNumberParser4(key as String, value as PropertyValueType) as Number {
+    function defaultNumberParser4(key as String, value as Application.Properties.ValueType?) as Number {
         return parseNumberRaw(key, value, 4);
     }
 
-    function defaultFalse(key as String, value as PropertyValueType) as Boolean {
+    function defaultFalse(key as String, value as Application.Properties.ValueType?) as Boolean {
         if (value instanceof Boolean) {
             return value;
         }
@@ -2776,11 +2778,11 @@ class Settings {
         return false;
     }
 
-    function defaultColourParser(key as String, value as PropertyValueType) as Number {
+    function defaultColourParser(key as String, value as Application.Properties.ValueType?) as Number {
         return parseColourRaw(key, value, Graphics.COLOR_RED, false);
     }
 
-    function defaultColourParserTransparent(key as String, value as PropertyValueType) as Number {
+    function defaultColourParserTransparent(key as String, value as Application.Properties.ValueType?) as Number {
         return parseColourRaw(key, value, Graphics.COLOR_TRANSPARENT, true);
     }
 

@@ -208,10 +208,6 @@ class BreadcrumbRenderer {
         }
 
         var info = Activity.getActivityInfo();
-        if (info == null) {
-            // all other metrics depend on info
-            return;
-        }
 
         var centeredTextOffset =
             (direction *

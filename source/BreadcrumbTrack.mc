@@ -197,7 +197,7 @@ class BreadcrumbTrack {
             Storage.setValue(key + "name", name);
         } catch (e) {
             // it will still be in memory, just not persisted, this is bad as the user will think it worked, so return false to indicate error
-            logE("failed route save: " + e.getErrorMessage());
+            logE("failed route save: " + (e as Exception).getErrorMessage());
             ++$.globalExceptionCounter;
             return false;
         }
@@ -567,7 +567,7 @@ class BreadcrumbTrack {
 
         var currentSpeedPPS = 1f; // assume a slow walk if we cannot get the current speed
         var info = Activity.getActivityInfo();
-        if (info != null && info.currentSpeed != null) {
+        if (info.currentSpeed != null) {
             currentSpeedPPS = info.currentSpeed as Float;
         }
 
@@ -609,7 +609,7 @@ class BreadcrumbTrack {
     ) as [Number, Float]? {
         var currentSpeedPPS = 1f; // assume a slow walk if we cannot get the current speed
         var info = Activity.getActivityInfo();
-        if (info != null && info.currentSpeed != null) {
+        if (info.currentSpeed != null) {
             currentSpeedPPS = info.currentSpeed as Float;
         }
 
@@ -784,9 +784,6 @@ class BreadcrumbTrack {
         }
 
         var info = Activity.getActivityInfo();
-        if (info == null) {
-            return distancePx / cachedValues.currentScale;
-        }
         var currentPoint = pointFromActivityInfo(info);
         if (currentPoint == null || !currentPoint.valid()) {
             return distancePx / cachedValues.currentScale;

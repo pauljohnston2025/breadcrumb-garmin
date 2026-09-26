@@ -370,7 +370,7 @@ class MapRenderer {
                     // changing it to
                     // tileFromCache.bitmap.isCached() + " "
                     //  + " " + tileFromCache.bitmap
-                    var message = e.getErrorMessage();
+                    var message = (e as Exception).getErrorMessage();
                     logE("failed drawBitmap2 (renderMap): " + message);
                     ++$.globalExceptionCounter;
                     incNativeColourFormatErrorIfMessageMatches(message);

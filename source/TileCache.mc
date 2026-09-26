@@ -548,7 +548,7 @@ class ImageWebTileRequestHandler {
         //                 :filterMode => Graphics.FILTER_MODE_BILINEAR,
         //             });
         //         } catch (e) {
-        // var message = e.getErrorMessage();
+        // var message = (e as Exception).getErrorMessage();
         // logE("failed drawBitmap2 (handleSuccessfulTile): " + message);
         // ++$.globalExceptionCounter;
         // incNativeColourFormatErrorIfMessageMatches(message);
@@ -962,14 +962,14 @@ class StorageTileCache {
                 // we could allow the user to specify 'maxTileCache storage' but we will just fill it up until there is no more space
                 // note: This means routes need to be loaded first, or there will be no space left for new routes
 
-                logE("tile storage full: " + e.getErrorMessage());
+                logE("tile storage full: " + (e as Exception).getErrorMessage());
                 // this page might have been too big, or we might just be full, so evict 2 tiles to  be safe
                 evictOldestTileFromPage();
                 evictLeastRecentlyUsedTile();
                 return false;
             }
 
-            logE("failed tile storage add: " + e.getErrorMessage());
+            logE("failed tile storage add: " + (e as Exception).getErrorMessage());
             ++$.globalExceptionCounter;
         }
 
@@ -997,12 +997,12 @@ class StorageTileCache {
                 // we could allow the user to specify 'maxTileCache storage' but we will just fill it up until there is no more space
                 // note: This means routes need to be loaded first, or there will be no space left for new routes
 
-                logE("tile storage full: " + e.getErrorMessage());
+                logE("tile storage full: " + (e as Exception).getErrorMessage());
                 evictLeastRecentlyUsedTile();
                 return;
             }
 
-            logE("failed tile storage add: " + e.getErrorMessage());
+            logE("failed tile storage add: " + (e as Exception).getErrorMessage());
             ++$.globalExceptionCounter;
         }
     }
@@ -1149,8 +1149,8 @@ class TileCache {
         // do we maybe want to store multiple palettes and just load the correct one form storage by id?
         // then we never need to nuke the palettes unless they change, and storage tiles could use whatever they wanted
         loadPalette(id, data);
-        safeSetStorage("paletteId", _paletteId as Application.PropertyValueType); // can store null, this is fine (clear out any old palette)
-        safeSetStorage("palette", _palette as Application.PropertyValueType); // can store null, this is fine (clear out any old palette)
+        safeSetStorage("paletteId", _paletteId as Application.Storage.ValueType); // can store null, this is fine (clear out any old palette)
+        safeSetStorage("palette", _palette as Application.Storage.ValueType); // can store null, this is fine (clear out any old palette)
     }
 
     function loadPalette(id as Number?, data as Array?) as Void {

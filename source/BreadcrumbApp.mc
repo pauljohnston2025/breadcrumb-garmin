@@ -75,7 +75,7 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
         try {
             _breadcrumbContext.settings.onSettingsChanged();
         } catch (e) {
-            logE("failed onSettingsChange: " + e.getErrorMessage());
+            logE("failed onSettingsChange: " + (e as Exception).getErrorMessage());
             ++$.globalExceptionCounter;
         }
     }
@@ -216,7 +216,7 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
                     return;
                 }
                 _breadcrumbContext.settings.saveSettings(
-                    rawData[0] as Dictionary<String, PropertyValueType>
+                    rawData[0] as Dictionary<String, Application.Properties.ValueType>
                 );
                 _breadcrumbContext.settings.onSettingsChanged(); // reload anything that has changed
                 return;
@@ -264,7 +264,7 @@ class BreadcrumbDataFieldApp extends Application.AppBase {
             logE("Unknown message type: " + type);
             mustUpdate();
         } catch (e) {
-            logE("failed onPhone: " + e.getErrorMessage());
+            logE("failed onPhone: " + (e as Exception).getErrorMessage());
             mustUpdate();
             ++$.globalExceptionCounter;
         }

@@ -118,14 +118,14 @@ class CachedValues {
 
     // updated whenever onlayout changes (audit usages, these should not need to be floats, but sometimes are used to do float math)
     // default to full screen guess
-    var physicalScreenWidth as Float = System.getDeviceSettings().screenWidth.toFloat() as Float;
-    var physicalScreenHeight as Float = System.getDeviceSettings().screenHeight.toFloat() as Float;
+    var physicalScreenWidth as Float = (System.getDeviceSettings().screenWidth as Number).toFloat() as Float;
+    var physicalScreenHeight as Float = (System.getDeviceSettings().screenHeight as Number).toFloat() as Float;
     var minPhysicalScreenDim as Float = -1f;
     var maxPhysicalScreenDim as Float = -1f;
     var xHalfPhysical as Float = physicalScreenWidth / 2f;
     var yHalfPhysical as Float = physicalScreenHeight / 2f;
-    var virtualScreenWidth as Float = System.getDeviceSettings().screenWidth.toFloat() as Float;
-    var virtualScreenHeight as Float = System.getDeviceSettings().screenHeight.toFloat() as Float;
+    var virtualScreenWidth as Float = physicalScreenWidth;
+    var virtualScreenHeight as Float = physicalScreenHeight;
     var minVirtualScreenDim as Float = -1f;
     var maxVirtualScreenDim as Float = -1f;
     var bufferedBitmapOffsetX as Float = -1f;
@@ -197,7 +197,7 @@ class CachedValues {
 
     function onTimerLap() as Void {
         var info = Activity.getActivityInfo();
-        if (info != null && info.elapsedTime != null && info.elapsedDistance != null) {
+        if (info.elapsedTime != null && info.elapsedDistance != null) {
             _lastLapDuration = (info.elapsedTime as Number) - _lapStartTime;
             _lastLapDistance = (info.elapsedDistance as Float) - _lapStartDistance;
             _lapStartTime = info.elapsedTime as Number;

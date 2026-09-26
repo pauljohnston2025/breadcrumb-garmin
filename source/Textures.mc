@@ -142,7 +142,7 @@ function getTexture(
 
         return -1;
     } catch (e) {
-        logE("failed to generate texture: " + e.getErrorMessage());
+        logE("failed to generate texture: " + (e as Exception).getErrorMessage());
         ++$.globalExceptionCounter;
         return -1;
     }

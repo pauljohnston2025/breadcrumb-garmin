@@ -23,7 +23,7 @@ class BreadcrumbDataFieldDelegate extends WatchUi.InputDelegate {
                     Attention.vibrate(vibeData);
                 }
             } catch (e) {
-                logE("failed to vibrate: " + e.getErrorMessage());
+                logE("failed to vibrate: " + (e as Exception).getErrorMessage());
             }
             return true;
         }
