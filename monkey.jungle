@@ -161,3 +161,28 @@ gpsmaph1.excludeAnnotations = $(gpsmaph1.excludeAnnotations);round;noscaledbitma
 gpsmaph1.resourcePath = $(gpsmaph1.resourcePath);resources-low-memory
 instinctcrossoveramoled.excludeAnnotations = $(instinctcrossoveramoled.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
 instinctcrossoveramoled.resourcePath = $(instinctcrossoveramoled.resourcePath);resources-low-memory
+
+
+d2mach2pro.excludeAnnotations = $(d2mach2pro.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+d2mach2pro.resourcePath = $(d2mach2pro.resourcePath);resources-low-memory
+fenix943mm.excludeAnnotations = $(fenix943mm.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+fenix943mm.resourcePath = $(fenix943mm.resourcePath);resources-low-memory
+fenix947mm.excludeAnnotations = $(fenix947mm.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+fenix947mm.resourcePath = $(fenix947mm.resourcePath);resources-low-memory
+fenix9pro43mm.excludeAnnotations = $(fenix9pro43mm.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+fenix9pro43mm.resourcePath = $(fenix9pro43mm.resourcePath);resources-low-memory
+fenix9pro47mm.excludeAnnotations = $(fenix9pro47mm.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+fenix9pro47mm.resourcePath = $(fenix9pro47mm.resourcePath);resources-low-memory
+fenix9pro51mm.excludeAnnotations = $(fenix9pro51mm.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+fenix9pro51mm.resourcePath = $(fenix9pro51mm.resourcePath);resources-low-memory
+fenix9prosolar47mm.excludeAnnotations = $(fenix9prosolar47mm.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+fenix9prosolar47mm.resourcePath = $(fenix9prosolar47mm.resourcePath);resources-low-memory
+fenix9prosolar51mm.excludeAnnotations = $(fenix9prosolar51mm.excludeAnnotations);rectangle;noscaledbitmap;$(lowMemExcludes)
+fenix9prosolar51mm.resourcePath = $(fenix9prosolar51mm.resourcePath);resources-low-memory
+
+fr170.excludeAnnotations = $(fr170.excludeAnnotations);rectangle;scaledbitmap;$(highMemExcludes)
+fr170.resourcePath = $(fr170.resourcePath);resources-high-memory
+fr170m.excludeAnnotations = $(fr170m.excludeAnnotations);rectangle;scaledbitmap;$(highMemExcludes)
+fr170m.resourcePath = $(fr170m.resourcePath);resources-high-memory
+fr70.excludeAnnotations = $(fr70.excludeAnnotations);rectangle;scaledbitmap;$(highMemExcludes)
+fr70.resourcePath = $(fr70.resourcePath);resources-high-memory
