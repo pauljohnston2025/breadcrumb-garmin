@@ -118,8 +118,10 @@ class CachedValues {
 
     // updated whenever onlayout changes (audit usages, these should not need to be floats, but sometimes are used to do float math)
     // default to full screen guess
-    var physicalScreenWidth as Float = (System.getDeviceSettings().screenWidth as Number).toFloat() as Float;
-    var physicalScreenHeight as Float = (System.getDeviceSettings().screenHeight as Number).toFloat() as Float;
+    var physicalScreenWidth as Float =
+        (System.getDeviceSettings().screenWidth as Number).toFloat() as Float;
+    var physicalScreenHeight as Float =
+        (System.getDeviceSettings().screenHeight as Number).toFloat() as Float;
     var minPhysicalScreenDim as Float = -1f;
     var maxPhysicalScreenDim as Float = -1f;
     var xHalfPhysical as Float = physicalScreenWidth / 2f;
@@ -181,6 +183,7 @@ class CachedValues {
     (:storage)
     var seedingInProgressTiles as Dictionary<String, [Number, Number, Number]> =
         ({}) as Dictionary<String, [Number, Number, Number]>;
+    var seedingCleaningErroredTiles as Boolean = false;
     (:storage)
     var seedingFirstTileX as Number = 0;
     (:storage)
@@ -1007,6 +1010,8 @@ class CachedValues {
         var divisor = currentScale;
         if (divisor == 0f) {
             // we should always have a current scale at this point, since we manually set scale (or we are caching map tiles)
+            // seeding tiles when we have no user location can cause this to be called with no current scale
+            // I guess normal render might call it when on user location either
             logE("Warning: current scale was somehow not set");
             divisor = 1f;
         }
@@ -1038,7 +1043,7 @@ class CachedValues {
         if (fixedPosition == null && scale == null) {
             return false; // nothing to do
         }
-        
+
         // set fixed position recalculates all on us
         _settings.setFixedPosition(null, null, true);
         setScale(null);
@@ -1085,6 +1090,7 @@ class CachedValues {
         seedingUpToRoutePoint = 0;
         seedingUpToRoutePointPartial = null;
         seedingInProgressTiles = ({}) as Dictionary<String, [Number, Number, Number]>;
+        seedingCleaningErroredTiles = false;
     }
 
     (:noStorage)
@@ -1111,6 +1117,7 @@ class CachedValues {
         // It's slower to do the lower layers first, but means if we run out of storage the higher layers will still be cached, so we will get a better experience.
         // Rather than having all the fine details, but no overview, we at least get the overview tiles. Users can set tileLayerMin and tileLayerMax if they would prefer to cache only a single layer.
         seedingZ = _settings.tileLayerMax;
+        seedingCleaningErroredTiles = true;
         // todo store current x and y for the for loop, also need to store the max/min tile coords
         // seedingX = ...
         // seedingY = ...
@@ -1133,6 +1140,14 @@ class CachedValues {
     function stepCacheCurrentMapArea() as Boolean {
         if (!seeding()) {
             return false;
+        }
+
+        if (seedingCleaningErroredTiles) {
+            var storageTileCache = getApp()._breadcrumbContext.tileCache._storageTileCache;
+            seedingCleaningErroredTiles = storageTileCache.removeErroredTiles();
+            // most likely cleaned some, assume it was complex
+            // even on the final op, the final page is cleared of errors, and we return true one last time to say complex op happened
+            return true;
         }
 
         if (seedingZ >= _settings.tileLayerMin && seedNextTilesToStorage()) {
@@ -1451,11 +1466,26 @@ class CachedValues {
             // we are just waiting on the last few to finish
             var size = seedingInProgressTiles.size();
             return [
-                size.toString() + " remaining",
+                "Finalising \n" + size + " remaining",
                 (MAX_TILES_AT_A_TIME - size) / MAX_TILES_AT_A_TIME.toFloat(),
-                true
+                true,
             ];
         }
+
+        if (seedingCleaningErroredTiles) {
+            var storageTileCache = getApp()._breadcrumbContext.tileCache._storageTileCache;
+            return [
+                "Cleaning Errored Tiles \n" +
+                    storageTileCache._cleanErroredPageIndex +
+                    "/" +
+                    storageTileCache._pageSizes.size(),
+                storageTileCache._cleanErroredPageIndex.toFloat() /
+                    storageTileCache._pageSizes.size(),
+                true,
+            ];
+        }
+
+        var tileLayerStr = "Caching Tile Layer " + seedingZ + "\n";
 
         if (_settings.storageSeedBoundingBox) {
             // simple tile layer progress, since we do not know how many tile per layer without some complex math
@@ -1478,13 +1508,14 @@ class CachedValues {
                       ).format("%.1f") +
                       "%)";
             return [
-                seedingTilesProgressForThisLayer +
+                tileLayerStr +
+                    seedingTilesProgressForThisLayer +
                     "/" +
                     seedingTilesOnThisLayer +
                     " " +
                     percentageStr,
                 overallProgress,
-                true
+                true,
             ];
         }
 
@@ -1495,7 +1526,7 @@ class CachedValues {
         }
 
         if (seedingUpToRoute >= routes.size()) {
-            return ["Route: " + seedingUpToRoute + "/" + routes.size(), 0f, true];
+            return [tileLayerStr + "Route: " + seedingUpToRoute + "/" + routes.size(), 0f, true];
         }
 
         var totalPointsPerLayer = 0;
@@ -1530,7 +1561,8 @@ class CachedValues {
                 ? ""
                 : " (" + ((seedingUpToRoutePoint.toFloat() / points) * 100).format("%.1f") + "%)";
         return [
-            "Route: " +
+            tileLayerStr +
+                "Route: " +
                 (seedingUpToRoute + 1) +
                 "/" +
                 routes.size() +
@@ -1547,7 +1579,7 @@ class CachedValues {
                 _settings.storageSeedRouteDistanceM.format("%.1f") +
                 "m)",
             overallProgress,
-            true
+            true,
         ];
     }
 }

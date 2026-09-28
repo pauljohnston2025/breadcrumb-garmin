@@ -648,6 +648,10 @@ class StorageTileCache {
         tileKeyStr as String,
         bitmap as WatchUi.BitmapResource
     ) as Void {}
+    // returns true if there is still more tiles to clean, false when all tiles have been cleaned
+    function removeErroredTiles() as Boolean {
+        return false;
+    }
     function clearValues() as Void {}
     function setNewPageCount(newPageCount as Number) as Void {}
 }
@@ -667,6 +671,8 @@ class StorageTileCache {
     var _currentPageKeys as Array<String> = [];
     var _pageSizes as Array<Number> = [0];
     private var _lastEvictedPageIndex as Number = 0;
+    var _cleanErroredPageIndex as Number = 0;
+    private var _cleanErroredStarted as Boolean = false;
     private var _maxPageSize as Number = 0;
 
     function initialize(settings as Settings, cachedValues as CachedValues) {
@@ -927,6 +933,73 @@ class StorageTileCache {
         // this is not currently possible, since we can only draw to a buffered bitmap, but cannot save the buffered bitmap to storage
         // so we have to hope the tile size fits into storage
         addHelper(STORAGE_TILE_TYPE_BITMAP, x, y, z, tileKeyStr, bitmap);
+    }
+
+    // returns true if there is still more tiles to clean, false when all tiles have been cleaned
+    function removeErroredTiles() as Boolean {
+        // we essentially want to evict all of the tiles that are not successful to force a reload
+        // if we check every single tile we might run into watchdog errors, so just evict tiles for one page at a time, assuming the page 
+        // size will be small enough that watchdog will not trip (it has to be or else normal eviction would also fail)
+
+        if (!_cleanErroredStarted)
+        {
+            // start the clean
+            _cleanErroredPageIndex = 0;
+            _cleanErroredStarted = true;
+        }
+        else {
+            // we are running the clean, move onto the next page
+            ++_cleanErroredPageIndex;
+        }
+
+        loadPage(_cleanErroredPageIndex);
+        removeErroredTilesFromPage();
+
+        if (_cleanErroredPageIndex >= _pageCount - 1)
+        {
+            _cleanErroredPageIndex = 0; // safety reset it
+            _cleanErroredStarted = false; // next time we will start clean
+            return false;
+        }
+
+        // keep calling until we have done all pages
+        return true;
+    }
+
+    private function removeErroredTilesFromPage() as Void
+    {
+        if (_currentPageIndex < 0 || _currentPageIndex >= _pageSizes.size()) {
+            logE("removeErroredTilesFromPage from page thats not loaded");
+            return;
+        }
+
+        // iterate backwards in loop for perf/memory/code size
+        // and to avoid edit whilst iterating
+        // note this is slightly slower than making an array of keys to remove, but more memory efficient, as each call to 
+        // _currentPageKeys.remove(key) has to scan the whole array again, and its the one at the end we are removing causing O(N^2) search overhead.
+        // I think its better for cpu though, as the remove is likely done in cpp code, but me iterating over a "toRemove" array would be done in monkeyc
+        // should reduce posabillity for watchdog errors, as less monkeyc code
+        var removedAny = false;
+        for (var i = _currentPageKeys.size() - 1; i >= 0; --i) {
+            var key = _currentPageKeys[i];
+            var tileMetaData = Storage.getValue(metaKey(key));
+
+            if (tileMetaData instanceof Array && tileMetaData.size() >= 3) {
+                if (tileMetaData[1] as Number == STORAGE_TILE_TYPE_ERRORED) {
+                    deleteByMetaData(key);
+                    _currentPageKeys.remove(key);
+                    _pageSizes[_currentPageIndex]--;
+                    _totalTileCount--;
+                    removedAny = true;
+                }
+            }
+        }
+       
+        // keep our tracking up to date
+        if (removedAny) {
+            saveCurrentPage();
+            safeSetStorage("totalTileCount", _totalTileCount);
+        }
     }
 
     private function addMetaData(

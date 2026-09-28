@@ -1546,12 +1546,9 @@ class BreadcrumbRenderer {
             }
             pagesStr += breadcrumbContext.tileCache._storageTileCache._pageSizes[i];
         }
-        var tileLayerStr =
-            _cachedValues.seedingZ < 0
-                ? "Finalising"
-                : "Caching Tile Layer " + _cachedValues.seedingZ;
+        
 
-        var screenMessage = tileLayerStr + "\n" + seedingProgress[0];
+        var screenMessage = seedingProgress[0];
         var includeRemainingMessage = seedingProgress[2];
 
         if (includeRemainingMessage) {
