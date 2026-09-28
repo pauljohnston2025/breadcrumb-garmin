@@ -196,6 +196,7 @@ class WebRequestHandleWrapper {
                 webHandler._settings.tileUrl.find(COMPANION_APP_TILE_URL_MATCH) != null &&
                 !getApp()._breadcrumbContext.settings.storageMapTilesOnly
             ) {
+                System.println("web handler got response: " + responseCode);
                 // todo only send this on certain errors, and only probably only after some limit?
                 webHandler.transmit([PROTOCOL_SEND_OPEN_APP], {}, getApp()._commStatus);
                 // don't send a toast here, it would be very annoying getting many toasts for every http error or connectiq errors (negative error codes)
@@ -227,7 +228,7 @@ class WebRequestHandleWrapper {
                 // it also only seemed to be when it errored with 404 - companion app server was not running
                 // perhaps it was from the webHandler.transmit, which is meant to prevent the `Communications transmit queue full` error
                 // maybe all web requests need to finish before we can transmit? Or perhaps the web handler is still active when we are in this function?
-                webHandler.decrementOutstanding(hash);
+                webHandler.decrementOutstandingAndWebHash(hash);
             }
             alreadyDecedWebHandler = true;
         }
@@ -276,7 +277,7 @@ class ConnectionListenerWrapper extends Communications.ConnectionListener {
         }
 
         alreadyDecedWebHandler = true;
-        webHandler._outstandingCount--;
+        webHandler.decrementOutstanding();
     }
 }
 
@@ -295,9 +296,12 @@ class WebRequestHandler {
     var _errorCount as Number = 0;
     var _successCount as Number = 0;
     var _lastResult as Number? = null;
+    // Track the last time a request started or completed (in seconds)
+    var _lastActivityTime as Number = 0;
 
     function initialize(settings as Settings) {
         _settings = settings;
+        _lastActivityTime = Time.now().value();
     }
 
     function clearValues() as Void {
@@ -369,6 +373,8 @@ class WebRequestHandler {
             return false;
         }
 
+        checkForActivityTimeout();
+
         // kept getting errors with
         // Error: System Error
         // Details: failed inside handle_image_callback
@@ -377,6 +383,7 @@ class WebRequestHandler {
         // (eg. maybe its larger than 32Kb and that makes a system error rather than a storage exception)
         // trying to reduce parallel requests to 1 at a time to see if that helps
         if (_outstandingCount < 3) {
+            // if we exceed this number we end up just getting BLE_QUEUE_FULL -101 Too many requests have been made.
             // we could get real crazy and start some tile requests through makeWebRequest
             // and some others through pushing tiles from the companion app
             // seems really hard to maintain though, and ble connection probably already saturated
@@ -387,8 +394,60 @@ class WebRequestHandler {
         return false;
     }
 
-    function decrementOutstanding(hash as String) as Void {
+    // Ive never actually seen this happen on a real device, but our code could get stuck
+    // it happens on the simulator all the time though, web request just don't timeout by the system nd never respond
+    // so we end up getting stuck not processing web requests. if it can happen on the sim it can probably happen on a device too, so best to attempt to reset it.
+    // worst case it looks like we get BLE_QUEUE_FULL -101 Too many requests have been made. response, which should be handleable
+    // the problem with this though seem to be that once its full it never recovers, and so then errors with (on the simulator)
+    // web handler got response: -101
+    // Communications transmit queue full
+    // honestly it seems pretty well unrecoverable, guess it might just be a simulator bug. 
+    // Its easy to reproduce, just disable the tile server and after a few 404 responses it just stops handling anything in the simulator. a real device seems to push through for the most part
+    function checkForActivityTimeout() as Void {
+        if (_outstandingCount == 0) {
+            return;
+        }
+
+        var now = Time.now().value();
+        var elapsed = now - _lastActivityTime;
+
+        if (elapsed < 0) {
+            // System clock adjusted backward mid-activity (not sure this is ven possible, but maybe it is if the gps time changes or something)
+            _lastActivityTime = now;
+            return;
+        }
+
+        // needs to be big enough so its almost never going to happen ona real device with real world latency
+        var timeoutSeconds = 30;
+        if (elapsed > timeoutSeconds) {
+            System.println(
+                "WebRequest watchdog timeout! Force clearing " +
+                    _outstandingCount +
+                    " stuck requests."
+            );
+            logE(
+                "WebRequest watchdog timeout! Force clearing " +
+                    _outstandingCount +
+                    " stuck requests."
+            );
+            resetStuckState();
+        }
+    }
+
+    // Forcefully clears outstanding locks if Garmin OS dropped a callback
+    function resetStuckState() as Void {
+        _outstandingCount = 0;
+        outstandingHashes = [];
+        _lastActivityTime = Time.now().value();
+    }
+
+    function decrementOutstanding() as Void {
         --_outstandingCount;
+        _lastActivityTime = Time.now().value();
+    }
+
+    function decrementOutstandingAndWebHash(hash as String) as Void {
+        decrementOutstanding();
         outstandingHashes.remove(hash);
     }
 
@@ -397,12 +456,22 @@ class WebRequestHandler {
         if (pendingTransmit.size() != 0) {
             // prioritize the  transmits over tile/web loads
             var transmitEntry = pendingTransmit[0];
-            pendingTransmit.remove(transmitEntry);
-            Communications.transmit(
-                transmitEntry[0],
-                transmitEntry[1],
-                new ConnectionListenerWrapper(me, transmitEntry[2])
-            );
+            pendingTransmit.remove(transmitEntry); // we could slice the first item off, but safer to remove by value incase we ever change how the list is formatted
+
+            try {
+                Communications.transmit(
+                    transmitEntry[0],
+                    transmitEntry[1],
+                    new ConnectionListenerWrapper(me, transmitEntry[2])
+                );
+            } catch (e) {
+                System.println(
+                    "Transmit failed synchronously: " + (e as Exception).getErrorMessage()
+                );
+                logE("Transmit failed synchronously: " + (e as Exception).getErrorMessage());
+                // note the docs say nothing about this throwing, but perhaps it does fail if ble is unavailable?
+                decrementOutstanding(); // Revert count if transmit failed to start
+            }
             return;
         }
 
@@ -419,10 +488,13 @@ class WebRequestHandler {
 
         // logT("url: " + webReq.url);
         // logT("params: "  + webReq.params);
-        webReq.start(me, _settings);
-
-        if (webReq instanceof ImageRequest) {
-            return;
+        try {
+            webReq.start(me, _settings);
+        } catch (e) {
+            System.println("Transmit failed synchronously: " + (e as Exception).getErrorMessage());
+            logE("Transmit failed synchronously: " + (e as Exception).getErrorMessage());
+            // note the docs say nothing about this throwing other than invalid params, but perhaps it does fail if ble is unavailable?
+            decrementOutstandingAndWebHash(webReq.hash); // Clean up both count AND hash
         }
     }
 
