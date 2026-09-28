@@ -1440,7 +1440,7 @@ class CachedValues {
     }
 
     (:storage)
-    function seedingProgress() as [String, Float] {
+    function seedingProgress() as [String, Float, Boolean] {
         // The total number of layers to process is the difference + 1.
         // e.g., from layer 15 down to 10 is (15 - 10) + 1 = 6 layers.
         var tileLayers = (_settings.tileLayerMax - _settings.tileLayerMin + 1).toFloat();
@@ -1453,6 +1453,7 @@ class CachedValues {
             return [
                 size.toString() + " remaining",
                 (MAX_TILES_AT_A_TIME - size) / MAX_TILES_AT_A_TIME.toFloat(),
+                true
             ];
         }
 
@@ -1483,12 +1484,18 @@ class CachedValues {
                     " " +
                     percentageStr,
                 overallProgress,
+                true
             ];
         }
 
         var routes = getApp()._breadcrumbContext.routes;
+
+        if (routes.size() == 0) {
+            return ["WARNING\nNO ROUTES\nAdd Route To Seed", 0f, false];
+        }
+
         if (seedingUpToRoute >= routes.size()) {
-            return ["Route: " + seedingUpToRoute + "/" + routes.size(), 0f];
+            return ["Route: " + seedingUpToRoute + "/" + routes.size(), 0f, true];
         }
 
         var totalPointsPerLayer = 0;
@@ -1540,6 +1547,7 @@ class CachedValues {
                 _settings.storageSeedRouteDistanceM.format("%.1f") +
                 "m)",
             overallProgress,
+            true
         ];
     }
 }

@@ -399,6 +399,11 @@ class BreadcrumbDataFieldView extends WatchUi.DataField {
         // the distance we don't really need data much faster than this anyway
         var newPoint = BreadcrumbTrack.pointFromActivityInfo(info);
         if (newPoint == null) {
+            // edge case where we have no user location, we need to reset the compute so we 
+            // can go back to processing tile seeding (or anything else in the loop above)
+            // all points that we get need to go though _cachedValues.handleHeadingPoint, 
+            // so we can't do the compute check first.
+            _computeCounter = 0; 
             return;
         }
 

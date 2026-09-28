@@ -209,7 +209,7 @@ class JsonWebTileRequestHandler {
                     _y,
                     _z,
                     _tileKeyStr,
-                    data as Dictionary<PropertyKeyType, PropertyValueType>
+                    data as Dictionary<Application.Storage.KeyType, Application.Storage.ValueType>
                 );
             }
         }
@@ -746,7 +746,7 @@ class StorageTileCache {
     private function saveCurrentPage() as Void {
         if (_currentPageIndex != -1) {
             var pageKey = pageStorageKey(_currentPageIndex);
-            Storage.setValue(pageKey, _currentPageKeys as Array<PropertyValueType>);
+            Storage.setValue(pageKey, _currentPageKeys as Array<Application.Storage.ValueType>);
         }
     }
 
@@ -897,7 +897,7 @@ class StorageTileCache {
         y as Number,
         z as Number,
         tileKeyStr as String,
-        data as Dictionary<PropertyKeyType, PropertyValueType>
+        data as Dictionary<Application.Storage.KeyType, Application.Storage.ValueType>
     ) as Void {
         addHelper(STORAGE_TILE_TYPE_DICT, x, y, z, tileKeyStr, data);
     }
@@ -908,7 +908,7 @@ class StorageTileCache {
         y as Number,
         z as Number,
         tileKeyStr as String,
-        data as Dictionary<PropertyKeyType, PropertyValueType> or WatchUi.BitmapResource
+        data as Dictionary<Application.Storage.KeyType, Application.Storage.ValueType> or WatchUi.BitmapResource
     ) as Void {
         if (addMetaData(x, y, z, tileKeyStr, [Time.now().value(), type, NO_EXPIRY])) {
             safeAdd(tileKey(tileKeyStr), data);
@@ -934,7 +934,7 @@ class StorageTileCache {
         y as Number,
         z as Number,
         tileKeyStr as String,
-        metaData as Array<PropertyValueType>
+        metaData as Array<Application.Storage.ValueType>
     ) as Boolean {
         var pageIndex = getPageIndexForKey(x, y, z);
         loadPage(pageIndex);
@@ -987,7 +987,7 @@ class StorageTileCache {
         return true;
     }
 
-    private function safeAdd(key as String, data as PropertyValueType) as Void {
+    private function safeAdd(key as String, data as Application.Storage.ValueType) as Void {
         try {
             Storage.setValue(key, data);
         } catch (e) {

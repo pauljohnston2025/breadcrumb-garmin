@@ -183,12 +183,12 @@ class BreadcrumbTrack {
             ]);
             Storage.setValue(
                 key + "coords",
-                coordinates._internalArrayBuffer as Array<PropertyValueType>
+                coordinates._internalArrayBuffer as Array<Application.Storage.ValueType>
             );
             Storage.setValue(key + "coordsSize", coordinates._size);
             Storage.setValue(
                 key + "directions",
-                directions._internalArrayBuffer as Array<PropertyValueType>
+                directions._internalArrayBuffer as Array<Application.Storage.ValueType>
             );
             Storage.setValue(key + "distanceTotal", distanceTotal);
             Storage.setValue(key + "elevationMin", elevationMin);

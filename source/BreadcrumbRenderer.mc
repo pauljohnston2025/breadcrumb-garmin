@@ -360,7 +360,7 @@ class BreadcrumbRenderer {
             } else {
                 renderDistanceMetric(dc, y, null);
             }
-         } else {
+        } else {
             renderTextMetric(dc, y, "INVALID");
         }
     }
@@ -1550,13 +1550,12 @@ class BreadcrumbRenderer {
             _cachedValues.seedingZ < 0
                 ? "Finalising"
                 : "Caching Tile Layer " + _cachedValues.seedingZ;
-        dc.drawText(
-            xHalfPhysical,
-            yHalfPhysical,
-            Graphics.FONT_XTINY,
-            tileLayerStr +
-                "\n" +
-                seedingProgress[0] +
+
+        var screenMessage = tileLayerStr + "\n" + seedingProgress[0];
+        var includeRemainingMessage = seedingProgress[2];
+
+        if (includeRemainingMessage) {
+            screenMessage +=
                 "\nPending Web: " +
                 breadcrumbContext.webRequestHandler.pending.size() +
                 " Running: " +
@@ -1576,7 +1575,13 @@ class BreadcrumbRenderer {
                 (System.getSystemStats().freeMemory / 1024f).format("%.1f") +
                 "K" +
                 "\nLast Web Res: " +
-                breadcrumbContext.webRequestHandler._lastResult,
+                breadcrumbContext.webRequestHandler._lastResult;
+        }
+        dc.drawText(
+            xHalfPhysical,
+            yHalfPhysical,
+            Graphics.FONT_XTINY,
+            screenMessage,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
         );
 
