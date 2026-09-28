@@ -75,9 +75,9 @@
     <string id="uiModeShowAll">Show On Top</string>
     <string id="uiModeHidden">Hidden</string>
     <string id="uiModeNone">Disabled</string>
-    <string id="fixedLatitude">Fixed Longitude</string>
+    <string id="fixedLatitude">Fixed Latitude</string>
     <string id="fixedLatitudePrompt">0 - disabled, -90 to 90</string>
-    <string id="fixedLongitude">Fixed Latitude</string>
+    <string id="fixedLongitude">Fixed Longitude</string>
     <string id="fixedLongitudePrompt">0 - disabled, -180 to 180</string>
     <string id="recalculateIntervalSTitle">Compute Interval (s)</string>
     <string id="tileCachePaddingTitle">Tile Cache Padding (tiles)</string>
